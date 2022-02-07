@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+    <script src="{% static 'js/adminPage.js' %}"></script>
+    <script src="{% static 'js/common/universal/all.js' %}"></script>
+</head>
+
+<body>
+    {% include 'common/header/header.html' %}
+    <div class="w3-row l12 m12" style="margin-top: 5.5%;" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-col l9 m8 w3-center" style="padding-left:20%;padding-top:5%;padding-bottom:5%;">
+            <form action="login" method="post"> {% csrf_token %}
+                <table class="w3-card w3-table" id="ProductTable">
+                    <tr style="background-color:azure;">
+                        <td><br></td>
+                        <th>Login Page</th>
+                        <td class="w3-text-blue">
+                            <small>
+                                <a href="/register"><b>For register click Here</b></a>
+                            </small>
+                        </td>
+                    </tr>
+
+                    {% for message in messages%}
+                    <tr>
+                        <td><br></td>
+                        <td class="w3-text-red">Warning:: {{ message }} </td>
+                        <td><br></td>
+                    </tr>
+                    {% endfor %}
+
+                    <tr>
+                        <td><br></td>
+                        <td>UserName</td>
+                        <td>
+                            <input type="text" name="username" placeholder="User Name" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td>Password</td>
+                        <td>
+                            <input type="password" name="password" placeholder="Password" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td><br></td>
+                        <td class="w3-small">
+                            <button type="submit" class="w3-btn w3-round-medium" value="Save" style="background-color: #89c4ff;">Login</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+</body>
+<script>
+    window.onload = function() {
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        };
+    function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+</script>
+
+</html>

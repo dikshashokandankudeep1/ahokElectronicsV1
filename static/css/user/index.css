@@ -1,0 +1,99 @@
+/* remove inuput type number arrows*/
+
+
+/* Chrome, Safari, Edge, Opera */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* Firefox */
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+/*****************/
+
+#profilePicMain {
+    width: 90px;
+    height: 90px;
+    border-radius: 100px;
+    background: green;
+}
+
+#profilePicInner {
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 36px;
+    line-height: 90px;
+}
+
+
+/*****************/
+
+.cardProfile {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+}
+
+.titleProfile {
+    color: grey;
+    font-size: 18px;
+}
+
+#buttonProfile {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
+
+#anchorProfile {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+}
+
+#buttonProfile:hover,
+#anchorProfile:hover {
+    opacity: 0.7;
+}
+
+
+/*****************/
+
+.borderBottom {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.mainHadding {
+    font-weight: 550;
+    color: #878787;
+    /*#989898;*/
+}
+
+.subHadding {
+    font-size: 95%;
+    cursor: pointer;
+}
+
+.subHadding:hover {
+    font-size: 95%;
+    cursor: pointer;
+    color: #2874f0;
+}

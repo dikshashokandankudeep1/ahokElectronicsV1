@@ -1,0 +1,105 @@
+<div id="profileinformation">
+    <div class="w3-row" id="personalInfo_def_edit">
+        <span style="font-weight:550;">
+            Personal Information
+        </span>
+        <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcEdit('personalInfo')">
+            Edit
+        </span>
+    </div>
+    <div class="w3-row" id="personalInfo_cancel">
+        <span style="font-weight:550;">
+            Personal Information
+        </span>
+        <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcCancel('personalInfo')">
+            Cancel
+        </span>
+    </div>
+    <div class="w3-row" style="margin-top:3%;">
+        <div class="w3-row">
+            <div id="personalInfo_def_name">
+                <input type="text" value="{{dataDictionary.firstName}}" disabled style="cursor:not-allowed; padding:1%; color:#878787;">
+                <input type="text" value="{{dataDictionary.lastName}}" disabled style="cursor:not-allowed; padding:1%; margin-left:1%; color:#878787;">
+            </div>
+            <div id="personalInfo_name">
+                <form action="" method="post"> {% csrf_token %}
+                    <input type="hidden" id="form_gender" name="personalInfo_form_gender" value="" />
+                    <input type="text" value="Pradeep" name="personalInfo_fname" style="padding:1%;">
+                    <input type="text" value="Kumawat" name="personalInfo_lname" style="padding:1%; margin-left:1%;">
+                    <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-left:2%;margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
+                </form>
+            </div>
+        </div>
+        <div class="w3-row" style="padding-top:3%;">
+            <div class="w3-row">
+                Your Gender
+            </div>
+            <div class="w3-row" style="padding-top:1%;">
+                <div id="personalInfo_def_gender" style="cursor:not-allowed;">
+                    <input type="radio" name="gender_def" id="Male" disabled checked>
+                    <span style="color:#878787; margin-right:2%;">Male</span>
+                    <input type="radio" name="gender_def" id="Female" disabled>
+                    <span style="color:#878787;">Female</span>
+                </div>
+                <div id="personalInfo_gender">
+                    <input type="radio" name="gender" id="Male" checked style="cursor:pointer;">
+                    <span style="margin-right:2%;">Male</span>
+                    <input type="radio" name="gender" id="Female" style="cursor:pointer;">
+                    <span>Female</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---->
+    <div class="w3-row" id="emailAddress_def_edit" style="padding-top:6%;">
+        <span style="font-weight:550;">
+            Email Address
+        </span>
+        <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcEdit('emailAddress')">
+            Edit
+        </span>
+    </div>
+    <div class="w3-row" id="emailAddress_cancel" style="padding-top:6%;">
+        <span style="font-weight:550;">
+            Email Address
+        </span>
+        <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcCancel('emailAddress')">
+            Cancel
+        </span>
+    </div>
+    <div class="w3-row" style="margin-top:3%;">
+        <div class="w3-row" id="emailAddress_def_email">
+            <input type="text" value="pradeepkumawat91@gmail.com" disabled style="cursor:not-allowed; padding:1%;width:35%; color:#878787;">
+        </div>
+        <div class="w3-row" id="emailAddress_email">
+            <input type="text" value="pradeepkumawat91@gmail.com" style="padding:1%; width:35%;">
+            <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-left:2%; margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
+        </div>
+    </div>
+    <!---->
+    <div class="w3-row" id="mobileNumber_def_edit" style="padding-top:6%;">
+        <span style="font-weight:550;">
+            Mobile Number
+        </span>
+        <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcEdit('mobileNumber')">
+            Edit
+        </span>
+    </div>
+    <div class="w3-row" id="mobileNumber_cancel" style="padding-top:6%;">
+        <span style="font-weight:550;">
+            Mobile Number
+        </span>
+        <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcCancel('mobileNumber')">
+            Cancel
+        </span>
+    </div>
+    <div class="w3-row" style="margin-top:3%;">
+        <div class="w3-row" id="mobileNumber_def_mobile">
+            <input type="text" value="+917597434356" disabled style="cursor:not-allowed; padding:1%; width:35%; color:#878787;">
+        </div>
+        <div class="w3-row" id="mobileNumber_mobile">
+            <input type="text" value="+917597434356" style="padding:1%; width:35%;">
+            <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-left:2%;margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
+        </div>
+    </div>
+</div>

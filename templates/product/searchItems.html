@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<title>Ashok Elcetronics</title>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+    <script src="{% static 'js/common/universal/all.js' %}"></script>
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+
+
+<body style="position: relative;">
+    <!-- Common Product All Data -->
+    {% include 'common/header/header.html' %}
+    <div class="w3-content" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row">
+            <div class="w3-col">
+                <div class="w3-left w3-text-grey">
+                    <h6>Home > <b>{{ categoryName }}</b></h6>
+                </div>
+            </div>
+        </div>
+        <div class="w3-row w3-card l9 m9 w3-center w3-grayscale" style="padding:3%">
+            {% for instance in dataDict.items %}
+                <a href="{{ categoryName }}/{{ instance.0 }}">
+                    <div class="w3-col l3 m4 s6 w3-display-container ">
+                        <img src="/static/media/common/Default_Image.PNG" class="w3-opacity-max " style="width:75%;">
+                        <div class="w3-display-middle w3-container">
+                            <small>
+                                <b>{{ instance.0 }}</b>
+                                <p class="w3-text-grey">
+                                    {% if instance.1 == 0 %}
+                                        No PRODUCTS
+                                    {% elif instance.1 == 1 %}
+                                        {{ instance.1 }} PRODUCT
+                                    {%else%}
+                                        {{ instance.1 }} PRODUCTS
+                                    {%endif%}
+                                </p>
+                            </small>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        };
+
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+    </script>
+</body>
+</html>

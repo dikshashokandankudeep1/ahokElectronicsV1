@@ -1,0 +1,98 @@
+<table class="w3-card w3-table" id="ProductTable">
+    <tr style="background-color:azure">
+        <th><br></th>
+        <th><br></th>
+        <th>ALTER PROMO CODE</th>
+        <th><br></th>
+    </tr>
+    <tr >
+        <th><br></th>
+        <th class="w3-text-blue">Home</th>
+        <th><br></th>
+    </tr>
+    {% for message in messages%}
+    <tr>
+        <td><br></td>
+        <td><br></td>
+        {% if productId == "" %}
+            <td class="w3-text-red">Error:: {{ message }} </td>
+        {% else %}
+            <td class="w3-text-green">Success:: {{ message }} </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <tr>
+            <td><br></td>
+            <td>PromoCode Id</td>
+            <td>
+                <input type="text" name="promoCodeId" id="promoCodeId" value="" placeholder="PromoCode Id" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>isActive</td>
+            <td>
+                <input type="radio" name="isActive" id="isActive" value="true"> Yes
+                <input type="radio" name="isActive" id="isActive" value="false"> No
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Discount Percentage</td>
+            <td>
+                <input type="number" name="discountPercentage" id="discountPercentage" value="" placeholder="Discount Percentage" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Min Selling Price Critaria</td>
+            <td>
+                <input type="number" name="minSellingPriceCritaria" id="minSellingPriceCritaria" value="" placeholder="Min Selling Price Critaria" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Max Selling Price Criteria</td>
+            <td>
+                <input type="number" name="maxSellingPriceCriteria" id="maxSellingPriceCriteria" value="" placeholder="Max Selling Price Criteria" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>New User Discount</td>
+            <td>
+                <input type="radio" name="isActive" id="isActive" value="true"> Yes
+                <input type="radio" name="isActive" id="isActive" value="false"> No
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>on Sale</td>
+            <td>
+                <input type="radio" name="isActive" id="isActive" value="true"> Yes
+                <input type="radio" name="isActive" id="isActive" value="false"> No
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Sale Occasion</td>
+            <td>
+                <input type="text" name="saleOccasion" id="saleOccasion" value="" placeholder="Sale Occasion" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td><br></td>
+            <td class="w3-small">
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;">
+                    save
+                </button>
+            </td>
+        </tr>
+        
+        <input type="hidden" id="action" name="action" value="">
+        <input type="hidden" name="formAddProductAction" value="promocode">
+    </form>
+</table>

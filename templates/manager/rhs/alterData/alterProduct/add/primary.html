@@ -1,0 +1,126 @@
+
+<table class="w3-card w3-table" id="ProductTable">
+    <tr style="background-color:azure">
+        <th><br></th>
+        <th><br></th>
+        <th>ADD PRODUCT</th>
+        <th><br></th>
+    </tr>
+    <tr >
+        <th><br></th>
+        <th class="w3-text-blue">Initial Details</th>
+        <th><br></th>
+    </tr>
+    {% for message in messages%}
+    <tr>
+        <td><br></td>
+        <td><br></td>
+        {% if productId == "" %}
+            <td class="w3-text-red">Error:: {{ message }} </td>
+        {% else %}
+            <td class="w3-text-green">Success:: {{ message }} </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <tr>
+            <td><br></td>
+            <td>Model Number</td>
+            <td>
+                <input type="text" name="modelNumber" id="modelNumber" value="" placeholder="modelNumber" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Category</td>
+            <td>
+                <input type="text" name="category" id="category" value="" placeholder="category" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Sub-Category</td>
+            <td>
+                <input type="text" name="subCategory" id="subCategory" value="" placeholder="subCategory" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Brand Name</td>
+            <td >
+                <input type="text" name="brandName" id="brandName" value="" placeholder="brandName" required >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Title</td>
+            <td>
+                <input type="text" name="title" id="title" value="" placeholder="title" required onclick="loadTitleFromFillItems()" onfocus="loadTitleFromFillItems()">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Price</td>
+            <td>
+                <input type="text" name="price" value="" placeholder="price" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Quantity</td>
+            <td>
+                <input type="text" name="quantity" value="" placeholder="quantity" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Warranty</td>
+            <td>
+                <input type="text" name="warranty" value="" placeholder="warranty (Ex. 2Yr, 3Mon)" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Product Image</td>
+            <td>
+                <input type="file" id="mainImage" name="mainImage" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td><br></td>
+            <td  class="w3-small">
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save and Next</button>
+            </td>
+        </tr>
+        <input type="hidden" name="userRatings" value="5">
+        <input type="hidden" name="reviewList" value="[]">
+        <input type="hidden" name="formAddProductAction" value="primaryDetails">
+    </form>
+</table>
+
+<script>
+    function loadTitleFromFillItems(){
+        let brandName   = document.getElementById("brandName").value;
+        let modelNumber = document.getElementById("modelNumber").value
+        let category    = document.getElementById("category").value;
+        let subCategory = document.getElementById("subCategory").value;
+        let title = ""
+        if(brandName != ""){
+            title = title + brandName + " "
+        }
+        if(modelNumber != ""){
+            title = title + modelNumber + " "
+        }
+        if(category != ""){
+            title = title + category + " "
+        }
+        if(subCategory != ""){
+            title = title + subCategory
+        }
+        if(title != ""){
+            document.getElementById("title").value = title;
+            document.getElementById("title").size = title.length;
+        }
+    }
+</script>

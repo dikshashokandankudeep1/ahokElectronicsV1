@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<title>Ashok Elcetronics</title>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--static load-->
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/searchItems.css' %}">
+    <script src="{% static 'js/common/universal/all.js' %}"></script>
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body style="position: relative;">
+    <!-- Common Product All Data -->
+    {% include 'common/header/header.html' %}
+    <div class="w3-content" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row">
+            <div class="w3-col">
+                <div class="w3-left w3-text-grey">
+                    {% if categoryName != "" %}
+                    <h6>Home > <b>{{ categoryName }}</b></h6>
+                    {% else %}
+                    <h6><br></h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class=" w3-row w3-card w3-center w3-grayscale">
+            <div class="w3-col l2 w3-hide-small w3-hide-medium" style="padding-right:1%;" onclick="onlyShowButtonSort()">
+                <div class="w3-row" style="padding-top:10%; text-align:left; padding-left:10%">
+                    <b>FILTER</b>
+                </div>
+                <div class="w3-row" style="padding-top:5%; text-align:left; padding-left:10%">
+                    <div class="w3-row" style="padding-bottom: 2%;"><small>PRICE</small></div>
+                    <form action="" method="post"> {% csrf_token %}
+                        <!---->
+                        {% if filterDict.PRICE_BL_2000 == 1 %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BL_2000" onclick="submitButtonClick('PRICE_BL_2000', 0)" checked> <small>Below ₹2000</small></div>
+                        {% else %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BL_2000" onclick="submitButtonClick('PRICE_BL_2000', 1)"> <small>Below ₹2000</small></div>
+                        {% endif %} {% if filterDict.PRICE_BTW_2000_3000 == 1 %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BTW_2000_3000" onclick="submitButtonClick('PRICE_BTW_2000_3000', 0)" checked> <small>₹2000 - ₹3000</small></div>
+                        {% else %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BTW_2000_3000" onclick="submitButtonClick('PRICE_BTW_2000_3000', 1)"> <small>₹2000 - ₹3000</small></div>
+                        {% endif %} {% if filterDict.PRICE_BTW_3000_4000 == 1 %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BTW_3000_4000" onclick="submitButtonClick('PRICE_BTW_3000_4000', 0)" checked> <small>₹3000 - ₹4000</small></div>
+                        {% else %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BTW_3000_4000" onclick="submitButtonClick('PRICE_BTW_3000_4000', 1)"> <small>₹3000 - ₹4000</small></div>
+                        {% endif %} {% if filterDict.PRICE_BTW_4000_5000 == 1 %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BTW_4000_5000" onclick="submitButtonClick('PRICE_BTW_4000_5000', 0)" checked> <small>₹4000 - ₹5000</small></div>
+                        {% else %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_BTW_4000_5000" onclick="submitButtonClick('PRICE_BTW_4000_5000', 1)"> <small>₹4000 - ₹5000</small></div>
+                        {% endif %} {% if filterDict.PRICE_ABW_5000 == 1 %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_ABW_5000" onclick="submitButtonClick('PRICE_ABW_5000', 0)" checked> <small>Above ₹5000</small></div>
+                        {% else %}
+                        <div class="w3-row"><input type="checkbox" name="FILTER:PRICE" value="PRICE_ABW_5000" onclick="submitButtonClick('PRICE_ABW_5000', 1)"> <small>Above ₹5000</small></div>
+                        {% endif %}
+                        <input type="hidden" id="filterDict" name="filterDict" value="" />
+                        <small><button class="w3-button" style="display:none;" id="priceSubmitButton">Buy Now</button></small>
+                    </form>
+                </div>
+            </div>
+            <div class="w3-col l10 m12 s12 w3-border-left" style="padding-left:5%; padding-right:5%; position: relative;">
+                <div class="w3-row " style="margin-bottom:1%;">
+                    <!--todo Kitchen Tools(Showing 1 - 34 of 34 items) -->
+                    {% if matchNotFound == "" %}
+                    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%" onclick="onlyShowButtonSort()">{{ categoryName }} (Showing {{productBrandnameListObjCount}} items)</div>
+                    {% else %}
+                    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%" onclick="onlyShowButtonSort()">No item found</div>
+                    {% endif %}
+                    <div class="w3-col l3 m3 s3" style="padding:2%;">
+                        <small id="buttonSort" onclick="showDropdownSort()">
+                            <button class="w3-button w3-light-gray w3-tiny w3-padding-small w3-round-large">
+                                <span>Sort by:</span>
+                                {% if SORTBY == "Popularity" %}
+                                    <span>Popularity</span>
+                                {% elif SORTBY == "Newest" %}
+                                    <span>Newest</span>
+                                {% elif SORTBY == "LTH" %}
+                                    <span>Price: Low to High</span>
+                                {% else %}
+                                    <span>Price: High to Low</span>
+                                {% endif %}
+                                <i class="fa fa-caret-down"></i>
+                            </button>
+                        </small>
+
+                        <div id="dropdownSort" class="w3-white w3-bar-block w3-card-4" style="margin-left:2%;position:absolute; z-index:9;">
+                            <form action="" method="post"> {% csrf_token %}
+                                <!---->
+                                {% if SORTBY == "Popularity" %}
+                                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                                <!---->
+                                {% elif SORTBY == "Newest" %}
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                                <!---->
+                                {% elif SORTBY == "LTH" %}
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                                <!---->
+                                {% else %}
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                                <!---->
+                                {% endif %}
+                                <input type="hidden" id="dropdownSortButton" name="dropdownSortButton" value="" />
+                                <input type="hidden" id="dropdownSortButtonfilterDict" name="dropdownSortButtonfilterDict" value="" />
+                                <input type="hidden" id="dropdownSortButtonmatchNotFound" name="dropdownSortButtonmatchNotFound" value="" />
+                                <input type="hidden" id="dropdownSortButtonrelaventSearch" name="dropdownSortButtonrelaventSearch" value="" />
+                                <small><button class="w3-button" style="display:none;" id="dropdownSortButtonClick">Buy Now</button></small>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% if matchNotFound != "" %}
+                <div class="w3-row w3-text" style="margin-top:5%;">
+                    <b>Sorry, no results found for <span class="w3-text-red">{{ matchNotFound }}</span></b>
+                </div>
+                <div class="w3-row " style="margin-bottom:5%;">
+                    Please check the spelling or try searching for something else
+                </div>
+                {% if productBrandnameListObjCount != 0 %}
+                <div class="w3-row w3-text">
+                    {% if relaventSearch != "" %}
+                    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%">Showing results for {{relaventSearch}} instead</div>
+                    {% else %}
+                    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%">Showing results for <b>tv</b> instead</div>
+                    {% endif %}
+                </div>
+                {% endif %} {% endif %}
+
+                <div class="w3-row" style="margin-bottom: 1%;" onclick="onlyShowButtonSort()">
+                    {% for instance in productBrandnameListObj %}
+                    <div class="w3-col l3 m6 s6">
+                        <div class="w3-display-container w3-hover-shadow">
+                            <div style="padding-bottom:4%;">
+                                <a href="/product/{{ instance.modelNumber }}">
+                                    <img src="{{ instance.mainImage.url }}" class="brandNameListId">
+                                </a>
+                            </div>
+                            <!--todo resolve and add on right top of image-->
+                            <div class="w3-left-align w3-text-black" style="padding-bottom:2%;padding-left:5%;"><small><b>₹ {{instance.price}}</b></small></div>
+                            <div class="w3-left-align w3-text-black" style="padding-bottom:4%;padding-left:5%;"><b>{{instance.title}}</b></div>
+                            <div class="w3-left-align w3-text-black" style="padding-bottom:4%;padding-left:5%;">
+                                <div class="w3-row">
+                                    <div class="w3-col l6 m12 s6">
+                                        <form action="" method="post"> {% csrf_token %}
+                                            <input type="hidden" name="ADDTOCART" value="{{instance.modelNumber}}" />
+                                            <small><button class="w3-button w3-tiny w3-round w3-teal">Add To Cart</button></small>
+                                        </form>
+                                    </div>
+                                    <div class="w3-col l6 m12 s6">
+                                        <form action="" method="post"> {% csrf_token %}
+                                            <input type="hidden" name="BUYNOW" value="{{instance.modelNumber}}" />
+                                            <small><button class="w3-button w3-tiny w3-round w3-black">Buy Now</button></small>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!--Right Filterd Items closed-->
+    </div>
+    <!--Middle Part Closed-->
+    <script>
+        window.onload = function() {
+            onlyShowButtonSort()
+            document.getElementById('dropdownSortButton').value = 'Popularity';
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        function showId(ID) {
+            document.getElementById(ID).style.display = "block";
+        }
+
+        function hideId(ID) {
+            document.getElementById(ID).style.display = "none";
+        }
+
+        function showDropdownSort() {
+            hideId('buttonSort')
+            showId("dropdownSort")
+        }
+
+        function onlyShowButtonSort(typeOfSort) {
+            showId('buttonSort')
+            hideId("dropdownSort")
+        }
+
+        function calculatefilterDictTOfilterDictStr(ID, todoChecked) {
+            filterDict = {}
+            filterDict["PRICE_BL_2000"] = '{{filterDict.PRICE_BL_2000}}'
+            filterDict["PRICE_BTW_2000_3000"] = '{{filterDict.PRICE_BTW_2000_3000}}'
+            filterDict["PRICE_BTW_3000_4000"] = '{{filterDict.PRICE_BTW_3000_4000}}'
+            filterDict["PRICE_BTW_4000_5000"] = '{{filterDict.PRICE_BTW_4000_5000}}'
+            filterDict["PRICE_ABW_5000"] = '{{filterDict.PRICE_ABW_5000}}'
+
+            filterDictStr = ""
+            if (ID == "showButtonSort") {
+                for (key in filterDict) {
+                    filterDictStr += key + ":" + filterDict[key] + ","
+                }
+            } else {
+                for (key in filterDict) {
+                    if (ID == key) {
+                        filterDictStr += key + ":" + todoChecked + ","
+                    } else {
+                        filterDictStr += key + ":" + filterDict[key] + ","
+                    }
+                }
+            }
+            filterDictStr = filterDictStr.slice(0, -1);
+            return filterDictStr
+        }
+
+        function showButtonSort(typeOfSort) {
+            showId('buttonSort')
+            hideId("dropdownSort")
+            document.getElementById('dropdownSortButton').value = typeOfSort
+
+            //for Price filter Intrigrity maintain
+            document.getElementById('dropdownSortButtonfilterDict').value = calculatefilterDictTOfilterDictStr("showButtonSort", "")
+            document.getElementById('dropdownSortButtonmatchNotFound').value = '{{matchNotFound}}'
+            document.getElementById('dropdownSortButtonrelaventSearch').value = '{{relaventSearch}}'
+            console.log("END val::", '{{matchNotFound}}', '{{relaventSearch}}')
+            document.getElementById("dropdownSortButtonClick").click();
+        }
+
+        function submitButtonClick(ID, todoChecked) {
+            document.getElementById("filterDict").value = calculatefilterDictTOfilterDictStr(ID, todoChecked)
+            document.getElementById("priceSubmitButton").click();
+        }
+    </script>
+</body>
+
+</html>

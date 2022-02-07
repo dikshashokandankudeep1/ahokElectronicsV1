@@ -1,0 +1,144 @@
+
+<table class="w3-card w3-table" id="ProductTable">
+    <tr style="background-color:azure">
+        <th><br></th>
+        <th><br></th>
+        <th>ALTER PAYMENT DETAIL</th>
+        <th><br></th>
+    </tr>
+    <tr >
+        <th><br></th>
+        <th class="w3-text-blue">Home</th>
+        <th><br></th>
+    </tr>
+    {% for message in messages%}
+    <tr>
+        <td><br></td>
+        <td><br></td>
+        {% if productId == "" %}
+            <td class="w3-text-red">Error:: {{ message }} </td>
+        {% else %}
+            <td class="w3-text-green">Success:: {{ message }} </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <tr>
+            <td><br></td>
+            <td>Mode Of Payment</td>
+            <td>
+                <input type="radio" name="modeOfPayment" id="modeOfPayment_UPI" value="UPI" onclick="Enable('UPI')"> UPI
+                <input type="radio" name="modeOfPayment" id="modeOfPayment_ACCOUNT" value="ACCOUNT" onclick="Enable('ACCOUNT')"> ACCOUNT
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>isActive</td>
+            <td>
+                <input type="radio" name="isActive" id="isActive_Yes" value="True"> Yes
+                <input type="radio" name="isActive" id="isActive_NO" value="False"> No
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>UPI ID</td>
+            <td>
+                <input type="text" name="upiId" id="upiId" value="" placeholder="UPI ID">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Bank Short Name</td>
+            <td>
+                <input type="text" name="bankName" id="bankName" value="" placeholder="Bank Short Name">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>IFSC Code</td>
+            <td>
+                <input type="text" name="ifscCode" id="ifscCode" value="" placeholder="IFSC Code">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Account Number</td>
+            <td>
+                <input type="text" name="accountNumber" id="accountNumber" value="" placeholder="Account Number">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Re-enter Account Number</td>
+            <td>
+                <input type="text" id="reAccountNumber" value="" placeholder="Re-enter Account Number">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Benificiary Name</td>
+            <td>
+                <input type="text" name="benificiaryName" id="benificiaryName" value="" placeholder="Benificiary Name" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td><br></td>
+            <td class="w3-small">
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;" onclick="checkAccountNumber(this)">
+                    save
+                </button>
+            </td>
+        </tr>
+        
+        <input type="hidden" id="action" name="action" value="payment">
+        <input type="hidden" name="formAddProductAction" value="alterData">
+    </form>
+</table>
+
+<script>
+    window.addEventListener("load",function(){
+        Enable("UPI");
+    });
+
+    function Enable(Mode){
+        if(Mode == "UPI"){
+            document.getElementById("modeOfPayment_UPI").checked = true;
+            document.getElementById("isActive_Yes").required = true;
+
+            document.getElementById("upiId").disabled = false;
+            document.getElementById("upiId").required = true;
+
+            document.getElementById("bankName").disabled = true;
+            document.getElementById("ifscCode").disabled = true;
+            document.getElementById("accountNumber").disabled = true;
+            document.getElementById("reAccountNumber").disabled = true;
+            document.getElementById("benificiaryName").disabled = true;
+        }
+        else{
+            document.getElementById("modeOfPayment_UPI").checked = false;
+            document.getElementById("isActive_NO").required = true;
+
+            document.getElementById("upiId").disabled = true;
+            document.getElementById("upiId").required = false;
+
+            document.getElementById("bankName").disabled = false;
+            document.getElementById("ifscCode").disabled = false;
+            document.getElementById("accountNumber").disabled = false;
+            document.getElementById("reAccountNumber").disabled = false;
+            document.getElementById("benificiaryName").disabled = false;
+
+            document.getElementById("bankName").required = true;
+            document.getElementById("ifscCode").required = true;
+            document.getElementById("accountNumber").required = true;
+            document.getElementById("reAccountNumber").required = true;
+            document.getElementById("benificiaryName").required = true;
+        }
+    }
+
+    function checkAccountNumber(){
+        if(document.getElementById("accountNumber").value !=  document.getElementById("reAccountNumber").value){
+        }
+    }
+</script>

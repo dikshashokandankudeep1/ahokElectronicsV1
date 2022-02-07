@@ -1,0 +1,54 @@
+<form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+    <table class="w3-card w3-table" id="ProductTable">
+        <tr style="background-color:azure">
+            <th><br></th>
+            <th><br></th>
+            <th>ADD PRODUCT</th>
+            <th><br></th>
+        </tr>
+        <tr >
+            <th><br></th>
+            <th class="w3-text-blue">Final Details</th>
+            <th class="w3-text-green"> {{productId}} </th>
+            <th><br></th>
+        </tr>
+        {% for message in messages%}
+        <tr>
+            <td><br></td>
+            <td class="w3-text-red">Warning:: {{ message }} </td>
+            <td><br></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td><br></td>
+            <td>Description</td>
+            <td>
+                <textarea name="description" id="description" rows="4" cols="50" placeholder="Product Description"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Specifications</td>
+            <td>
+                <textarea name="specifications" id="specifications" rows="4" cols="50" placeholder="Product Specifications"></textarea>
+            </td>
+        </tr>
+        
+        <tr>
+            <td><br></td>
+            <td><br></td>
+            <td  class="w3-small">
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save</button>
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89fff5;" onclick="fillSkipFunc()">Skip</button>
+            </td>
+        </tr>
+        <input type="hidden" name="productId" value="{{productId}}">
+        <input type="hidden" name="formAddProductAction" value="descriptionAndSpacificationManage">
+        <input id="skip" type="hidden" name="skip" value="">
+    </table>
+</form>
+<script>
+    function fillSkipFunc(){
+        document.getElementById("skip").value = "skip";
+    }
+</script>

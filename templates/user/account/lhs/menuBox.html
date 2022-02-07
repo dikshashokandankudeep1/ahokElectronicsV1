@@ -1,0 +1,200 @@
+<form action="" method="post" id="orders_form" onclick="funcOnClickButtonPress('orders_form')"> {% csrf_token %}
+    <div class="w3-row borderBottom w3-border-xsmall" style="padding-bottom:5%; cursor:pointer;">
+        <div class="w3-col l3" style="padding-left:10%">
+            <i class="fas fa-store"></i>
+        </div>
+        <div class="w3-col mainHadding l9" onMouseOver="this.style.color='#2874f0'" onMouseOut="this.style.color='#878787'">
+            MY ORDERS
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="orders" />
+</form>
+<div class="w3-row" style="padding-top:5%; padding-bottom:5%;">
+    <div class="w3-col l3" style="padding-left:10%">
+        <i class="fas fa-user"></i>
+    </div>
+    <div class="w3-col mainHadding l9">
+        ACCOUNT SETTINGS
+    </div>
+</div>
+{%if dataShow != "profileinformation"%}
+<form action="" method="post" id="profileinformation_form" onclick="funcOnClickButtonPress('profileinformation_form')"> {% csrf_token %}
+    <div class="w3-row" id="profileinformation_def" style="padding-top:3%; padding-bottom:3%;">
+        <div class="w3-col l3" style="padding-left:10%">
+            <br>
+        </div>
+        <div class="w3-col subHadding l9">
+            Profile Information
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="profileinformation" />
+</form>
+{%else%}
+<div class="w3-row" id="profileinformation_onClick" style="padding-top:3%; padding-bottom:3%; background-color:#f5faff;">
+    <div class="w3-col l3">
+        <br>
+    </div>
+    <div class="w3-col subHadding l9" style="font-weight:500; color:#2874f0;">
+        Profile Information
+    </div>
+</div>
+{%endif%}
+<!---->
+{%if dataShow != "manageaddresses"%}
+<form action="" method="post" id="manageaddresses_form" onclick="funcOnClickButtonPress('manageaddresses_form')"> {% csrf_token %}
+    <div class="w3-row" id="manageaddresses_def" style="padding-top:3%; padding-bottom:3%;">
+        <div class="w3-col l3">
+            <br>
+        </div>
+        <div class="w3-col subHadding l9">
+            Manage Addresses
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="manageaddresses" />
+</form>
+{%else%}
+<div class="w3-row" id="manageaddresses_onClick" style="padding-top:3%; padding-bottom:3%; background-color:#f5faff;">
+    <div class="w3-col l3">
+        <br>
+    </div>
+    <div class="w3-col subHadding l9" style="font-weight:500; color:#2874f0;">
+        Manage Addresses
+    </div>
+</div>
+{%endif%}
+<!---->
+{%if dataShow != "changepassword"%}
+<form action="" method="post" id="changepassword_form" onclick="funcOnClickButtonPress('changepassword_form')"> {% csrf_token %}
+    <div class="w3-row borderBottom" id="changepassword_def" style="padding-top:3%; padding-bottom:3%;">
+        <div class="w3-col l3">
+            <br>
+        </div>
+        <div class="w3-col subHadding l9">
+            Change Password
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="changepassword" />
+</form>
+{%else%}
+<div class="w3-row borderBottom" id="changepassword_onClick" style="padding-top:3%; padding-bottom:3%; background-color:#f5faff;">
+    <div class="w3-col l3">
+        <br>
+    </div>
+    <div class="w3-col subHadding l9" style="font-weight:500; color:#2874f0;">
+        Change Password
+    </div>
+</div>
+{%endif%}
+<!---->
+{%if dataShow != "my-chats"%}
+<form action="" method="post" id="my-chats_form" onclick="funcOnClickButtonPress('my-chats_form')"> {% csrf_token %}
+    <div class="w3-row borderBottom" style="padding-top:5%; padding-bottom:5%; cursor:pointer;">
+        <div class="w3-col l3" style="padding-left:10%">
+            <i class="fas fa-comment-alt"></i>
+        </div>
+        <div class="w3-col mainHadding l9">
+            MY CHAT
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="my-chats" />
+</form>
+{%else%}
+<div class="w3-row borderBottom" style="padding-top:5%; padding-bottom:5%; cursor:pointer;">
+    <div class="w3-col l3" style="padding-left:10%">
+        <i class="fas fa-comment-alt"></i>
+    </div>
+    <div class="w3-col mainHadding l9" style="font-weight:500; color:#2874f0;">
+        MY CHAT
+    </div>
+</div>
+{%endif%}
+<!---->
+<div class="w3-row" style="padding-top:5%; padding-bottom:5%;">
+    <div class="w3-col l3" style="padding-left:10%">
+        <i class="fas fa-address-card"></i>
+    </div>
+    <div class="w3-col mainHadding l9">
+        MY STUFF
+    </div>
+</div>
+<!---->
+{%if dataShow != "rewards"%}
+<form action="" method="post" id="rewards_form" onclick="funcOnClickButtonPress('rewards_form')"> {% csrf_token %}
+    <div class="w3-row" style="padding-bottom:3%;">
+        <div class="w3-col l3">
+            <br>
+        </div>
+        <div class="w3-col subHadding l9">
+            My Coupons
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="rewards" />
+</form>
+{%else%}
+<div class="w3-row" style="padding-bottom:3%;">
+    <div class="w3-col l3">
+        <br>
+    </div>
+    <div class="w3-col subHadding l9" style="font-weight:500; color:#2874f0;">
+        My Coupons
+    </div>
+</div>
+{%endif%}
+<!---->
+{%if dataShow != "notifications"%}
+<form action="" method="post" id="notifications_form" onclick="funcOnClickButtonPress('notifications_form')"> {% csrf_token %}
+    <div class="w3-row" style="padding-top:3%; padding-bottom:3%;">
+        <div class="w3-col l3">
+            <br>
+        </div>
+        <div class="w3-col subHadding l9">
+            All Notifications
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="notifications" />
+</form>
+{%else%}
+<div class="w3-row" style="padding-top:3%; padding-bottom:3%;">
+    <div class="w3-col l3">
+        <br>
+    </div>
+    <div class="w3-col subHadding l9" style="font-weight:500; color:#2874f0;">
+        All Notifications
+    </div>
+</div>
+{%endif%}
+<!---->
+{%if dataShow != "wishlist"%}
+<form action="" method="post" id="wishlist_form" onclick="funcOnClickButtonPress('wishlist_form')"> {% csrf_token %}
+    <div class="w3-row borderBottom" style="padding-top:3%; padding-bottom:5%;">
+        <div class="w3-col l3">
+            <br>
+        </div>
+        <div class="w3-col subHadding l9">
+            My Wishlist
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="wishlist" />
+</form>
+{%else%}
+<div class="w3-row borderBottom" style="padding-top:3%; padding-bottom:5%;">
+    <div class="w3-col l3">
+        <br>
+    </div>
+    <div class="w3-col subHadding l9" style="font-weight:500; color:#2874f0;">
+        My Wishlist
+    </div>
+</div>
+{%endif%}
+<!---->
+<form action="" method="post" id="logout_form" onclick="funcOnClickButtonPress('logout_form')"> {% csrf_token %}
+    <div class="w3-row" style="padding-top:5%; cursor:pointer;">
+        <div class="w3-col l3" style="padding-left:10%">
+            <i class=" fas fa-power-off"></i>
+        </div>
+        <div class="w3-col mainHadding l9" onMouseOver="this.style.color='#2874f0'" onMouseOut="this.style.color='#878787'">
+            Logout
+        </div>
+    </div>
+    <input type="hidden" name="menuSwitch" value="logout" />
+</form>

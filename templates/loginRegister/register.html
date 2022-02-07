@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+    <script src="{% static 'js/adminPage.js' %}"></script>
+    <script src="{% static 'js/common/universal/all.js' %}"></script>
+</head>
+
+<body>
+    {% include 'common/header/header.html' %}
+    <div class="w3-row l12 m12" style="margin-top: 5.5%;" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-col l9 m8 w3-center" style="padding-left:20%;padding-top:5%;padding-bottom:5%;">
+            <form action="register" method="post"> {% csrf_token %}
+                <table class="w3-card w3-table" id="ProductTable">
+                    <tr style="background-color:azure">
+                        <th><br></td>
+                        <th>Sign Up</th>
+                        <th><br></td>
+                    </tr>
+                    {% for message in messages%}
+                    <tr>
+                        <td><br></td>
+                        <td class="w3-text-red">Warning:: {{ message }} </td>
+                        <td><br></td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><br></td>
+                        <td>FirstName</td>
+                        <td>
+                            <input type="text" name="firstName" value="{{dataDict.firstName}}" placeholder="First Name" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td>LastName</td>
+                        <td>
+                            <input type="text" name="lastName" value="{{dataDict.lastName}}" placeholder="Last Name" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td>Password</td>
+                        <td>
+                            <input type="password" name="password1" value="{{dataDict.password1}}" placeholder="Password" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td>Confirm password</td>
+                        <td>
+                            <input type="password" name="password2" value="{{dataDict.password2}}" placeholder="Confirm Password" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td>Mobile Number</td>
+                        <td>
+                            <input type="text" name="mobilenumber" value="{{dataDict.mobilenumber}}" placeholder="Mobile Number" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td>WhatsApp Number</td>
+                        <td>
+                            <input type="text" name="whatsappnumber" value="{{dataDict.whatsappnumber}}" placeholder="WhatsApp Number" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                        <td>Email Address</td>
+                        <td>
+                            <input type="text" name="emailaddress" value="{{dataDict.emailaddress}}" placeholder="Email Address" required>
+                        </td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td><br></td>
+                        <td>Profile Picture</td>
+                        <td>
+                            <input type="file" id="userImage" name="userImage" required>
+                        </td>
+                    </tr>
+                    -->
+                    <tr>
+                        <td><br></td>
+                        <td><br></td>
+                        <td  class="w3-small">
+                            <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Register</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    window.onload = function() {
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        };
+    function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+</script>
+</html>

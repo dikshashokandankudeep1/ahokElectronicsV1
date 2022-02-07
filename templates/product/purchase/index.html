@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<title>Ashok Elcetronics</title>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--static load-->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/searchItems.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Imagezoom.css' %}">
+
+    <script src="{% static 'js/common/imagezoom.js' %}"></script>
+    <script src="{% static 'js/common/universal/all.js' %}"></script>
+    <style>
+        .required {
+            color: red;
+        }
+    </style>
+
+</head>
+
+<body style="position: relative;">
+    {% include 'common/header/checkout.html' %}
+    <div class="w3-content" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
+    <div class="w3-row">
+        <div class="w3-col l12 m12 s12">
+            <div class="w3-row">
+                <div class="w3-col l10 m12 s11">
+                    {%if userAddressBookDictListCount %}
+                    <div class="w3-row" style="padding-bottom: 2%; padding-top: 4%; padding-left: 2%;">
+                        <div class="w3-col l6 m12 s12">
+                            <b>Select a delivery address</b>
+                        </div>
+                    </div>
+                    <div class="w3-row" style="padding-bottom:2%;">
+                        {% for data in userAddressBookDictList%}
+                        <div class="w3-col w3-round l3 m5 s12 w3-card" style="padding:2%; margin-left:2%; margin-bottom:2%;">
+                            <p><b>{{ data.userFullName }}</b></p>
+                            <small>{{ data.addr1 }}</small>
+                            <small>{{ data.addr2 }}</small>
+                            <small>{{ data.townCity }}</small>
+                            <small>{{ data.countryOrRegion }}</small>
+                            <!---->
+                            <div class="w3-row" style="padding:-1%;"><small>Contact No. {{ data.phoneNo }}</small></div>
+                            {% if data.orderNotes != "" %}
+                            <div class="w3-row w3-text-blue"><small><p>Should be with {{ data.orderNotes }}</p></small></div>
+                            {% else %}
+                            <div class="w3-row w3-text-blue">
+                                <div class="w3-row w3-text-blue"><small><p>Should be with covid safety</p></small></div>
+                            </div>
+                            {% endif %}
+                            <div class="w3-row">
+                                <a href="/product/purchase/paymentGateway/{{ data.id }}">
+                                    <button class="w3-button w3-round w3-teal"><small>Deliver to this Address</small></button>
+                                </a>
+                            </div>
+                            <div class="w3-row" style="padding-top:4%;">
+                                <div class="w3-col l4 m3 s2" style="margin-right:1%;">
+                                    <form action="" method="post"> {% csrf_token %}
+                                        <input type="hidden" name="EDIT" value="{{data.id}}">
+                                        <button class="w3-button w3-round w3-tiny w3-cyan">Edit</button>
+                                    </form>
+                                </div>
+                                <div class="w3-col l4 m3 s2">
+                                    <form action="" method="post"> {% csrf_token %}
+                                        <input type="hidden" name="DELETE" value="{{data.id}}">
+                                        <button class="w3-button w3-round w3-tiny w3-cyan">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="w3-col l2 m12 s12">
+                    <div><br></div>
+                </div>
+            </div>
+            <div class="w3-col l12 m8 s10">
+                <div class="w3-row">
+                    <div class="w3-col l10 m12 s12" style="padding-top:1%; padding-bottom:3%;">
+                        <div class="w3-row">
+                            <div class="w3-col l6 m12 s12 ">
+                                <div class="w3-row" style="padding-bottom: 2%; padding-top: 4%; padding-left: 2%;">
+                                    <div class="w3-col l12 m12 s12">
+                                        {% if userAddressBookItemEditObj == "" %}
+                                        <b>Add a new address</b>
+                                        <!---->
+                                        {% else %}
+                                        <div class="w3-row">
+                                            <h3>Please update the delivery address.</h3>
+                                        </div>
+                                        <div class="w3-row">
+                                            <b>Edit your address</b>
+                                        </div>
+                                        <!---->
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <form action="" method="post"> {% csrf_token %}
+                                    <div class="w3-row" style="padding: 2%; padding-left: 2%;">
+                                        <div class="w3-col l12 m12 s12">
+                                            <table class="w3-table-all w3-tiny">
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>First Name<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='firstName' style='width:60%' placeholder='First Name' name='firstName' value="{{userAddressBookItemEditObj.firstName}}"
+                                                                required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Last Name<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='lastName' style='width:60%' placeholder='Last Name' name='lastName' value="{{userAddressBookItemEditObj.lastName}}" required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Company Name</medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='companyName' style='width:60%' placeholder='Company Name' name='companyName' value="{{userAddressBookItemEditObj.companyName}}"></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Country/Region<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='countryOrRegion' style='width:60%' placeholder='Country or Region' name='countryOrRegion' value="{{userAddressBookItemEditObj.countryOrRegion}}"
+                                                                required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Street Address<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='streetAddress1' style='width:60%' placeholder='House No or street name' name='streetAddress1' value="{{userAddressBookItemEditObj.streetAddress1}}"
+                                                                required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>streetAddress2<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='streetAddress2' style='width:60%' placeholder='Apartment, suit, unit, etc. (optional)' name='streetAddress2' value="{{userAddressBookItemEditObj.streetAddress2}}"
+                                                                required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Town/City<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='townOrCity' style='width:60%' placeholder='Town or City' name='townOrCity' value="{{userAddressBookItemEditObj.townOrCity}}"
+                                                                required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>State/County<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='stateOrCounty' style='width:60%' placeholder='State or County' name='stateOrCounty' value="{{userAddressBookItemEditObj.stateOrCounty}}"
+                                                                required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Postcode/ZIP<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='postcodeOrZIP' style='width:60%' placeholder='Postcode or ZIP' name='postcodeOrZIP' value="{{userAddressBookItemEditObj.postcodeOrZIP}}"
+                                                                required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Phone Number<span class="required"> *</span></medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='phoneNo' style='width:60%' placeholder='Phone Number' name='phoneNo' value="{{userAddressBookItemEditObj.phoneNo}}" required></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Email Address</medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='emailAddress' style='width:60%' placeholder='Email Address' name='emailAddress' value="{{userAddressBookItemEditObj.emailAddress}}"></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <b><medium>Order Notes</medium></b>
+                                                    </td>
+                                                    <td>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='orderNotes' style='width:60%' placeholder='Notes about your order, e.g. special notes for delivery' name='orderNotes' value="{{userAddressBookItemEditObj.orderNotes}}"></medium>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        {% if userAddressBookItemEditObj == "" %}
+                                                        <medium><button class="w3-button w3-black w3-hover-dark-grey">Add Address</button></medium>
+                                                        {% else %}
+                                                        <input type="hidden" name="MODIFYADDRESS" value="{{userAddressBookItemEditObj.id}}">
+                                                        <medium><button class="w3-button w3-black w3-hover-dark-grey">Modify Address</button></medium>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <br>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<script>
+window.onload = function() {
+    document.getElementById("dropdownMenuProfile").style.display = "none";
+};
+
+function dropdownMenuProfileHide(){
+    document.getElementById("dropdownMenuProfile").style.display = "none";
+}
+</script>
+
+</body>
+
+</html>

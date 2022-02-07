@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<title>Ashok Elcetronics</title>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/searchItems.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Imagezoom.css' %}">
+
+    <script src="{% static 'js/common/imagezoom.js' %}"></script>
+    <script src="{% static 'js/common/universal/all.js' %}"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        img {
+            vertical-align: middle;
+        }
+        /* Position the image container (needed to position the left and right arrows) */
+        
+        .container {
+            position: relative;
+        }
+        /* Hide the images by default */
+        /*.mySlides {
+            display: none;
+        }
+        */
+        /* Add a pointer when hovering over the thumbnail images */
+        
+        .cursor {
+            cursor: pointer;
+        }
+        /* Next & previous buttons */
+        
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 40%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        /* Position the "next button" to the right */
+        
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+        /* On hover, add a black background color with a little bit see-through */
+        
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        /* Number text (1/3 etc) */
+        
+        .numbertext {
+            color: #f2f2f2;
+            font-size: 12px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
+        }
+        /* Container for image text */
+        
+        .caption-container {
+            text-align: center;
+            background-color: #222;
+            padding: 2px 16px;
+            color: white;
+        }
+        
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        /* Six columns side by side */
+        
+        .column {
+            float: left;
+            width: 16.66%;
+        }
+        /* Add a transparency effect for thumnbail images */
+        
+        .demo {
+            opacity: 0.6;
+        }
+        
+        .active,
+        .demo:hover {
+            opacity: 1;
+        }
+    </style>
+
+</head>
+<script>
+    function showId(ID) {
+        document.getElementById(ID).style.display = "block";
+    }
+
+    function hideId(ID) {
+        document.getElementById(ID).style.display = "none";
+    }
+
+    function showZoomImage(ID) {
+        showId('myZoomImageOutputId');
+        imageZoom(String(ID) + "_myZoomImageInputId", "myZoomImageOutputId");
+        hideId('rightSideDetailPannel');
+    }
+
+    function hideZoomImage() {
+        showId('rightSideDetailPannel');
+        hideId('myZoomImageOutputId');
+    }
+</script>
+
+<body  onload="hideZoomImage()" style="position: relative;">
+    {% include 'common/header/header.html' %}
+    <div class="w3-content" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row" onmouseover="hideZoomImage()">
+            <div class="w3-col">
+                <div class="w3-left w3-text-grey">
+                    {% if instance.categoryName != "" %}
+                    <h6>Home > {{ instance.category }} > {{ instance.brandName }} > {{ instance.title }}</h6>
+                    {% else %}
+                    <h6><br></h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!--{{ forloop.counter }}-->
+        <div class="w3-row w3-border-bottom w3-border-white" style="padding-top:5%;">
+            <div class="w3-col l4 m6 s12">
+
+                <div class="w3-row" style="margin-top:5%; margin-bottom:10%;">
+                    <div class="container">
+                        <div class="w3-col w3-center l2 m2 s2" onmouseover="hideZoomImage()">
+                            <!--todo images vertical scroll-->
+                            {% for data in dataData.HoverImageDict.items %}
+                            <div class="row" style="margin-bottom:5%;">
+                                <img class="demo cursor" src="{{data.1}}" style="width:75%" onclick="currentSlide('{{data.0}}')" alt="The Woods">
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="w3-col l10 m10 s10">
+                            <!--todo images vertical scroll-->
+                            {% for data in dataData.HoverImageDict.items %}
+                            <div class="mySlides w3-green" style="margin-top:15%;margin-left:15%;">
+                                <!--<div class="numbertext w3-text-black">{{data.0}} / 6</div>-->
+                                <img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId" onmouseover="showZoomImage('{{data.0}}')">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w3-row" style="padding-top:5%;" onmouseover="hideZoomImage()">
+                    <!--
+                    <div class="w3-col l2 m2 s2" style="padding-right:2%;">
+                        <small><input class='w3-input w3-round w3-border' type='text' id='ProductQuantity' placeholder='Qty.' name='ProductQuantity' onchange="quantityChange()" required></small>
+                    </div>
+                    -->
+                    <div class="w3-col w3-center l5 m5 s5" style="padding-left: 2%;">
+                        <form action="" method="post"> {% csrf_token %}
+                            <input type="hidden" name="ADDTOCART" value="{{instance.modelNumber}}" />
+                            <!--<input type="hidden" id="QUANTITY" name="QUANTITY" value="1" />-->
+                            <!--<button class="w3-button w3-teal" onclick="quantityValidation(this)">Add To Cart</button>-->
+                            <button class="w3-button w3-teal">Add To Cart</button>
+                        </form>
+                    </div>
+                    <div class="w3-col l5 m5 s5">
+                        <form action="" method="post"> {% csrf_token %}
+                            <input type="hidden" name="BUYNOW" value="{{instance.modelNumber}}" />
+                            <!--<input type="hidden" name="BUYNOW" value="{{instance.modelNumber}}/{{instance.quantity}}" />-->
+                            <!--<input type="hidden" id="QUANTITY" name="QUANTITY" value="1" />-->
+                            <!--<button class="w3-button w3-black" onclick="quantityValidation(this)">Buy Now</button>-->
+                            <button class="w3-button w3-black">Buy Now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-col w3-align-left l8 m6 s8" style="padding-left:15%;" id="rightSideDetailPannel">
+                <div class="w3-row" style="padding-bottom:1%;">
+                    <div class="w3-xlarge">{{ instance.title }}</div>
+                </div>
+                <div class="w3-row" style="padding-bottom:1%;">
+                    <div class="w3-large"><b>₹{{ instance.price }}</b></div>
+                </div>
+                <div class="w3-row" style="padding-top:2%;">
+                    <b>Highlights of this item</b>
+                    <ul>
+                        {% for key, value in dataData.Highlight.items %}
+                        <li>
+                            <medium>{{ key }}</medium>:
+                            <medium>{{ value }}</medium>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="w3-col w3-align-left l6 m6 s8 img-zoom-result w3-card-4" id="myZoomImageOutputId" onmouseover="hideZoomImage()">
+            </div>
+        </div>
+    </div>
+    <script>
+        /*
+        function quantityChange() {
+            document.getElementById("QUANTITY").value = document.getElementById("ProductQuantity").value
+        }
+        */
+        /*
+        function quantityValidation(button) {
+            
+            if (document.getElementById("ProductQuantity").value == '') {
+                button.setCustomValidity('Please enter quantity');
+            } else {
+                button.setCustomValidity('');
+            }
+        }
+        */
+    </script>
+    <script>
+        window.onload = function() {
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        };
+
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        var slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("demo");
+            var captionText = document.getElementById("caption");
+            if (n > slides.length) {
+                slideIndex = 1
+            }
+            if (n < 1) {
+                slideIndex = slides.length
+            }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += "active";
+            captionText.innerHTML = dots[slideIndex - 1].alt;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+
+<table class="w3-card w3-table" id="ProductTable">
+    <tr style="background-color:azure">
+        <th><br></th>
+        <th><br></th>
+        <th>ALTER HOME SLIDER</th>
+        <th><br></th>
+    </tr>
+    <tr >
+        <th><br></th>
+        <th class="w3-text-blue">Home</th>
+        <th><br></th>
+    </tr>
+    {% for message in messages%}
+    <tr>
+        <td><br></td>
+        <td><br></td>
+        {% if productId == "" %}
+            <td class="w3-text-red">Error:: {{ message }} </td>
+        {% else %}
+            <td class="w3-text-green">Success:: {{ message }} </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <tr>
+            <td><br></td>
+            <td>Slider Image</td>
+            <td>
+                <input type="file" id="image" name="image" required>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>isActive</td>
+            <td>
+                <input type="radio" name="isActive" id="isActive" value="True"> Yes
+                <input type="radio" name="isActive" id="isActive" value="False"> No
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>product Redirect Url</td>
+            <td>
+                <input type="url" name="productRedirectUrl" id="productRedirectUrl" value="" placeholder="RedirectUrl" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Slider Description</td>
+            <td>
+                <textarea name="description" id="description" rows="4" cols="50" placeholder="Slider Description"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td><br></td>
+            <td class="w3-small">
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;">
+                    save
+                </button>
+            </td>
+        </tr>
+        
+        <input type="hidden" id="action" name="action" value="homeSlider">
+        <input type="hidden" name="formAddProductAction" value="alterData">
+    </form>
+</table>

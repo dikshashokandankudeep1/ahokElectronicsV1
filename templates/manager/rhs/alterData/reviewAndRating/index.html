@@ -1,0 +1,88 @@
+
+<table class="w3-card w3-table" id="ProductTable">
+    <tr style="background-color:azure">
+        <th><br></th>
+        <th><br></th>
+        <th>ALTER REVIEW AND RATING</th>
+        <th><br></th>
+    </tr>
+    <tr>
+        <th><br></th>
+        <th class="w3-text-blue">Home</th>
+        <th><br></th>
+    </tr>
+    {% for message in messages%}
+    <tr>
+        <td><br></td>
+        <td><br></td>
+        {% if productId == "" %}
+            <td class="w3-text-red">Error:: {{ message }} </td>
+        {% else %}
+            <td class="w3-text-green">Success:: {{ message }} </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <tr>
+            <td><br></td>
+            <td>User Id</td>
+            <td>
+                <input type="text" name="userId" id="userId" value="" placeholder="User Id" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Product Id</td>
+            <td>
+                <input type="text" name="productId" id="productId" value="" placeholder="Product Id" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Review Description</td>
+            <td>
+                <textarea type="text" name="description" id="description" value=""  rows="4" cols="50"> </textarea>
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Rating Number</td>
+            <td>
+                <input type="number" name="rating" id="rating" value="" placeholder="Rating Number" >
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Image 1</td>
+            <td>
+                <input type="file" id="image_1" name="image_1">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Image 2</td>
+            <td>
+                <input type="file" id="image_2" name="image_2">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Date</td>
+            <td>
+                <input type="date" name="date" id="date">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td><br></td>
+            <td class="w3-small">
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;">
+                    save
+                </button>
+            </td>
+        </tr>
+        <input type="hidden" id="action" name="action" value="">
+        <input type="hidden" name="formAddProductAction" value="reviewAndRating">
+    </form>
+</table>

@@ -1,0 +1,109 @@
+<table class="w3-card w3-table" id="ProductTable">
+    <tr style="background-color:azure">
+        <th><br></th>
+        <th>ADD PRODUCT</th>
+        <th class="w3-text-blue"><small>Secondary Details</small></th>
+        <th class="w3-text-blue w3-hover-text-red" style="cursor: pointer;"><i class="fa fa-plus"></i> &nbsp; Add Item</th>
+        <input type="hidden" id="counter" value="0">
+    </tr>
+    {% for message in messages%}
+    <tr>
+        <td><br></td>
+        <td class="w3-text-red">Warning:: {{ message }} </td>
+        <td><br></td>
+    </tr>
+    {% endfor %}
+        
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <tr id="searchPannel"> 
+            <td><br></td>
+            <td>
+                <input class="w3-round-medium" type="text" id="newItemValue" name="newItemValue" value="" placeholder="Insert new item name" onkeyup="func()" required>
+            </td>
+            <td>
+                <select name="dataTypes" id="dataTypes" >
+                    <option id="opt" class="w3-bar-item" value="text" style="margin:10%">Text</option>
+                    <option value="image" style="padding:100%">Image</option>
+                    <option value="number" style="padding:100%">number</option>
+                </select>
+            </td> 
+        </tr>
+        <tr>
+        <div id="similarItemsId"></div>
+        </tr>
+        <input type="hidden" id="tickers" value="['battery', 'mouse', 'remote', 'wi-fi']">
+        <input type="hidden" name="productId" value="">
+        <input type="hidden" name="formAddProductAction" value="moreDetails">
+        <input id="skip" type="hidden" name="skip" value="">
+    </form>
+</table>
+
+<script>
+    let outputTable = ""
+    function addTag(){
+        let buttonsPannel = '<tr id="buttonsPannel"> \
+                                <td><br></td> \
+                                <td><br></td> \
+                                <td  class="w3-small"> \
+                                    <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save</button> \
+                                    <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89fff5;" onclick="fillSkipFunc()">Skip</button> \
+                                </td> \
+                            </tr> \
+                            '
+        let nameOfInput = "warranty"
+        let placeHolder = "warranty (Ex. 2Yr, 3Mon)"
+        let textType = '<input type="text" name="'+ nameOfInput +'" value="" placeholder="'+ placeHolder +'" required>'
+        let imageType = '<input type="file" id="'+ nameOfInput +'" name="'+ nameOfInput +'" required>'
+        let firstInputTag = '<tr>   \
+                                <td><br></td>   \
+                                <td>Warranty</td>   \
+                                <td>'
+                                
+        let secondInputTag =  '</td>   \
+                            </tr>' 
+        let flg = "text"
+        let InputTag = ""
+        if(flg == "text"){
+            InputTag =  firstInputTag + textType + secondInputTag
+        }
+    }
+    function addTagInput(){
+        //let tagData = 
+
+    }
+    function func(){
+        if (array.length != 0)
+        {
+            const array = document.getElementById("tickers").value.replaceAll("[","").replaceAll("]","").replaceAll("'","").split(", ")
+            
+            console.log(array)
+            
+            const substring = document.getElementById("newItemValue").value;
+
+            var arrMatchedData = []
+            const match = array.find(element => {
+                if (element.includes(substring)) {
+                    arrMatchedData.push(element)
+                    //return true;
+                }
+            });
+
+            console.log("matched data::", match); // 👉️ hello
+            console.log("arrMatchedData::", arrMatchedData)
+            let similarItemsId = ""
+            
+            for(let i=0; i < arrMatchedData.length; i++) {
+                similarItemsId += "<p>" + arrMatchedData[i] + "</p>";
+            }
+            document.getElementById("similarItemsId").innerHTML  = similarItemsId
+            //if (match !== undefined) {
+            // array contains substring match
+            //}
+        }
+    }
+
+
+    function fillSkipFunc(){
+        document.getElementById("skip").value = "skip";
+    }
+</script>

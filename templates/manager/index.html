@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+
+    <script src="{% static 'js/common/universal/all.js' %}"></script>
+    <script src="{% static 'js/adminPage.js' %}"></script>
+</head>
+
+<body>
+    {% include 'common/header/header.html' %}
+    <div class="w3-row " style="margin-top: 5.5%;" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-col l1 m1 s1 w3-center"><br></div>
+        <div class="w3-col l2 m2 w3-left" style="padding-right: 1%;">
+            {% include 'manager/lhs/Pannel.html' %}
+        </div>
+
+        <div class="w3-col l6 m8 w3-center" style="margin-left: 2%;">
+            {% if touds == "home" %}
+                {% include 'manager/rhs/home.html' %}
+            {% elif touds == "usersProfiles" %}
+                {% include 'manager/rhs/usersProfiles.html' %}
+            {% elif touds == "alterProduct" %}
+                {% if secondTouds == "home" %}
+                    {% include 'manager/rhs/alterData/index.html' %}
+                {% elif secondTouds == "homeSlider" %}
+                    {% include 'manager/rhs/alterData/homeSlider/index.html' %}
+                {% elif secondTouds == "homeImages" %}
+                    {% include 'manager/rhs/alterData/homeImages/index.html' %}
+                {% elif secondTouds == "payment" %}
+                    {% include 'manager/rhs/alterData/payment/index.html' %}
+                {% elif secondTouds == "promocode" %}
+                    {% include 'manager/rhs/alterData/promocode/index.html' %}
+                {% elif secondTouds == "reviewAndRating" %}
+                    {% include 'manager/rhs/alterData/reviewAndRating/index.html' %}
+                {% elif secondTouds == "productIndex" %}
+                    {% include 'manager/rhs/alterData/alterProduct/index.html' %}
+                {% elif secondTouds == "update" %}
+                    {% include 'manager/rhs/alterData/alterProduct/update/index.html' %}
+                {% elif secondTouds == "view" %}
+                    {% include 'manager/rhs/alterData/alterProduct/view/index.html' %}
+                {% elif secondTouds == "primaryDetails" %}
+                    {% include 'manager/rhs/alterData/alterProduct/add/primary.html' %}
+                {% elif secondTouds == "moreDetails" %}
+                    {% include 'manager/rhs/alterData/alterProduct/add/second.html' %}
+                {% elif secondTouds == "hoverImages" %}
+                    {% include 'manager/rhs/alterData/alterProduct/add/ternary.html' %}
+                {% elif secondTouds == "descriptionAndSpacificationManage" %}
+                    {% include 'manager/rhs/alterData/alterProduct/add/quaterly.html' %}
+                {% endif %}
+            {% elif touds == "manageStoreItems" %}
+                {% include 'manager/rhs/manageStore.html' %}
+            {% elif touds == "alterPaymentDetails" %}
+                {% include 'manager/rhs/managePayments.html' %}
+            {% elif touds == "emailandMessaging" %}
+                {% include 'manager/rhs/manageEmailAndMobile.html' %}
+            {% elif touds == "console" %}
+                {% include 'manager/rhs/console.html' %}
+            {% elif touds == "logout" %}
+                {% include 'manager/rhs/logout.html' %}
+            {% endif %}
+        </div>
+    </div>
+<script>
+    window.onload = function() {
+        document.getElementById("dropdownMenuProfile").style.display = "none";
+    };
+
+    function dropdownMenuProfileHide(){
+        document.getElementById("dropdownMenuProfile").style.display = "none";
+    }
+
+</script>
+
+</body>
+
+</html>

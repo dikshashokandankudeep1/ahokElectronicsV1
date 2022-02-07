@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<title>Ashok Elcetronics</title>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
+    <script src="{% static 'js/adminPage.js' %}"></script>
+</head>
+
+<!--<body onload="subpageload('Add Product')">-->
+
+<body onload="subpageload('ProductDelivery')">
+    <div class="w3-container">
+        <div><br></div>
+        <div class="w3-bar w3-black">
+            <button class="w3-btn w3-hover-dark-grey" id="bt:Add Product" onclick="subpageload('Add Product')"><small>Add Product</small></button>
+            <button class="w3-btn w3-hover-dark-grey" id="bt:ProductDelivery" onclick="subpageload('ProductDelivery')"><small>ProductDelivery</small></button>
+            <button class="w3-btn w3-hover-dark-grey" id="bt:UserPurchaseInfo" onclick="subpageload('UserPurchaseInfo')"><small>UserPurchaseInfo</small></button>
+        </div>
+    </div>
+    <div class="w3-row l12 m12" id="Add Product">
+        <div class="w3-col l9 m8 w3-center" style="padding-left:20%;padding-top:5%;padding-bottom:5%;">
+            <form action="/admin_page" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                <table class="w3-table w3-striped w3-hoverable w3-card-4" id="ProductTable">
+                    <tr id="filter_type">
+                        <th>Filter Type</th>
+                        <td style="width:30%">
+                            <select class="w3-select w3-border" name="filter_type" onchange="myFilterFunction(this)" required>
+                                <option value="" disabled selected> Select Filter</option>
+                                <option value="NO-FILTER">Add Products</option>
+                                <option value="HOME-SLIDER">Add Home Slider Image</option>
+                                <option value="HOME-CATEGORY-ITEMS">Add Home Icons Image</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="w3-center">
+                            <button class="w3-btn w3-round-medium w3-teal w3-center" value="Save">UpLoad Data</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="w3-row" id="ProductDelivery">
+        <div class="w3-col l8 m8 w3-center" style="padding-left:5%;padding-top:5%;padding-bottom:5%;">
+            <input class="w3-input w3-border w3-padding" type="text" placeholder="Search for user Id ..." id="myInput" onkeyup="myFunction()">
+            <form action="/admin_page" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                <table class="w3-table-all w3-margin-top" id="myTable">
+                    <tr>
+                        <th>User ID</th>
+                        <th>Current Order Status</th>
+                        <th>Order Action</th>
+                        <th>validate</th>
+                    </tr>
+                    {% for order in dataDictList%}
+                    <tr onclick="showUserDetail('{{order.username}}', '{{order.trxnid}}', '{{order.paidamount}}')">
+                        <td>{{order.userId}}</td>
+                        <td class="w3-text-green">{{order.orderStatus}}</td>
+                        <form action="" method="post"> {% csrf_token %}
+                            <td>
+                                <div class="w3-dropdown-hover w3-mobile">
+                                    <select class="w3-select w3-border" id="{{order.orderId}}_orderAction" name="{{order.orderId}}_orderAction">
+                                    <option value="" disabled selected> Order Action </option>
+                                    <option value="WTRXNID">Wrong transactionID</option>
+                                    <option value="CTRXNID">Correct transactionID</option>
+                                    <option value="POS">product out of stock</option>
+                                </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="userId" value="{{order.userId}}" />
+                                <input type="hidden" name="testorderId" value="{{order.orderId}}" />
+                                <button class="w3-btn w3-round-medium w3-teal w3-center" value="Save" onclick="orderActionValidation(this, '{{order.orderId}}')">Generate Bill</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </form>
+        </div>
+        <div class="w3-col l4 m8 w3-center" style="padding-left:1%;padding-top:5%;padding-bottom:5%;">
+            <table class="w3-table w3-border" id="myTable">
+                <tr class="w3-teal">
+                    <th colspan="2">
+                        User Payment Detail
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <b>User Name</b>
+                    </td>
+                    <td id="username"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Transaction ID</b>
+                    </td>
+                    <td id="trxnid"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Paid Amount</b>
+                    </td>
+                    <td id="paidamount"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="w3-row l12 m12" id="UserPurchaseInfo">
+        <div class="w3-col l9 m8 w3-center" style="padding-left:20%;padding-top:5%;padding-bottom:5%;">
+            <form action="userDataShowAction" target="_blank" id="form_id" method="GET">
+                <div class="w3-row">
+                    <div class="w3-col l4"> User ID </div>
+                    <div class="w3-col l4">
+                        <input id="UserID" type="text" placeholder="User ID" required/>
+                    </div>
+                    <div class="w3-col l4">
+                        <small>
+                            <button class="w3-btn w3-round-medium w3-teal w3-center" onclick="userDataShowAction()" value="Save">
+                                Open User Detail
+                            </button>
+                        </small>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function userDataShowAction() {
+            typeofuserdatashow = 1;
+            document.getElementById("form_id").action = "/user/" + document.getElementById("UserID").value + "/" + typeofuserdatashow;;
+        }
+    </script>
+    <script>
+        manuTagList = ["Add Product", "ProductDelivery", "UserPurchaseInfo"]
+
+        function subpageload(menuTagName) {
+            for (index = 0; index < manuTagList.length; index++) {
+                if (manuTagList[index] == menuTagName) {
+                    document.getElementById("bt:" + menuTagName).style.backgroundColor = "#228B22"
+                    document.getElementById(manuTagList[index]).style.display = "block";
+                } else {
+                    document.getElementById("bt:" + manuTagList[index]).style.backgroundColor = "#708090"
+                    document.getElementById(manuTagList[index]).style.display = "none";
+                }
+            }
+        }
+
+        function myFunction() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function showUserDetail(username, paymentTransactionID, onOrderPaidAmount) {
+            document.getElementById("username").innerHTML = username
+            document.getElementById("trxnid").innerHTML = paymentTransactionID
+            document.getElementById("paidamount").innerHTML = "₹ " + onOrderPaidAmount + "/-";
+        }
+
+        function orderActionValidation(button, orderId) {
+            orderAction = document.getElementById((orderId + "_orderAction"))
+            if (orderAction[orderAction.selectedIndex].value == '') {
+                button.setCustomValidity('Please select Order Action');
+            } else {
+                button.setCustomValidity('');
+            }
+        }
+    </script>
+</body>
