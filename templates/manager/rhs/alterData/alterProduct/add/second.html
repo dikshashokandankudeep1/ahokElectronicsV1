@@ -32,7 +32,12 @@
                 <td><br></td>
                 <td>Description 1</td>
                 <td>
-                    <input type="text" name="1_Name" id="1_Name" value="" placeholder="Name" required>
+                    <input type="text" name="1_Name" id="1_Name" list="tickerList" value="" placeholder="Name" required>
+                    <datalist id="tickerList">
+                        {% for item in tickerList%}
+                            <option value="{{item}}">{{item}}</option>
+                        {% endfor %}
+                    </datalist>
                 </td>
                 <td>
                     <input type="text" name="1_Value" id="1_Value" value="" placeholder="Value" required>
@@ -42,7 +47,7 @@
                 <td><br></td>
                 <td>Description 2</td>
                 <td>
-                    <input type="text" name="2_Name" id="2_Name" value="" placeholder="Name" >
+                    <input type="text" name="2_Name" id="2_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="2_Value" id="2_Value" value="" placeholder="Value" >
@@ -52,7 +57,7 @@
                 <td><br></td>
                 <td>Description 3</td>
                 <td>
-                    <input type="text" name="3_Name" id="3_Name" value="" placeholder="Name" >
+                    <input type="text" name="3_Name" id="3_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="3_Value" id="3_Value" value="" placeholder="Value" >
@@ -62,7 +67,7 @@
                 <td><br></td>
                 <td>Description 4</td>
                 <td>
-                    <input type="text" name="4_Name" id="4_Name" value="" placeholder="Name" >
+                    <input type="text" name="4_Name" id="4_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="4_Value" id="4_Value" value="" placeholder="Value" >
@@ -72,7 +77,7 @@
                 <td><br></td>
                 <td>Description 5</td>
                 <td>
-                    <input type="text" name="5_Name" id="5_Name" value="" placeholder="Name" >
+                    <input type="text" name="5_Name" id="5_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="5_Value" id="5_Value" value="" placeholder="Value" >
@@ -82,7 +87,7 @@
                 <td><br></td>
                 <td>Description 6</td>
                 <td>
-                    <input type="text" name="6_Name" id="6_Name" value="" placeholder="Name" >
+                    <input type="text" name="6_Name" id="6_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="6_Value" id="6_Value" value="" placeholder="Value" >
@@ -92,7 +97,7 @@
                 <td><br></td>
                 <td>Description 7</td>
                 <td>
-                    <input type="text" name="7_Name" id="7_Name" value="" placeholder="Name" >
+                    <input type="text" name="7_Name" id="7_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="7_Value" id="7_Value" value="" placeholder="Value" >
@@ -102,7 +107,7 @@
                 <td><br></td>
                 <td>Description 8</td>
                 <td>
-                    <input type="text" name="8_Name" id="8_Name" value="" placeholder="Name" >
+                    <input type="text" name="8_Name" id="8_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="8_Value" id="8_Value" value="" placeholder="Value" >
@@ -112,7 +117,7 @@
                 <td><br></td>
                 <td>Description 9</td>
                 <td>
-                    <input type="text" name="9_Name" id="9_Name" value="" placeholder="Name" >
+                    <input type="text" name="9_Name" id="9_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="9_Value" id="9_Value" value="" placeholder="Value" >
@@ -122,7 +127,7 @@
                 <td><br></td>
                 <td>Description 10</td>
                 <td>
-                    <input type="text" name="10_Name" id="10_Name" value="" placeholder="Name" >
+                    <input type="text" name="10_Name" id="10_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="10_Value" id="10_Value" value="" placeholder="Value" >
@@ -132,7 +137,7 @@
                 <td><br></td>
                 <td>Description 11</td>
                 <td>
-                    <input type="text" name="11_Name" id="11_Name" value="" placeholder="Name" >
+                    <input type="text" name="11_Name" id="11_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
                     <input type="text" name="11_Value" id="11_Value" value="" placeholder="Value" >
@@ -142,7 +147,7 @@
                 <td><br></td>
                 <td>Description 12</td>
                 <td>
-                    <input type="text" name="12_Name" id="12_Name" value="" placeholder="Name">
+                    <input type="text" name="12_Name" id="12_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
                     <input type="text" name="12_Value" id="12_Value" value="" placeholder="Value">
@@ -152,7 +157,7 @@
                 <td><br></td>
                 <td>Description 13</td>
                 <td>
-                    <input type="text" name="13_Name" id="13_Name" value="" placeholder="Name">
+                    <input type="text" name="13_Name" id="13_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
                     <input type="text" name="13_Value" id="13_Value" value="" placeholder="Value">
@@ -162,7 +167,7 @@
                 <td><br></td>
                 <td>Description 14</td>
                 <td>
-                    <input type="text" name="14_Name" id="14_Name" value="" placeholder="Name">
+                    <input type="text" name="14_Name" id="14_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
                     <input type="text" name="14_Value" id="14_Value" value="" placeholder="Value">
@@ -172,7 +177,7 @@
                 <td><br></td>
                 <td>Description 15</td>
                 <td>
-                    <input type="text" name="15_Name" id="15_Name" value="" placeholder="Name">
+                    <input type="text" name="15_Name" id="15_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
                     <input type="text" name="15_Value" id="15_Value" value="" placeholder="Value">

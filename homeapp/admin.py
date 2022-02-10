@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from .models import  usertable, userAddressBook, userordertable, userOrderGrouptable, messagetable, \
     productsTablePrimary, productsTableSecodary, productsTableTernary, productsTableQuaterly,\
-    paymentTable, promoCodes, homeSliderImageTable, homeProductListImagesTable, reviewAndRatingTable#, hometable
+    paymentTable, promoCodes, homeSliderImageTable, homeProductListImagesTable, reviewAndRatingTable, \
+    tickerTable
 
 #admin.site.register(hometable)
 admin.site.register(usertable)
@@ -19,3 +20,4 @@ admin.site.register(promoCodes)
 admin.site.register(homeSliderImageTable)
 admin.site.register(homeProductListImagesTable)
 admin.site.register(reviewAndRatingTable)
+admin.site.register(tickerTable)

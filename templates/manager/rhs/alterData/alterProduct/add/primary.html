@@ -34,7 +34,12 @@
             <td><br></td>
             <td>Category</td>
             <td>
-                <input type="text" name="category" id="category" value="" placeholder="category" required>
+                <input type="text" name="category" id="category" list="categoryList" value="" placeholder="category" required>
+                <datalist id="categoryList">
+                    {% for item in categoryList%}
+                        <option value="{{item}}">{{item}}</option>
+                    {% endfor %}
+                </datalist>
             </td>
         </tr>
         <tr>
@@ -62,21 +67,21 @@
             <td><br></td>
             <td>Price</td>
             <td>
-                <input type="text" name="price" value="" placeholder="price" required>
+                <input type="number" name="price" value="" placeholder="price" required>
             </td>
         </tr>
         <tr>
             <td><br></td>
             <td>Quantity</td>
             <td>
-                <input type="text" name="quantity" value="" placeholder="quantity" required>
+                <input type="number" name="quantity" value="" placeholder="quantity" required>
             </td>
         </tr>
         <tr>
             <td><br></td>
             <td>Warranty</td>
             <td>
-                <input type="text" name="warranty" value="" placeholder="warranty (Ex. 2Yr, 3Mon)" required>
+                <input type="text" name="warranty" value="2Yr, 3Month" placeholder="warranty (Ex. 2Yr, 3Mon)" required>
             </td>
         </tr>
         <tr>
@@ -90,7 +95,9 @@
             <td><br></td>
             <td><br></td>
             <td  class="w3-small">
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save and Next</button>
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;" onclick="categoryCheck()">
+                    Save and Next
+                </button>
             </td>
         </tr>
         <input type="hidden" name="userRatings" value="5">
@@ -113,14 +120,43 @@
             title = title + modelNumber + " "
         }
         if(category != ""){
-            title = title + category + " "
+            //title = title + category + " "
         }
         if(subCategory != ""){
-            title = title + subCategory
+            //title = title + subCategory
         }
         if(title != ""){
             document.getElementById("title").value = title;
             document.getElementById("title").size = title.length;
         }
+    }
+
+    function categoryCheck(){
+        categoryList = ""
+        categoryList = '{{categoryList}}'
+        categoryList = categoryList.replaceAll('&#x27;', "").replaceAll("[", '').replaceAll("]", '').split(", ")
+
+        categoryItem = document.getElementById("category").value
+        console.log("categoryItem::",categoryItem)
+        const found = categoryList.find(element => element == categoryItem);
+        //const found = categoryList.findIndex(element => element.includes(categoryItem));
+        console.log("found::", found)
+        
+        if(typeof(found) == "undefined"){
+            for(i=0; i<categoryList.length; i++){
+                if(categoryList[i].includes("/")){
+                    console.log("data is unmatched for::", categoryList[i])
+                }
+                const found1 = (categoryList[i].split("/")).find(element => element == categoryItem);
+                if(typeof(found1) == "undefined")
+                {
+                    document.getElementById("category").setCustomValidity('selected item is not matched with store')
+                }
+            }
+        }
+
+        //categoryList.replaceALL("&#x27;", '')
+        console.log("categoryList::", categoryList)
+
     }
 </script>

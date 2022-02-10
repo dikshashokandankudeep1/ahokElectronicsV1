@@ -50,4 +50,5 @@ class HomeProductListImagesTableForm(forms.ModelForm):
             'image',
             'isActive',
             'category',
+            'shape'
         ]

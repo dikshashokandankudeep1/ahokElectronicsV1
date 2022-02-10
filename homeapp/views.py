@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from .models import usertable, userAddressBook, userordertable, userOrderGrouptable, \
                     homeSliderImageTable, homeProductListImagesTable,\
                     productsTablePrimary, productsTableSecodary, productsTableTernary, \
-                    paymentTable
+                    paymentTable, tickerTable
 
 
 from django.contrib.auth.models import User, auth
@@ -41,10 +41,29 @@ def manager_View(request, touds):
             print("manager_View POST 7")
             print("other posibilities")
     print("manager_View 8")
+
+    categoryList = []
+    if secondTouds == "primaryDetails":
+        for obj in tickerTable.objects.values_list():
+            categoryList = [ item.split("|")[0] for item in obj[2].replace("[", "").replace("]", "").replace("'", "").split(", ")]
+
+    #secondTouds = "moreDetails"
+
+    tickerList = []
+    if secondTouds == "moreDetails":
+        for obj in tickerTable.objects.values_list():
+            tickerList = [ item.split("|")[0] for item in obj[1].replace("[", "").replace("]", "").replace("'", "").split(", ")]
+            
+        print("tickerList::", tickerList)
+        
+    print("---------------secondTouds---------", secondTouds)
+
     context = {
         "touds" : touds,
         "secondTouds" : secondTouds, 
-        "productId" : productId
+        "productId" : productId,
+        "categoryList" : categoryList,
+        "tickerList" : tickerList
     }
     return render(request, "manager/index.html", context)
 
@@ -106,7 +125,7 @@ def ProductList_view(request, categoryName):
         elif request.POST.__contains__("signIn"):
             setSession(request, 'lastPageUrl', request.get_full_path())
             #request.session['lastPageUrl'] = request.get_full_path()
-            print("Home_view 0 POST request.session['lastPageUrl']::",getSession(request, 'lastPageUrl'))
+            print("ProductList_view 0 POST request.session['lastPageUrl']::",getSession(request, 'lastPageUrl'))
             return redirect('/login')
 
     categoryObj     =   productsTablePrimary.objects.filter(category=categoryName)

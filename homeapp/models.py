@@ -1,3 +1,4 @@
+from turtle import width
 from django.db import models
 
 class paymentTable(models.Model):
@@ -21,6 +22,12 @@ class paymentTable(models.Model):
         else:
             return False
 
+class tickerTable(models.Model):
+    tickerList  = models.CharField(blank = True, max_length=5000, default="[]")
+    categoryList  = models.CharField(blank = True, max_length=5000, default="[]")
+    categoryTickerMapList  = models.CharField(blank = True, max_length=50000, default="{}")
+    categorySubCategoryMapList  = models.CharField(blank = True, max_length=50000, default="{}")
+
 class promoCodes(models.Model):
     promoCodeId             = models.CharField(blank = True, max_length=50, default="")
     isActive                = models.BooleanField(blank=True, default=True)
@@ -41,7 +48,8 @@ class homeProductListImagesTable(models.Model):
     image       = models.ImageField(blank=True, null=True)
     isActive    = models.BooleanField(blank=True, default=True)
     category    = models.CharField(blank = True, max_length=50, default="")
-
+    shape       = models.CharField(blank = True, max_length=50, default="")
+    
 class reviewAndRatingTable(models.Model):
     userId              =   models.CharField(blank = True, max_length=50, default="")
     productId           =   models.CharField(blank = True, max_length=50, default="")
@@ -108,7 +116,7 @@ class productsTableSecodary(models.Model):
 
 
 class productsTablePrimary(models.Model):
-    modelNumber     =   models.CharField(blank=True, max_length=50, default="", primary_key=True)
+    modelNumber     =   models.CharField(blank=True, max_length=50, default="")
     category        =   models.CharField(blank = True, max_length=50, default="")
     subCategory     =   models.CharField(blank = True, max_length=50, default="")
     brandName       =   models.CharField(blank = True, max_length=50, default="")

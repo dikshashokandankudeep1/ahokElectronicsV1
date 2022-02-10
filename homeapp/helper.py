@@ -1,46 +1,132 @@
 from django.contrib import messages
-from .models import productsTablePrimary, productsTableSecodary, productsTableQuaterly, paymentTable
+from .models import productsTablePrimary, productsTableSecodary, productsTableQuaterly, paymentTable, tickerTable
 
 from .forms import ProductsTablePrimaryForm, ProductsTableTernaryForm, HomeSliderImageTableForm, \
         HomeProductListImagesTableForm
 
 
-def alterProductManagePOST(request):
+def updateTikerTableCategoryList(request):
 
-    def handleProductsTableSecodary(request):
-        print("handleProductsTableSecodary 1 request.POST::", request.POST)
-        
-        dataList = []
-        counter = 0
-        for index in ["%d" %i for i in range(1,16)]:
-            if(request.POST[index + "_Value"] != ""):
-                dataList.append(request.POST[index + "_Name"] + "|" + request.POST[index + "_Value"])
-                counter = counter + 1
-        
-        print("handleProductsTableSecodary 2")
-        for index in ["%d" %i for i in range(counter, 16)]:
-            dataList.append("")
+    if len(tickerTable.objects.all()) == 0:
+        tickerTable_ = tickerTable(tickerList="[]", categoryList=str([request.POST["category"]]), 
+                        categoryTickerMapList="{}", categorySubCategoryMapList="{}")
+        tickerTable_.save()
+    else:
+        for obj in tickerTable.objects.values_list():
+            categoryList = []
+            if obj[2] == "[]":
+                categoryList.append(request.POST["category"])
+            else:
+                categoryList = [ item.split("|")[0] for item in obj[2].replace("[", "").replace("]", "").replace("'", "").split(", ")]
+            
+                if request.POST["category"] not in categoryList:
+                    categoryList.append(request.POST["category"])
 
-        print("handleProductsTableSecodary 3")
-        if request.POST.__contains__("productId"):
-            print("handleProductsTableSecodary 4")
-            _productsTableSecodary =  productsTableSecodary(productId=request.POST["productId"], 
-                    otherFeature_1=dataList[0], otherFeature_2=dataList[1], otherFeature_3=dataList[2], 
-                    otherFeature_4=dataList[3], otherFeature_5=dataList[4], otherFeature_6=dataList[5], 
-                    otherFeature_7=dataList[6], otherFeature_8=dataList[7], otherFeature_9=dataList[8], 
-                    otherFeature_10=dataList[9], otherFeature_11=dataList[10], otherFeature_12=dataList[11], 
-                    otherFeature_13=dataList[12], otherFeature_14=dataList[13], otherFeature_15=dataList[14])
-            print("handleProductsTableSecodary 5")
-            _productsTableSecodary.save()
-            print("handleProductsTableSecodary 6")
+            for obj in tickerTable.objects.all():
+                obj.categoryList = categoryList
+                obj.save()
 
-            return request, "hoverImages", request.POST["productId"]
 
+def updateTikerTableCategorySubCategoryMapList(request):
+
+    for obj in tickerTable.objects.values_list():
+        #print("obj::", obj)
+        categorySubCategoryMapList = {}
+
+        if obj[4] == "{}":
+            categorySubCategoryMapList[request.POST["category"]] = request.POST["subCategory"]
         else:
-            print("handleProductsTableSecodary 7")
-            return request, "hoverImages", ""
+            categorySubCategoryMapList = dict( (key, value.split(", ")) for key, value in dict([ item.replace("]", "").split(": ") for item in obj[4].replace("{", "").replace("}", "").replace("'", "").replace("[", "").split("], ") ]).items())
+            
+            if categorySubCategoryMapList.__contains__(request.POST["category"]):
+                if request.POST["subCategory"] not in categorySubCategoryMapList[request.POST["category"]]:
+                    categorySubCategoryMapList[request.POST["category"]].append(request.POST["subCategory"])
+            else:
+                categorySubCategoryMapList[request.POST["category"]] = [request.POST["subCategory"]]
 
+        for obj in tickerTable.objects.all():
+            obj.categorySubCategoryMapList = str(categorySubCategoryMapList)
+            obj.save()    
+    
+        #print("categorySubCategoryMapList::", categorySubCategoryMapList)
+
+
+    
+def updateTikerTableTicker(request, dataList):
+
+    dataListSet = [ item.split("|")[0] for item in dataList]
+
+    print("Before tickerTable.objects.all()::", tickerTable.objects.all())
+    
+    for obj in tickerTable.objects.values_list():
+        dbCommonDataList = []
+        tickerList = []
+        if obj[1] == "[]":
+            dbCommonDataList = dataListSet
+        else:
+            tickerList = [ item.split("|")[0] for item in obj[1].replace("[", "").replace("]", "").replace("'", "").split(", ")]
+            dbCommonDataList = list(set(tickerList + dataListSet))
+
+        print("obj[3]::", obj[3])
+        categoryTickerMapList = {}
+        productsTablePrimary_ = productsTablePrimary.objects.filter(modelNumber=request.POST["productId"])[0]
+        if obj[3] == "{}":
+            categoryTickerMapList[productsTablePrimary_.category] = dbCommonDataList
+        else:
+            categoryTickerMapList = dict( (key, value.split(", ")) for key, value in dict([ item.replace("]", "").split(": ") for item in obj[3].replace("{", "").replace("}", "").replace("'", "").replace("[", "").split("], ") ]).items())
+            
+            if categoryTickerMapList.__contains__(productsTablePrimary_.category):
+                categoryTickerMapList = list(set(categoryTickerMapList[productsTablePrimary_.category] + dbCommonDataList))
+            else:
+                categoryTickerMapList[productsTablePrimary_.category] = dbCommonDataList
+
+        print("After tickerTable.objects.all()::", tickerTable.objects.all())
+        for obj in tickerTable.objects.all():
+            obj.tickerList = dbCommonDataList
+            obj.categoryTickerMapList = str(categoryTickerMapList)
+            obj.save()
+
+def handleProductsTableSecodary(request):
+    print("handleProductsTableSecodary 1 request.POST::", request.POST)
+    
+    dataList = []
+    counter = 0
+    for index in ["%d" %i for i in range(1,16)]:
+        if(request.POST[index + "_Value"] != ""):
+            dataList.append(request.POST[index + "_Name"] + "|" + request.POST[index + "_Value"])
+            counter = counter + 1
+
+    updateTikerTableTicker(request, dataList)
+    
+    print("handleProductsTableSecodary 2")
+    for index in ["%d" %i for i in range(counter, 16)]:
+        dataList.append("")
+
+    print("handleProductsTableSecodary 3")
+    if request.POST.__contains__("productId"):
+        print("handleProductsTableSecodary 4")
+        _productsTableSecodary =  productsTableSecodary(productId=request.POST["productId"], 
+                otherFeature_1=dataList[0], otherFeature_2=dataList[1], otherFeature_3=dataList[2], 
+                otherFeature_4=dataList[3], otherFeature_5=dataList[4], otherFeature_6=dataList[5], 
+                otherFeature_7=dataList[6], otherFeature_8=dataList[7], otherFeature_9=dataList[8], 
+                otherFeature_10=dataList[9], otherFeature_11=dataList[10], otherFeature_12=dataList[11], 
+                otherFeature_13=dataList[12], otherFeature_14=dataList[13], otherFeature_15=dataList[14])
+        print("handleProductsTableSecodary 5")
+        
+        _productsTableSecodary.save()
+        
+        print("handleProductsTableSecodary 6")
+
+        return request, "hoverImages", request.POST["productId"]
+
+    else:
+        print("handleProductsTableSecodary 7")
+        return request, "hoverImages", ""
+
+
+def alterProductManagePOST(request):
     print("alterProductManagePOST POST::", request.POST)
+
     if request.POST["formAddProductAction"] == "alterData":
         if request.POST.__contains__("redirect"):
             print("alterData 1")
@@ -58,6 +144,7 @@ def alterProductManagePOST(request):
             form = HomeProductListImagesTableForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
+                updateTikerTableCategoryList(request)
                 return request, "home", ""
             else:
                 print("error::form invalid:: HomeProductListImagesTableForm")
@@ -108,6 +195,8 @@ def alterProductManagePOST(request):
             print("primaryDetails 3")
             if form.is_valid():
                 form.save()
+                updateTikerTableCategorySubCategoryMapList(request)
+            
                 print("primaryDetails 4::", request.POST["modelNumber"])
                 return request, "moreDetails", request.POST["modelNumber"]
             else:
@@ -149,7 +238,8 @@ def alterProductManagePOST(request):
         else:
             print("descriptionAndSpacificationManage 2")
             productsTableQuaterly_ = productsTableQuaterly(productId=request.POST["productId"], 
-                    description=request.POST["description"], specifications=request.POST["specifications"])
+                                        description=request.POST["description"], 
+                                        specifications=request.POST["specifications"])
             productsTableQuaterly_.save()
             messages.info(request, ("modelNumber:- '"+ request.POST["productId"] +"' saved"))
             return request, "home", request.POST["productId"]
