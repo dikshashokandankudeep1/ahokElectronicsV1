@@ -40,9 +40,14 @@
                     </div>
                 </div>
                 <div class="w3-row" style="padding-top:5%;">
-                    <div class="w3-col w3-large l10 m12 s12 w3-border-top" style="padding-top:2%; padding-bottom:2%">
+                    <div class="w3-col w3-large l8 m12 s12 w3-border-top" style="padding-top:2%; padding-bottom:2%">
                         Shipment
                     </div>
+                    <div class="w3-col l2 w3-border-top" style="padding-top:2%; padding-bottom:2%">
+                        <small class="w3-text-blue w3-hover-text-red" style="cursor: pointer;">
+                            <a href="\" style="text-decoration: none;"><i class="fa fa-plus"></i>  Add more items</a> 
+                        </small>
+                    </div>                    
                 </div>
                 <div class="w3-row">
                     <div class="w3-col l10 m12 s12">
@@ -70,7 +75,7 @@
                                 <div class="w3-row " style="padding-bottom: 1%; ">
                                     <small class=" w3-text-grey ">Sub Total - </small>
                                     <small>₹ {% widthratio product.price 1 product.quantity %} </small>
-                                    <small class="w3-text-blue w3-hover-text-red" style="cursor: pointer;"><a href="\" style="text-decoration: none;"><br>Add more items</a> </small>
+                                    
                                 </div>
                             </li>
                             {% endfor %}
@@ -230,7 +235,7 @@
             for (var i=0; i<maxLimitErrorList.length; i++){                
                 quantity = parseInt(maxLimitErrorList[i].split(", ")[3].replaceAll(" ", '').split(":")[1])
                 storeQuantity = parseInt(maxLimitErrorList[i].split(", ")[4].replaceAll("}", '').replaceAll(" ", '').split(":")[1])
-                itemID = maxLimitErrorList[i].split(", ")[0].replaceAll(" ", '').split(":")[1]
+                itemID = maxLimitErrorList[i].split(", ")[0].replaceAll(": ", ':').split(":")[1]
                 if(storeQuantity < quantity){
                     showId(itemID + "_maxLimitError")
                     document.getElementById(itemID + "_maxLimitError").style = "padding-left:5%";

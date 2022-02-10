@@ -137,20 +137,28 @@
         };
 
         function maxLimitValidation(){
+            //console.log("Reached 1")
             maxLimitErrorList = '{{dataDictionary.productDictList}}';
+            //console.log("Reached 2")
             maxLimitErrorList = maxLimitErrorList.replaceAll('&#x27;', "").replaceAll("[", '').replaceAll("]", '').replaceAll("{", '').split("},")
-            console.log("maxLimitErrorList::", maxLimitErrorList);
+            //console.log("maxLimitErrorList::", maxLimitErrorList);
             maxLimitErrorFlag = false
             for (var i=0; i<maxLimitErrorList.length; i++){  
+                //console.log("Reached 3.1::", maxLimitErrorList[i].split(", ")[4])
                 quantity = parseInt(maxLimitErrorList[i].split(", ")[4].replaceAll(" ", '').split(":")[1])
+                //console.log("Reached 3.2::", maxLimitErrorList[i].split(", ")[5])
                 storeQuantity = parseInt(maxLimitErrorList[i].split(", ")[5].replaceAll("}", '').replaceAll(" ", '').split(":")[1])
-                itemID = maxLimitErrorList[i].split(", ")[0].replaceAll(" ", '').split(":")[1]
+                //console.log("Reached 4::", maxLimitErrorList[i].split(", ")[0].replaceAll(": ", ':').split(":")[1])
+                itemID = maxLimitErrorList[i].split(", ")[0].replaceAll(": ", ':').split(":")[1]
                 
+                //console.log("Reached 5")
                 if(storeQuantity < quantity){
+                    //console.log("Reached 6")
                     showId(itemID + "_maxLimitError")
                     maxLimitErrorFlag = true
                 }
                 else{
+                    //console.log("Reached 7::", itemID)
                     hideId(itemID + "_maxLimitError")
                 }
             }

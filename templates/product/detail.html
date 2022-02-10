@@ -134,7 +134,7 @@
     }
 </script>
 
-<body  onload="hideZoomImage()" style="position: relative;">
+<body  onload="hideZoomImage()" style="position: relative; background-color: #f9f9f9;">
     {% include 'common/header/header.html' %}
     <div class="w3-content" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row" onmouseover="hideZoomImage()">
@@ -166,7 +166,7 @@
                         <div class="w3-col l10 m10 s10">
                             <!--todo images vertical scroll-->
                             {% for data in dataData.HoverImageDict.items %}
-                            <div class="mySlides w3-green" style="margin-top:15%;margin-left:15%;">
+                            <div class="mySlides" style="margin-top:15%;margin-left:15%;">
                                 <!--<div class="numbertext w3-text-black">{{data.0}} / 6</div>-->
                                 <img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId" onmouseover="showZoomImage('{{data.0}}')">
                             </div>
@@ -202,21 +202,20 @@
             </div>
             <div class="w3-col w3-align-left l8 m6 s8" style="padding-left:15%;" id="rightSideDetailPannel">
                 <div class="w3-row" style="padding-bottom:1%;">
-                    <div class="w3-xlarge">{{ instance.title }}</div>
+                    <div class="w3-xxlarge">{{ instance.title }}</div>
                 </div>
-                <div class="w3-row" style="padding-bottom:1%;">
-                    <div class="w3-large"><b>₹{{ instance.price }}</b></div>
+                <div class="w3-row" style="padding-bottom:2%;">
+                    <div class="w3-large">₹{{ instance.price }}</div>
                 </div>
-                <div class="w3-row" style="padding-top:2%;">
-                    <b>Highlights of this item</b>
-                    <ul>
-                        {% for key, value in dataData.Highlight.items %}
-                        <li>
+                <div class="w3-row w3-border-top" style="padding-top:2%;">
+                    
+                    {% for key, value in dataData.Highlight.items %}
+                        <div>  
                             <medium>{{ key }}</medium>:
-                            <medium>{{ value }}</medium>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                            <span class="w3-text-grey"><medium>{{ value }}</medium></span>
+                        </div>
+                    {% endfor %}
+                
                 </div>
             </div>
             <div class="w3-col w3-align-left l6 m6 s8 img-zoom-result w3-card-4" id="myZoomImageOutputId" onmouseover="hideZoomImage()">
@@ -242,6 +241,7 @@
     </script>
     <script>
         window.onload = function() {
+            hideZoomImage()
             document.getElementById("dropdownMenuProfile").style.display = "none";
         };
 
