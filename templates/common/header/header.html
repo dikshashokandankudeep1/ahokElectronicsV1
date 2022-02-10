@@ -13,13 +13,18 @@
     }
 
     #dropdownMenuProfile {
-            z-index: 3; 
-            position:absolute; 
-            overflow:hidden; 
-            background: #fff; 
-            width:12%; 
-            margin-top:2%;
-        }
+        z-index: 3; 
+        position:absolute; 
+        overflow:hidden; 
+        background: #fff; 
+        width:12%; 
+        margin-top:2%;
+    }
+
+    #loginDiv{
+        padding-top:4.5%;
+    }
+    
     
     .search
     {
@@ -83,6 +88,9 @@
             width: 22%;
             margin-top:2%;
         }
+        #loginDiv{
+            padding-top:10%;
+        }
 
     }
 
@@ -96,7 +104,6 @@
             background: #fff; 
             width:22%; 
             margin-top:2%;
-            
         }
     }
 
@@ -160,7 +167,7 @@
 
     <div class="w3-col l3 m4 s2">
         {% if userID == "" %}
-        <div class="w3-row" style="padding-top:4.5%">
+        <div class="w3-row" id="loginDiv" >
             <a href="/login">
                 <div class="w3-col w3-center w3-hide-large w3-hide-medium l8 m8 s8" style="cursor:pointer;">
                     <div class="w3-text-black" style="font-family:IconFont;"> Login/SignUp</div>
