@@ -254,7 +254,7 @@ def handleSearchBox(request):
     searchProductTitle = request.POST["searchData"]
     if searchProductTitle != "" :
         print("handleSearchBox 1 if searchProductTitle::",searchProductTitle)
-        productproductTitleListObj  =  productsTablePrimary.objects.filter(filter_type='NO-FILTER').filter(title__contains=searchProductTitle)
+        productproductTitleListObj  =  productsTablePrimary.objects.filter(title__contains=searchProductTitle)
         print("handleSearchBox 1 if productproductTitleListObj::",productproductTitleListObj)
         if len(productproductTitleListObj) != 0:
             url = "/product/search/" + searchProductTitle

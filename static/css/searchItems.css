@@ -5,8 +5,16 @@
     padding-right: 5%;
 }
 
-.homeCategoryListId {
-    width: 10%;
+.homeCategoryListId_H {
+    width: 180px;
+    height: 130px;
+}
+.homeCategoryListId_V {
+    width: 120px;
+    height: 130px;
+}
+.homeCategoryListId_S {
+    width: 130px;
     height: 130px;
 }
 
@@ -15,11 +23,17 @@
     .brandNameListId {
         width: 80%;
     }
-    #brandNameListIdText {
-        padding-left: 15%;
-    }
-    .homeCategoryListId {
+    
+    .homeCategoryListId_H {
         width: 180px;
+        height: 130px;
+    }
+    .homeCategoryListId_V {
+        width: 120px;
+        height: 130px;
+    }
+    .homeCategoryListId_S {
+        width: 130px;
         height: 130px;
     }
 }
@@ -30,11 +44,17 @@
         width: 70%;
         height: 140px;
     }
-    #brandNameListIdText {
-        padding-left: 20%;
-    }
-    .homeCategoryListId {
+   
+    .homeCategoryListId_H {
         width: 180px;
+        height: 130px;
+    }
+    .homeCategoryListId_V {
+        width: 120px;
+        height: 130px;
+    }
+    .homeCategoryListId_S {
+        width: 130px;
         height: 130px;
     }
 }
@@ -44,11 +64,16 @@
     .brandNameListId {
         width: 60%;
     }
-    #brandNameListIdText {
-        padding-left: 25%;
-    }
-    .homeCategoryListId {
+    .homeCategoryListId_H {
         width: 180px;
+        height: 130px;
+    }
+    .homeCategoryListId_V {
+        width: 120px;
+        height: 130px;
+    }
+    .homeCategoryListId_S {
+        width: 130px;
         height: 130px;
     }
 }
@@ -58,11 +83,17 @@
     .brandNameListId {
         width: 105%;
     }
-    #brandNameListIdText {
-        padding-left: 6%;
+    
+    .homeCategoryListId_H {
+        width: 180px;
+        height: 130px;
     }
-    .homeCategoryListId {
-        width: 100%;
+    .homeCategoryListId_V {
+        width: 120px;
+        height: 130px;
+    }
+    .homeCategoryListId_S {
+        width: 130px;
         height: 130px;
     }
 }
@@ -72,11 +103,17 @@
     .brandNameListId {
         width: 95%;
     }
-    #brandNameListIdText {
-        padding-left: 8%;
+    
+    .homeCategoryListId_H {
+        width: 180px;
+        height: 130px;
     }
-    .homeCategoryListId {
-        width: 80%;
+    .homeCategoryListId_V {
+        width: 120px;
+        height: 130px;
+    }
+    .homeCategoryListId_S {
+        width: 130px;
         height: 130px;
     }
 }

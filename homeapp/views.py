@@ -72,7 +72,7 @@ def Home_view(request):
     print("Home_view")
 
     if request.method == 'POST':
-        print("Home_view POST")
+        print("Home_view POST::", request.POST)
 
         if(request.POST.__contains__("search")):
             url, matchNotFound, relaventSearch = handleSearchBox(request)

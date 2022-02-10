@@ -74,7 +74,6 @@
     {% include 'common/header/header.html' %}
     <div class="w3-content" style="max-width:1200px; margin-top: 5.5%;" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-main" style="margin-left:100px; margin-right:100px;">
-            <!-- Image header -->
             
             <section class="regular slider" >
                 {% for instance in productHomeSliderObj %}
@@ -83,39 +82,73 @@
                 </div>
                 {% endfor %}
             </section>
-
-            <div class="w3-row" style="padding-top:6%;">
+            <!--  
+            <div align="center" class="w3-row" style="padding-top:6%;">
                 {% for instance in productHomeCategoryListObj %}
                     {% if instance.shape == "H" %}
-                        <div align="center" class="w3-col l3 m4 s6">
-                            <div class="w3-container" style="height:70%">
+                        <div align="center" class="w3-col l3 m4 s6 w3-border">
+                            <div class="w3-container w3-red" style="height:70%">
                     {% elif instance.shape == "V" %}
-                        <div align="center" class="w3-col l3 m4 s6">
-                            <div class="w3-container" style="width:70%">
+                        <div align="center" class="w3-col l3 m4 s6 w3-border">
+                            <div class="w3-container w3-green" style="width:40%">
                     {% else %}
-                        <div align="center" class="w3-col l3 m4 s6">
+                        <div align="center" class="w3-col l3 m4 s6 w3-border">
                             <div class="w3-container">
                     {% endif %}
                         <a href="product-category/{{ instance.category }}">
                             <img src="{{ instance.image.url }}" class="homeCategoryListId">
                         </a>
-                        <center>
-                            <h4><b>{{ instance.category }}</b></h4>
-                        </center>
+                        <h4 class="w3-border"><b>{{ instance.category }}</b></h4>
+                        
                     </div>
                 </div>
                 {% endfor %}
             </div>
+            -->
+            
+            <div align="center" class="w3-row" style="padding-top:6%;">
+              {% for instance in productHomeCategoryListObj %}
+                  {% if instance.shape == "H" %}
+                      <div align="center" class="w3-col l3 m4 s6">
+                        <div class="w3-container ">
+                          <a href="product-category/{{ instance.category }}">
+                            <img src="{{ instance.image.url }}" class="homeCategoryListId_H">
+                          </a>
+                          <h4><b>{{ instance.category }}</b></h4>
+                        </div>
+                      </div>
+                  {% elif instance.shape == "V" %}
+                      <div align="center" class="w3-col l3 m4 s6 ">
+                        <div class="w3-container" >
+                          <a href="product-category/{{ instance.category }}">
+                            <img src="{{ instance.image.url }}" class="homeCategoryListId_V">
+                          </a>
+                          <h4><b>{{ instance.category }}</b></h4>
+                        </div>
+                      </div>
+                  {% else %}
+                      <div align="center" class="w3-col l3 m4 s6">
+                          <div class="w3-container">
+                            <a href="product-category/{{ instance.category }}">
+                              <img src="{{ instance.image.url }}" class="homeCategoryListId_S">
+                          </a>
+                          <h4><b>{{ instance.category }}</b></h4>
+                      </div>
+                  </div>
+                  {% endif %}
+              {% endfor %}
+          </div>
+
         </div>
     </div>
     <div class="w3-row w3-border-top" style="margin-top: 3%;">
-        <div class="w3-col l6 w3-text-gray" style="text-align: center; padding-top:2%; padding-bottom:2%;"> 
-            <span> Copyright © 2022 Ashok Electronics </span>
+        <div class="w3-col l6 m6 s6 w3-text-gray" style="text-align: center; padding-top:2%; padding-bottom:2%;"> 
+            <small><span> Copyright © 2022 Ashok Electronics </span></small>
         </div>
-        <div class="w3-col l5 w3-text-gray" style="text-align: center; padding-right:5%; padding-top:2%; padding-bottom:2%;"> 
-            <span> Powered by Ashok Electronics </span>
+        <div class="w3-col l5 m5 s5 w3-text-gray" style="text-align: center; padding-right:5%; padding-top:2%; padding-bottom:2%;"> 
+            <small><span> Powered by Ashok Electronics </span></small>
         </div>
-        <div class="w3-col l1 w3-xxlarge" style="text-align: center; padding-top:1%; padding-bottom:2%;"> 
+        <div class="w3-col l1 m1 s1 w3-xxlarge" style="text-align: center; padding-top:1%; padding-bottom:2%;"> 
             <i class="fas fa-sms" ></i> 
         </div>
     </div>
