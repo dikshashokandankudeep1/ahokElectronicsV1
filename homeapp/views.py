@@ -99,6 +99,7 @@ def Home_view(request):
     if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
         userID = request.user.id
 
+    print("userID::", userID)
     context = {
         'userID'    :   userID,
         'productHomeCategoryListObj'        : productHomeCategoryListObj,
@@ -550,6 +551,10 @@ def account_View(request, touds):
     elif touds =="changepassword":
         dataDictionary = {"username" : userObject.username }
         dataShow = touds
+    elif touds =="logout":
+        user = auth.authenticate(userObject.username, password=userObject.password)
+        auth.logout(request)
+        return redirect("/")
     else:
         dataDictionary = {"username" : userObject.username }
         dataShow = touds
