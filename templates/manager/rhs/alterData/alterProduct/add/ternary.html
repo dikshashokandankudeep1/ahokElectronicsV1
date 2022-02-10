@@ -1,0 +1,85 @@
+<form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+    <table class="w3-card w3-table" id="ProductTable">
+        <tr style="background-color:azure">
+            <th><br></th>
+            <th><br></th>
+            <th>ADD PRODUCT</th>
+            <th><br></th>
+        </tr>
+        <tr >
+            <th><br></th>
+            <th class="w3-text-blue">Ternary Details</th>
+            <th class="w3-text-green"> {{productId}} </th>
+            <th><br></th>
+        </tr>
+        {% for message in messages%}
+        <tr>
+            <td><br></td>
+            <td class="w3-text-red">Warning:: {{ message }} </td>
+            <td><br></td>
+        </tr>
+        {% endfor %}
+
+        
+
+
+        <tr>
+            <td><br></td>
+            <td>Hover Image 1</td>
+            <td>
+                <input type="file" id="hoverImage_1" name="hoverImage_1">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Hover Image 2</td>
+            <td>
+                <input type="file" id="hoverImage_2" name="hoverImage_2">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Hover Image 3</td>
+            <td>
+                <input type="file" id="hoverImage_3" name="hoverImage_3">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Hover Image 4</td>
+            <td>
+                <input type="file" id="hoverImage_4" name="hoverImage_4">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Hover Image 5</td>
+            <td>
+                <input type="file" id="hoverImage_5" name="hoverImage_5">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td>Hover Image 6</td>
+            <td>
+                <input type="file" id="hoverImage_6" name="hoverImage_6">
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+            <td><br></td>
+            <td  class="w3-small">
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save</button>
+                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89fff5;" onclick="fillSkipFunc()">Skip</button>
+            </td>
+        </tr>
+        <input type="hidden" name="productId" value="{{productId}}">
+        <input type="hidden" name="formAddProductAction" value="hoverImages">
+        <input id="skip" type="hidden" name="skip" value="">
+    </table>
+</form>
+<script>
+    function fillSkipFunc(){
+        document.getElementById("skip").value = "skip";
+    }
+</script>
