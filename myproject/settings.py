@@ -26,7 +26,7 @@ SECRET_KEY = 'au3^8!-0wtu5hf9nn=zz8pf&@tcsu!qv=)@f^&qlkqt_&64u6p'
 DEBUG = True
 
 #ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dikshashokandankudeep1.pythonanywhere.com']
 
 
 # Application definition
@@ -126,12 +126,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+'''
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'static/media')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+'''
+
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'static/media')
+
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
 
 
 
