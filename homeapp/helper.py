@@ -67,16 +67,19 @@ def updateTikerTableTicker(request, dataList):
             tickerList = [ item.split("|")[0] for item in obj[1].replace("[", "").replace("]", "").replace("'", "").split(", ")]
             dbCommonDataList = list(set(tickerList + dataListSet))
 
+        #print("obj::", obj)
         print("obj[3]::", obj[3])
         categoryTickerMapList = {}
         productsTablePrimary_ = productsTablePrimary.objects.filter(modelNumber=request.POST["productId"])[0]
         if obj[3] == "{}":
             categoryTickerMapList[productsTablePrimary_.category] = dbCommonDataList
+            print("IF categoryTickerMapList::", categoryTickerMapList)
         else:
             categoryTickerMapList = dict( (key, value.split(", ")) for key, value in dict([ item.replace("]", "").split(": ") for item in obj[3].replace("{", "").replace("}", "").replace("'", "").replace("[", "").split("], ") ]).items())
             
             if categoryTickerMapList.__contains__(productsTablePrimary_.category):
-                categoryTickerMapList = list(set(categoryTickerMapList[productsTablePrimary_.category] + dbCommonDataList))
+                categoryTickerMapList[productsTablePrimary_.category] = list(set(categoryTickerMapList[productsTablePrimary_.category] + dbCommonDataList))
+
             else:
                 categoryTickerMapList[productsTablePrimary_.category] = dbCommonDataList
 
