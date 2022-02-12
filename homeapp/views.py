@@ -207,8 +207,9 @@ def ProductSearchList_view(request, productTitle):
             return productBrandnameListObj
 
 
-    print("ProductSearchList_view START")
-    productproductTitleListObj = productsTablePrimary.objects.filter(title__contains=productTitle).filter(isActive=True)
+    print("ProductSearchList_view START::", productTitle)
+    
+    productproductTitleListObj = productsTablePrimary.objects.filter(searchTitle__contains=productTitle.replace(" ", "").lower()).filter(isActive=True)
     filterDict = {"PRICE_BL_2000" : 0, "PRICE_BTW_2000_3000" : 0, "PRICE_BTW_3000_4000" : 0, "PRICE_BTW_4000_5000" : 0, "PRICE_ABW_5000" : 0}
     SORTBY = 'Popularity'
     matchNotFound = ""
@@ -225,9 +226,9 @@ def ProductSearchList_view(request, productTitle):
     if request.method == 'POST':
         print("ProductSearchList_view POST::", request.POST)
         if(request.POST.__contains__("search")):
-            url, matchNotFound1, relaventSearch1 = handleSearchBox(request)
-            matchNotFound = matchNotFound1
-            relaventSearch = relaventSearch1
+            url, matchNotFound, relaventSearch = handleSearchBox(request)
+            if url != "":
+                redirect(url)
         elif(request.POST.__contains__("FILTER:PRICE")):
             print("ProductSearchList_view FILTER:PRICE::",request.POST["FILTER:PRICE"])
             productproductTitleListObj = priceFilterCalculateObj(request.POST["filterDict"], productproductTitleListObj)
@@ -252,6 +253,8 @@ def ProductSearchList_view(request, productTitle):
     if url != "":
         vec = url.split("/")
         productTitle = vec[3]
+        redirect(url)
+
 
     print("ProductSearchList_view productTitle::",productTitle)
 
@@ -324,15 +327,15 @@ def ProductListOnClick_view(request, categoryName, brandName):
         print("ProductListOnClick_view POST::", request.POST)
         updateaddToCartID = ""
         url = ""
-        if request.POST.__contains__("ADDTOCART") and request.POST.__contains__("BUYNOW"):
+        if request.POST.__contains__("ADDTOCART") or request.POST.__contains__("BUYNOW"):
+
+            print("request.user.id::",request.user.id)
 
             if (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
                 setSession(request, 'lastPageUrl', request.get_full_path())
                 #request.session['lastPageUrl'] = request.get_full_path()
                 print("ProductListOnClick_view 0 POST request.session['lastPageUrl']::",getSession(request,'lastPageUrl'))
                 return redirect('/login')
-            print("request.user.id::",request.user.id)
-            
             
             if request.POST.__contains__("ADDTOCART"):
                 print("ProductListOnClick_view request.POST['ADDTOCART']::", request.POST['ADDTOCART'])
@@ -345,6 +348,8 @@ def ProductListOnClick_view(request, categoryName, brandName):
                 setSession(request, 'currentOrderList', [updateaddToCartID])
                 #request.session["currentOrderList"] = [updateaddToCartID]
              
+            if url != "":
+                return redirect(url)
         elif(request.POST.__contains__("search")):
             print("ProductListOnClick_view handleSearchBox")
             url, matchNotFound, relaventSearch = handleSearchBox(request)
@@ -385,7 +390,6 @@ def ProductListOnClick_view(request, categoryName, brandName):
             print("ProductListOnClick_view POST userObject::", userObject)
             if userObject.addToCartItemsDict != "":
                 print("ProductListOnClick_view userObject.addToCartItemsDict::",userObject.addToCartItemsDict)
-                #addToCartItemsDict = dict( map(int, item.split(":")) for item in userObject.addToCartItemsDict.strip('}{').split(","))
                 addToCartItemsDict = dict( [item.split(":")[0].strip().strip("'"),int(item.split(":")[1].strip())]  for item in userObject.addToCartItemsDict.strip('}{').split(","))
                 print("addToCartItemsDict::", addToCartItemsDict)
                 #todo pradeep
@@ -426,6 +430,7 @@ def ProductListOnClick_view(request, categoryName, brandName):
         'categoryName'                   : categoryName,
         'brandName'                      : brandName,
         'filterDict'        :   filterDict,
+        'searchTitle'   :   "",
         'SORTBY'            :   SORTBY,
         'matchNotFound'     :   matchNotFound,
         'relaventSearch'    :   relaventSearch

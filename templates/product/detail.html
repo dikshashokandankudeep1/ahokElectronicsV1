@@ -122,32 +122,15 @@
         document.getElementById(ID).style.display = "none";
     }
 
-    function showZoomImage(ID , isDeviceMobile) {
-        console.log("showZoomImage::", isDeviceMobile)
-        if(isDeviceMobile == 'yes'){
-            showId('myZoomImageOutputId_small');
-            imageZoom(String(ID) + "_myZoomImageInputId_small", "myZoomImageOutputId_small");
-        }
-        else{
-            showId('myZoomImageOutputId');
-            imageZoom(String(ID) + "_myZoomImageInputId", "myZoomImageOutputId");
-        }
+    function showZoomImage(ID) {
+        showId('myZoomImageOutputId');
+        imageZoom(String(ID) + "_myZoomImageInputId", "myZoomImageOutputId");
         hideId('rightSideDetailPannel');
     }
 
-    function hideZoomImage(isDeviceMobile) {
-        console.log("hideZoomImage::", isDeviceMobile)
+    function hideZoomImage() {
         showId('rightSideDetailPannel');
-        if(isDeviceMobile == 'yes'){
-            hideId('myZoomImageOutputId_small');
-        }
-        else if(isDeviceMobile == 'no'){
-            hideId('myZoomImageOutputId');
-        }
-        else{
-            hideId('myZoomImageOutputId');
-            hideId('myZoomImageOutputId_small');
-        }
+        hideId('myZoomImageOutputId');
     }
 </script>
 
@@ -197,29 +180,26 @@
         width:100%;
         height:auto;	
     }
+    /*
     .zoom-without-container:hover {
-      transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+      transform: scale(1.5); 
     }
-
-    .quick-img-zoom img {
-        transform-origin: 0 0;
-        transition: transform .25s, visibility .25s ease-in;
-      }
-    /* The Transformation */
-    .quick-img-zoom:hover img {
-        transform: scale(2);
+    */
+    
+    .zoom-without-container:active {
+        transform: scale(1.5); 
     }
     
 </style>
 
-<body  onload="hideZoomImage('allDevices')" style="position: relative; background-color:#f9f9f9;">
+<body  onload="hideZoomImage()" style="position: relative; background-color:#f9f9f9; height:100%">
     {% include 'common/header/header.html' %}
     <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-row" onmouseover="hideZoomImage('allDevices')">
+        <div class="w3-row" onmouseover="hideZoomImage()">
             <div class="w3-col">
-                <div class="w3-left w3-text-grey">
+                <div class="w3-left w3-text-grey" style="padding-bottom:3%">
                     {% if instance.categoryName != "" %}
-                    <h6>Home > {{ instance.category }} > {{ instance.brandName }} > {{ instance.title }}</h6>
+                    <hspan class="w3-tiny">Home > {{ instance.category }} > {{ instance.brandName }} > {{ instance.title }}</span>
                     {% else %}
                     <h6><br></h6>
                     {% endif %}
@@ -231,7 +211,7 @@
             <div class="w3-col l4 m6 s12">
                 <div class="w3-row" style="margin-top:5%; ">
                     <div class="container">
-                        <div class="w3-col w3-center l2 m2 s2" onmouseover="hideZoomImage('allDevices')">
+                        <div class="w3-col w3-center l2 m2 s2" onmouseover="hideZoomImage()">
                             <!--todo images vertical scroll-->
                             {% for data in dataData.HoverImageDict.items %}
                             <div class="row" style="margin-bottom:5%;">
@@ -245,11 +225,9 @@
                             {% for data in dataData.HoverImageDict.items %}
                             <div class="mySlides">
                                 <!--<div class="numbertext w3-text-black">{{data.0}} / 6</div>-->
-                                <div class="w3-hide-small"><img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId" onmouseover="showZoomImage('{{data.0}}', 'no')"></div>
-                                <!--<div class="w3-hide-large w3-hide-medium"><img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId_small" onmouseover="showZoomImage('{{data.0}}', 'yes')"></div>-->
+                                <div class="w3-hide-small"><img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId" onmouseover="showZoomImage('{{data.0}}')"></div>
                                 <div class="w3-hide-large w3-hide-medium" style="margin-bottom:5%">
-                                    <img src="{{data.1}}" class="zoom-without-container" style="width:100%" id="{{data.0}}_myZoomImageInputId_small" alt="zoom">
-                                        <!--<p class="w3-text-green w3-hover-text-blue w3-center" style="" onclick=""> zoom image </p>-->
+                                    <img src="{{data.1}}" class="zoom-without-container" style="width:100%" alt="zoom">
                                 </div>
                             </div>
                             {% endfor %}
@@ -275,11 +253,8 @@
                 </div>
             </div>
            
-            <div class="w3-col w3-align-left l6 m6 s5 w3-hide-small img-zoom-result w3-card-4" id="myZoomImageOutputId" onmouseover="hideZoomImage('no')">
+            <div class="w3-col w3-align-left l6 m6 s5 w3-hide-small img-zoom-result w3-card-4" id="myZoomImageOutputId" onmouseover="hideZoomImage()">
             </div>
-            <!--
-            <div class="w3-col w3-align-left l6 m6 s5 w3-hide-large w3-hide-medium img-zoom-result w3-card-4" id="myZoomImageOutputId_small" onmouseover="hideZoomImage('yes')">
-            </div>-->
             
             <div class="w3-col w3-align-left l2 m2 s12">
                 <div class="w3-row" id="addToCart">
@@ -307,29 +282,11 @@
                     <div class="w3-col l1 m1 s1"><br></div>
                 </div>
             </div>
-
         </div>
     </div>
     <script>
-        /*
-        function quantityChange() {
-            document.getElementById("QUANTITY").value = document.getElementById("ProductQuantity").value
-        }
-        */
-        /*
-        function quantityValidation(button) {
-            
-            if (document.getElementById("ProductQuantity").value == '') {
-                button.setCustomValidity('Please enter quantity');
-            } else {
-                button.setCustomValidity('');
-            }
-        }
-        */
-    </script>
-    <script>
         window.onload = function() {
-            hideZoomImage('allDevices')
+            hideZoomImage()
             document.getElementById("dropdownMenuProfile").style.display = "none";
         };
 
@@ -371,5 +328,5 @@
         }
     </script>
 </body>
-
+<!--{% include 'home/footer.html' %}-->
 </html>

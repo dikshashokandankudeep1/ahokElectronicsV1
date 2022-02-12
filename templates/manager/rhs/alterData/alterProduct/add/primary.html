@@ -41,9 +41,16 @@
         </tr>
         <tr>
             <td class="w3-hide-small"><br></td>
-            <td style="padding-top:3%;">Sub-Category</td>
+            <td style="padding-top:3%;">Sub-Category-1</td>
             <td>
-                <input class="w3-input w3-border" type="text" name="subCategory" id="subCategory" value="" placeholder="subCategory" required>
+                <input class="w3-input w3-border" type="text" name="subCategory1" id="subCategory1" value="" placeholder="subCategory-1" required>
+            </td>
+        </tr>
+        <tr>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Sub-Category-2</td>
+            <td>
+                <input class="w3-input w3-border" type="text" name="subCategory2" id="subCategory2" value="" placeholder="subCategory2">
             </td>
         </tr>
         <tr>
@@ -105,8 +112,10 @@
                 </button>
             </td>
         </tr>
+
         <input type="hidden" name="userRatings" value="5">
         <input type="hidden" name="reviewList" value="[]">
+        <input type="hidden" id="searchTitle" name="searchTitle" value="">
         <input type="hidden" name="formAddProductAction" value="primaryDetails">
     </form>
 </table>
@@ -116,26 +125,36 @@
   
 <script>
     function loadTitleFromFillItems(){
+        console.log("loadTitleFromFillItems")
         let brandName   = document.getElementById("brandName").value;
         let modelNumber = document.getElementById("modelNumber").value
         let category    = document.getElementById("category").value;
-        let subCategory = document.getElementById("subCategory").value;
+        let subCategory1 = document.getElementById("subCategory1").value;
+        let subCategory2 = document.getElementById("subCategory2").value;
         let title = ""
-        if(brandName != ""){
-            title = title + brandName + " "
+        
+        if(category != ""){
+            title +=  category + " "
+        }
+        if(subCategory1 != ""){
+            title += subCategory1 + " "
+        }
+        if(subCategory2 != ""){
+            title += subCategory2 + " "
         }
         if(modelNumber != ""){
-            title = title + modelNumber + " "
+            title += modelNumber + " "
         }
-        if(category != ""){
-            //title = title + category + " "
+        if(brandName != ""){
+            title += brandName + " "
         }
-        if(subCategory != ""){
-            //title = title + subCategory
-        }
+        
         if(title != ""){
             document.getElementById("title").value = title;
             document.getElementById("title").size = title.length;
+
+            document.getElementById("searchTitle").value = title.replaceAll(" ", '').toLowerCase();
+            //console.log("searchTitle.value::", document.getElementById("searchTitle").value)
         }
     }
 

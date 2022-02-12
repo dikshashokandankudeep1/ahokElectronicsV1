@@ -34,15 +34,15 @@ def updateTikerTableCategorySubCategoryMapList(request):
         categorySubCategoryMapList = {}
 
         if obj[4] == "{}":
-            categorySubCategoryMapList[request.POST["category"]] = request.POST["subCategory"]
+            categorySubCategoryMapList[request.POST["category"]] = request.POST["subCategory1"]
         else:
             categorySubCategoryMapList = dict( (key, value.split(", ")) for key, value in dict([ item.replace("]", "").split(": ") for item in obj[4].replace("{", "").replace("}", "").replace("'", "").replace("[", "").split("], ") ]).items())
             
             if categorySubCategoryMapList.__contains__(request.POST["category"]):
-                if request.POST["subCategory"] not in categorySubCategoryMapList[request.POST["category"]]:
-                    categorySubCategoryMapList[request.POST["category"]].append(request.POST["subCategory"])
+                if request.POST["subCategory1"] not in categorySubCategoryMapList[request.POST["category"]]:
+                    categorySubCategoryMapList[request.POST["category"]].append(request.POST["subCategory1"])
             else:
-                categorySubCategoryMapList[request.POST["category"]] = [request.POST["subCategory"]]
+                categorySubCategoryMapList[request.POST["category"]] = [request.POST["subCategory1"]]
 
         for obj in tickerTable.objects.all():
             obj.categorySubCategoryMapList = str(categorySubCategoryMapList)
@@ -254,7 +254,9 @@ def handleSearchBox(request):
     searchProductTitle = request.POST["searchData"]
     if searchProductTitle != "" :
         print("handleSearchBox 1 if searchProductTitle::",searchProductTitle)
-        productproductTitleListObj  =  productsTablePrimary.objects.filter(title__contains=searchProductTitle)
+        #searchProductTitle = searchProductTitle.replace(" ", "").lower()
+        #print("searchProductTitle::", searchProductTitle)
+        productproductTitleListObj  =  productsTablePrimary.objects.filter(searchTitle__contains=searchProductTitle.replace(" ", "").lower())
         print("handleSearchBox 1 if productproductTitleListObj::",productproductTitleListObj)
         if len(productproductTitleListObj) != 0:
             url = "/product/search/" + searchProductTitle

@@ -43,13 +43,13 @@
     {% include 'common/header/header.html' %}
     <div class="w3-content" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row">
-            <div class="w3-col">
+            <div class="w3-col" style="padding-bottom:3%">
                 <div class="w3-left w3-text-grey">
-                    <h6>Home > <b>{{ categoryName }}</b></h6>
+                    <span class="w3-tiny">Home > <b>{{ categoryName }}</b></span>
                 </div>
             </div>
         </div>
-        <div class="w3-row w3-card l9 m9 s9 w3-center w3-grayscale" style="padding:3%">
+        <div class="w3-row w3-card l9 m9 s9 w3-center w3-small w3-grayscale" style="padding:3%">
             {% for instance in dataDict.items %}
                 <a href="{{ categoryName }}/{{ instance.0 }}">
                     <div class="w3-col l3 m4 s6 w3-display-container ">
@@ -73,14 +73,17 @@
             {% endfor %}
         </div>
     </div>
-    <script>
-        window.onload = function() {
-            document.getElementById("dropdownMenuProfile").style.display = "none";
-        };
-
-        function dropdownMenuProfileHide(){
-            document.getElementById("dropdownMenuProfile").style.display = "none";
-        }
-    </script>
+    <!--{% include 'home/footer.html' %}-->
 </body>
+
+<script>
+    window.onload = function() {
+        document.getElementById("dropdownMenuProfile").style.display = "none";
+    };
+
+    function dropdownMenuProfileHide(){
+        document.getElementById("dropdownMenuProfile").style.display = "none";
+    }
+</script>
+
 </html>

@@ -11,49 +11,76 @@
     <script src="{% static 'js/common/universal/all.js' %}"></script>
 </head>
 
+<style>
+    .checked {
+        color: orange;
+    }
+
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:50px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:70px;
+        }
+    }
+</style>
+
 <body>
     {% include 'common/header/header.html' %}
-    <div class="w3-row l12 m12" style="margin-top: 5.5%;" onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-col l9 m8 w3-center" style="padding-left:20%;padding-top:5%;padding-bottom:5%;">
+    <div class="w3-row w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-col l6 m8 s11 w3-center" style="padding-left:10%; padding-top:5%; padding-bottom:5%;">
             <form action="login" method="post"> {% csrf_token %}
                 <table class="w3-card w3-table">
                     <tr style="background-color:azure;">
-                        <td><br></td>
-                        <th>Login Page</th>
+                        <td class="w3-hide-small"><br></td>
+                        <td class="w3-small"><b>Login Page</b></td>
                         <td class="w3-text-blue">
                             <small>
-                                <a href="/register"><b>For register click Here</b></a>
+                                <a href="/register" style="text-decoration:none;"><b>Register now</b></a>
                             </small>
                         </td>
                     </tr>
+                    
 
                     {% for message in messages%}
                     <tr>
-                        <td><br></td>
-                        <td class="w3-text-red">Warning:: {{ message }} </td>
-                        <td><br></td>
+                        <td class="w3-hide-small"><br></td>
+                        <td class="w3-text-red" colspan="2">Warning:: {{ message }} </td>
+                        
                     </tr>
                     {% endfor %}
 
                     <tr>
-                        <td><br></td>
-                        <td>UserName</td>
+                        <td class="w3-hide-small"><br></td>
+                        <td style="padding-top:3%">UserName</td>
                         <td>
-                            <input type="text" name="username" placeholder="User Name" required>
+                            <input class="w3-input w3-border" type="text" name="username" placeholder="User Name" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
-                        <td>Password</td>
+                        <td class="w3-hide-small"><br></td>
+                        <td style="padding-top:3%;">Password</td>
                         <td>
-                            <input type="password" name="password" placeholder="Password" required>
+                            <input class="w3-input w3-border" type="password" name="password" placeholder="Password" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
+                        <td class="w3-hide-small"><br></td>
                         <td><br></td>
                         <td class="w3-small">
-                            <button type="submit" class="w3-btn w3-round-medium" value="Save" style="background-color: #89c4ff;">Login</button>
+                            <button type="submit" class="w3-button w3-round w3-tiny" value="Save" style="background-color: #89c4ff;">Login</button>
                         </td>
                     </tr>
                 </table>

@@ -118,7 +118,8 @@ class productsTableSecodary(models.Model):
 class productsTablePrimary(models.Model):
     modelNumber     =   models.CharField(blank=True, max_length=50, default="")
     category        =   models.CharField(blank = True, max_length=50, default="")
-    subCategory     =   models.CharField(blank = True, max_length=50, default="")
+    subCategory1    =   models.CharField(blank = True, max_length=50, default="")
+    subCategory2    =   models.CharField(blank = True, max_length=50, default="")
     brandName       =   models.CharField(blank = True, max_length=50, default="")
     title           =   models.CharField(blank = True, max_length=50, default="")
                         #title => brandName + category + subCategory + otherthings + (ModelNumber)
@@ -130,6 +131,7 @@ class productsTablePrimary(models.Model):
 
     userRatings     =   models.IntegerField(blank=True, null=True, default=0)
     reviewList      =   models.CharField(blank=True, max_length=50, default="")
+    searchTitle     =   models.CharField(blank=True, max_length=50, default="") #lowercase of title and having no space
     #onsale          =   models.BooleanField(blank=True, default=True)
     
 

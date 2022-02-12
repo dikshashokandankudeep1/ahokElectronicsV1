@@ -8,7 +8,8 @@ class ProductsTablePrimaryForm(forms.ModelForm):
         fields = [
             'modelNumber',
             'category',
-            'subCategory',
+            'subCategory1',
+            'subCategory2',
             'brandName',
             'title',
             'price',
@@ -18,6 +19,7 @@ class ProductsTablePrimaryForm(forms.ModelForm):
             'isActive',
             'userRatings',
             'reviewList',
+            'searchTitle',
         ]
 
 
