@@ -51,9 +51,6 @@ def manager_View(request, touds):
             print("other posibilities")
     print("manager_View 8")
 
-
-
-
     categoryList = []
     if secondTouds == "primaryDetails":
         for obj in tickerTable.objects.values_list():
@@ -72,11 +69,15 @@ def manager_View(request, touds):
         print("tickerList::", tickerList)
 
 
-
     print("---------------Touds---------", touds)    
     print("---------------secondTouds---------", secondTouds)
+
+    userID = ""
+    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
+        userID = request.user.id
     
     context = {
+        "userID" : userID,
         "touds" : touds,
         "secondTouds" : secondTouds, 
         "productId" : productId,
