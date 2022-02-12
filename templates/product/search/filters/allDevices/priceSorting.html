@@ -1,0 +1,61 @@
+<div class="w3-row " style="margin-bottom:1%;">
+    <!--todo Kitchen Tools(Showing 1 - 34 of 34 items) -->
+    {% if matchNotFound == "" %}
+    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%" onclick="onlyShowButtonSort()">{{ categoryName }} (Showing {{productBrandnameListObjCount}} items)</div>
+    {% else %}
+    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%" onclick="onlyShowButtonSort()">No item found</div>
+    {% endif %}
+    <div class="w3-col l3 m3 s3" style="padding:2%;">
+        <small id="buttonSort" onclick="showDropdownSort()">
+            <button class="w3-button w3-light-gray w3-tiny w3-padding-small w3-round-large">
+                <span>Sort by:</span>
+                {% if SORTBY == "Popularity" %}
+                    <span>Popularity</span>
+                {% elif SORTBY == "Newest" %}
+                    <span>Newest</span>
+                {% elif SORTBY == "LTH" %}
+                    <span>Price: Low to High</span>
+                {% else %}
+                    <span>Price: High to Low</span>
+                {% endif %}
+                <i class="fa fa-caret-down"></i>
+            </button>
+        </small>
+
+        <div id="dropdownSort" class="w3-white w3-bar-block w3-card-4" style="margin-left:2%;position:absolute; z-index:9;">
+            <form action="" method="post"> {% csrf_token %}
+                <!---->
+                {% if SORTBY == "Popularity" %}
+                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                <!---->
+                {% elif SORTBY == "Newest" %}
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                <!---->
+                {% elif SORTBY == "LTH" %}
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                <!---->
+                {% else %}
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Popularity')">Popularity</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('Newest')">Newest</option>
+                <option class="w3-bar-item w3-button w3-padding-small" onclick="showButtonSort('LTH')">Price Low to High</option>
+                <option class="w3-bar-item w3-light-blue w3-button w3-padding-small" onclick="showButtonSort('HTL')">Price High to Low</option>
+                <!---->
+                {% endif %}
+                <input type="hidden" id="dropdownSortButton" name="dropdownSortButton" value="" />
+                <input type="hidden" id="dropdownSortButtonfilterDict" name="dropdownSortButtonfilterDict" value="" />
+                <input type="hidden" id="dropdownSortButtonmatchNotFound" name="dropdownSortButtonmatchNotFound" value="" />
+                <input type="hidden" id="dropdownSortButtonrelaventSearch" name="dropdownSortButtonrelaventSearch" value="" />
+                <small><button class="w3-button" style="display:none;" id="dropdownSortButtonClick">Buy Now</button></small>
+            </form>
+        </div>
+    </div>
+</div>

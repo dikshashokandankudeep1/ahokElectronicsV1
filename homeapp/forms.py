@@ -15,6 +15,7 @@ class ProductsTablePrimaryForm(forms.ModelForm):
             'quantity',
             'warranty',
             'mainImage',
+            'isActive',
             'userRatings',
             'reviewList',
         ]

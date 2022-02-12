@@ -90,7 +90,7 @@ def updateTikerTableTicker(request, dataList):
             obj.save()
 
 def handleProductsTableSecodary(request):
-    print("handleProductsTableSecodary 1 request.POST::", request.POST)
+    #print("handleProductsTableSecodary 1 request.POST::", request.POST)
     
     dataList = []
     counter = 0
@@ -101,24 +101,24 @@ def handleProductsTableSecodary(request):
 
     updateTikerTableTicker(request, dataList)
     
-    print("handleProductsTableSecodary 2")
+    #print("handleProductsTableSecodary 2")
     for index in ["%d" %i for i in range(counter, 16)]:
         dataList.append("")
 
-    print("handleProductsTableSecodary 3")
+    #print("handleProductsTableSecodary 3")
     if request.POST.__contains__("productId"):
-        print("handleProductsTableSecodary 4")
+        #print("handleProductsTableSecodary 4")
         _productsTableSecodary =  productsTableSecodary(productId=request.POST["productId"], 
                 otherFeature_1=dataList[0], otherFeature_2=dataList[1], otherFeature_3=dataList[2], 
                 otherFeature_4=dataList[3], otherFeature_5=dataList[4], otherFeature_6=dataList[5], 
                 otherFeature_7=dataList[6], otherFeature_8=dataList[7], otherFeature_9=dataList[8], 
                 otherFeature_10=dataList[9], otherFeature_11=dataList[10], otherFeature_12=dataList[11], 
                 otherFeature_13=dataList[12], otherFeature_14=dataList[13], otherFeature_15=dataList[14])
-        print("handleProductsTableSecodary 5")
+        #print("handleProductsTableSecodary 5")
         
         _productsTableSecodary.save()
         
-        print("handleProductsTableSecodary 6")
+        #print("handleProductsTableSecodary 6")
 
         return request, "hoverImages", request.POST["productId"]
 
@@ -221,7 +221,7 @@ def alterProductManagePOST(request):
     elif request.POST["formAddProductAction"] == "hoverImages":
         if (request.POST.__contains__("skip") and request.POST["skip"] == "skip"):
             print("hoverImages 1")
-            return request, "descriptionAndSpacificationManage", ""
+            return request, "descriptionAndSpacificationManage", request.POST["productId"]
         else:
             print("hoverImages 2")
             form = ProductsTableTernaryForm(request.POST, request.FILES)

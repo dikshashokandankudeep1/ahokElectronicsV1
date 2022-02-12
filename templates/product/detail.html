@@ -122,22 +122,100 @@
         document.getElementById(ID).style.display = "none";
     }
 
-    function showZoomImage(ID) {
-        showId('myZoomImageOutputId');
-        imageZoom(String(ID) + "_myZoomImageInputId", "myZoomImageOutputId");
+    function showZoomImage(ID , isDeviceMobile) {
+        console.log("showZoomImage::", isDeviceMobile)
+        if(isDeviceMobile == 'yes'){
+            showId('myZoomImageOutputId_small');
+            imageZoom(String(ID) + "_myZoomImageInputId_small", "myZoomImageOutputId_small");
+        }
+        else{
+            showId('myZoomImageOutputId');
+            imageZoom(String(ID) + "_myZoomImageInputId", "myZoomImageOutputId");
+        }
         hideId('rightSideDetailPannel');
     }
 
-    function hideZoomImage() {
+    function hideZoomImage(isDeviceMobile) {
+        console.log("hideZoomImage::", isDeviceMobile)
         showId('rightSideDetailPannel');
-        hideId('myZoomImageOutputId');
+        if(isDeviceMobile == 'yes'){
+            hideId('myZoomImageOutputId_small');
+        }
+        else if(isDeviceMobile == 'no'){
+            hideId('myZoomImageOutputId');
+        }
+        else{
+            hideId('myZoomImageOutputId');
+            hideId('myZoomImageOutputId_small');
+        }
     }
 </script>
 
-<body  onload="hideZoomImage()" style="position: relative; background-color: #f9f9f9;">
+<style>
+    .checked {
+        color: orange;
+    }
+
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+    #addToCart{
+        padding-top:10%;
+    }
+    #buyNow{
+        padding-top:5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:60px;
+        }
+        #addToCart{
+            padding-top:10%;
+        }
+        #buyNow{
+            padding-top:2%;
+        }    
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:70px;
+        }
+    }
+
+    .zoom-without-container {
+        transition: transform .2s; /* Animation */
+        margin: 0 auto;
+      }
+
+    .zoom-without-container img{
+        width:100%;
+        height:auto;	
+    }
+    .zoom-without-container:hover {
+      transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    }
+
+    .quick-img-zoom img {
+        transform-origin: 0 0;
+        transition: transform .25s, visibility .25s ease-in;
+      }
+    /* The Transformation */
+    .quick-img-zoom:hover img {
+        transform: scale(2);
+    }
+    
+</style>
+
+<body  onload="hideZoomImage('allDevices')" style="position: relative; background-color:#f9f9f9;">
     {% include 'common/header/header.html' %}
-    <div class="w3-content" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-row" onmouseover="hideZoomImage()">
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row" onmouseover="hideZoomImage('allDevices')">
             <div class="w3-col">
                 <div class="w3-left w3-text-grey">
                     {% if instance.categoryName != "" %}
@@ -151,10 +229,9 @@
         <!--{{ forloop.counter }}-->
         <div class="w3-row w3-border-bottom w3-border-white" style="padding-top:5%;">
             <div class="w3-col l4 m6 s12">
-
-                <div class="w3-row" style="margin-top:5%; margin-bottom:10%;">
+                <div class="w3-row" style="margin-top:5%; ">
                     <div class="container">
-                        <div class="w3-col w3-center l2 m2 s2" onmouseover="hideZoomImage()">
+                        <div class="w3-col w3-center l2 m2 s2" onmouseover="hideZoomImage('allDevices')">
                             <!--todo images vertical scroll-->
                             {% for data in dataData.HoverImageDict.items %}
                             <div class="row" style="margin-bottom:5%;">
@@ -166,41 +243,21 @@
                         <div class="w3-col l10 m10 s10">
                             <!--todo images vertical scroll-->
                             {% for data in dataData.HoverImageDict.items %}
-                            <div class="mySlides" style="margin-top:15%;margin-left:15%;">
+                            <div class="mySlides">
                                 <!--<div class="numbertext w3-text-black">{{data.0}} / 6</div>-->
-                                <img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId" onmouseover="showZoomImage('{{data.0}}')">
+                                <div class="w3-hide-small"><img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId" onmouseover="showZoomImage('{{data.0}}', 'no')"></div>
+                                <!--<div class="w3-hide-large w3-hide-medium"><img src="{{data.1}}" style="width:100%" id="{{data.0}}_myZoomImageInputId_small" onmouseover="showZoomImage('{{data.0}}', 'yes')"></div>-->
+                                <div class="w3-hide-large w3-hide-medium" style="margin-bottom:5%">
+                                    <img src="{{data.1}}" class="zoom-without-container" style="width:100%" id="{{data.0}}_myZoomImageInputId_small" alt="zoom">
+                                        <!--<p class="w3-text-green w3-hover-text-blue w3-center" style="" onclick=""> zoom image </p>-->
+                                </div>
                             </div>
                             {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="w3-row" style="padding-top:5%;" onmouseover="hideZoomImage()">
-                    <!--
-                    <div class="w3-col l2 m2 s2" style="padding-right:2%;">
-                        <small><input class='w3-input w3-round w3-border' type='text' id='ProductQuantity' placeholder='Qty.' name='ProductQuantity' onchange="quantityChange()" required></small>
-                    </div>
-                    -->
-                    <div class="w3-col w3-center l5 m5 s5" style="padding-left: 2%;">
-                        <form action="" method="post"> {% csrf_token %}
-                            <input type="hidden" name="ADDTOCART" value="{{instance.modelNumber}}" />
-                            <!--<input type="hidden" id="QUANTITY" name="QUANTITY" value="1" />-->
-                            <!--<button class="w3-button w3-teal" onclick="quantityValidation(this)">Add To Cart</button>-->
-                            <button class="w3-button w3-teal">Add To Cart</button>
-                        </form>
-                    </div>
-                    <div class="w3-col l5 m5 s5">
-                        <form action="" method="post"> {% csrf_token %}
-                            <input type="hidden" name="BUYNOW" value="{{instance.modelNumber}}" />
-                            <!--<input type="hidden" name="BUYNOW" value="{{instance.modelNumber}}/{{instance.quantity}}" />-->
-                            <!--<input type="hidden" id="QUANTITY" name="QUANTITY" value="1" />-->
-                            <!--<button class="w3-button w3-black" onclick="quantityValidation(this)">Buy Now</button>-->
-                            <button class="w3-button w3-black">Buy Now</button>
-                        </form>
+                        </div>                    
                     </div>
                 </div>
             </div>
-            <div class="w3-col w3-align-left l8 m6 s8" style="padding-left:15%;" id="rightSideDetailPannel">
+            <div class="w3-col w3-small w3-align-left l6 m6 s12" style="padding-left:5%;" id="rightSideDetailPannel">
                 <div class="w3-row" style="padding-bottom:1%;">
                     <div class="w3-xxlarge">{{ instance.title }}</div>
                 </div>
@@ -215,11 +272,42 @@
                             <span class="w3-text-grey"><medium>{{ value }}</medium></span>
                         </div>
                     {% endfor %}
-                
                 </div>
             </div>
-            <div class="w3-col w3-align-left l6 m6 s8 img-zoom-result w3-card-4" id="myZoomImageOutputId" onmouseover="hideZoomImage()">
+           
+            <div class="w3-col w3-align-left l6 m6 s5 w3-hide-small img-zoom-result w3-card-4" id="myZoomImageOutputId" onmouseover="hideZoomImage('no')">
             </div>
+            <!--
+            <div class="w3-col w3-align-left l6 m6 s5 w3-hide-large w3-hide-medium img-zoom-result w3-card-4" id="myZoomImageOutputId_small" onmouseover="hideZoomImage('yes')">
+            </div>-->
+            
+            <div class="w3-col w3-align-left l2 m2 s12">
+                <div class="w3-row" id="addToCart">
+                    <div class="w3-col l1 m1 s1"><br></div>
+                    <div class="w3-col l10 m10 s10">
+                        <form action="" method="post"> {% csrf_token %}
+                            <input type="hidden" name="ADDTOCART" value="{{instance.modelNumber}}" />
+                            <button class="w3-button w3-medium w3-block w3-round" style="background-color:#ffe11b;">
+                                Add To Cart
+                            </button><!--#b7daed-->
+                        </form>
+                    </div>
+                    <div class="w3-col l1 m1 s1"><br></div>
+                </div>
+                <div class="w3-row" id="buyNow">
+                    <div class="w3-col l1 m1 s1"><br></div>
+                    <div class="w3-col l10 m10 s10">
+                        <form action="" method="post"> {% csrf_token %}
+                            <input type="hidden" name="BUYNOW" value="{{instance.modelNumber}}" />
+                            <button class="w3-button w3-medium w3-block w3-round" style="background-color:#ff9f00;">
+                                Buy Now
+                            </button>
+                        </form>
+                    </div>
+                    <div class="w3-col l1 m1 s1"><br></div>
+                </div>
+            </div>
+
         </div>
     </div>
     <script>
@@ -241,7 +329,7 @@
     </script>
     <script>
         window.onload = function() {
-            hideZoomImage()
+            hideZoomImage('allDevices')
             document.getElementById("dropdownMenuProfile").style.display = "none";
         };
 

@@ -82,17 +82,17 @@ class productsTableTernary(models.Model):
     def getHoverImageDict(self):
         hoverImageDict = {}
         if self.hoverImage_1 != "":
-            hoverImageDict[1] = self.hoverImage_1.url
+            hoverImageDict[2] = self.hoverImage_1.url
         if self.hoverImage_2 != "":
-            hoverImageDict[2] = self.hoverImage_2.url
+            hoverImageDict[3] = self.hoverImage_2.url
         if self.hoverImage_3 != "":
-            hoverImageDict[3] = self.hoverImage_3.url
+            hoverImageDict[4] = self.hoverImage_3.url
         if self.hoverImage_4 != "":
-            hoverImageDict[4] = self.hoverImage_4.url
+            hoverImageDict[5] = self.hoverImage_4.url
         if self.hoverImage_5 != "":
-            hoverImageDict[5] = self.hoverImage_5.url
+            hoverImageDict[6] = self.hoverImage_5.url
         if self.hoverImage_6 != "":
-            hoverImageDict[6] = self.hoverImage_6.url
+            hoverImageDict[7] = self.hoverImage_6.url
         return hoverImageDict
 
 
@@ -126,6 +126,7 @@ class productsTablePrimary(models.Model):
     quantity        =   models.IntegerField(blank=True, null=True, default=0)
     warranty        =   models.CharField(blank=True, max_length=50, default="")
     mainImage       =   models.ImageField(blank=True, null=True)
+    isActive        =   models.BooleanField(blank=True, default=True)
 
     userRatings     =   models.IntegerField(blank=True, null=True, default=0)
     reviewList      =   models.CharField(blank=True, max_length=50, default="")

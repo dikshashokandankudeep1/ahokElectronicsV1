@@ -148,7 +148,7 @@ def ProductList_view(request, categoryName):
             print("ProductList_view 0 POST request.session['lastPageUrl']::",getSession(request, 'lastPageUrl'))
             return redirect('/login')
 
-    categoryObj     =   productsTablePrimary.objects.filter(category=categoryName)
+    categoryObj     =   productsTablePrimary.objects.filter(category=categoryName).filter(isActive=True)
     brandNameObj    =   categoryObj.values_list('brandName', flat=True).distinct()
 
     dataDict = {}
@@ -168,7 +168,7 @@ def ProductList_view(request, categoryName):
         'brandnameObjCount' :   brandNameObj.count(),
         'categoryName'  : categoryName
     }
-    return render(request, "product/searchItems.html", context)
+    return render(request, "product/search/countingFromTitle.html", context)
 
 
 
@@ -208,7 +208,7 @@ def ProductSearchList_view(request, productTitle):
 
 
     print("ProductSearchList_view START")
-    productproductTitleListObj = productsTablePrimary.objects.filter(title__contains=productTitle)
+    productproductTitleListObj = productsTablePrimary.objects.filter(title__contains=productTitle).filter(isActive=True)
     filterDict = {"PRICE_BL_2000" : 0, "PRICE_BTW_2000_3000" : 0, "PRICE_BTW_3000_4000" : 0, "PRICE_BTW_4000_5000" : 0, "PRICE_ABW_5000" : 0}
     SORTBY = 'Popularity'
     matchNotFound = ""
@@ -274,7 +274,7 @@ def ProductSearchList_view(request, productTitle):
         'categoryName'                   : "",
         'brandName'                      : ""
     }
-    return render(request, "product/searchItemsOnClick.html", context)
+    return render(request, "product/search/fromTitle.html", context)
 
 
 def ProductListOnClick_view(request, categoryName, brandName):
@@ -314,34 +314,37 @@ def ProductListOnClick_view(request, categoryName, brandName):
 
     print("ProductListOnClick_view request.user.id::", request.user.id)
     
-    productBrandnameListObj = productsTablePrimary.objects.filter(category=categoryName).filter(brandName=brandName)
+    productBrandnameListObj = productsTablePrimary.objects.filter(category=categoryName).filter(brandName=brandName).filter(isActive=True)
     print("----------------", productBrandnameListObj.values())
     filterDict = {"PRICE_BL_2000" : 0, "PRICE_BTW_2000_3000" : 0, "PRICE_BTW_3000_4000" : 0, "PRICE_BTW_4000_5000" : 0, "PRICE_ABW_5000" : 0}
     SORTBY = 'Popularity'
     matchNotFound = ''
     relaventSearch = ''
     if request.method == 'POST':
-        print("ProductListOnClick_view POST")
-
-        if (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
-            setSession(request, 'lastPageUrl', request.get_full_path())
-            #request.session['lastPageUrl'] = request.get_full_path()
-            print("ProductListOnClick_view 0 POST request.session['lastPageUrl']::",getSession(request,'lastPageUrl'))
-            return redirect('/login')
-        print("request.user.id::",request.user.id)
-        url = ""
+        print("ProductListOnClick_view POST::", request.POST)
         updateaddToCartID = ""
+        url = ""
+        if request.POST.__contains__("ADDTOCART") and request.POST.__contains__("BUYNOW"):
 
-        if request.POST.__contains__("ADDTOCART"):
-            print("ProductListOnClick_view request.POST['ADDTOCART']::", request.POST['ADDTOCART'])
-            updateaddToCartID = request.POST['ADDTOCART']
-            url = "/viewcart"
-        elif request.POST.__contains__("BUYNOW"):
-            print("ProductListOnClick_view request.POST['BUYNOW']::", request.POST['BUYNOW'])
-            updateaddToCartID = request.POST['BUYNOW']
-            url = "/product/purchase"
-            setSession(request, 'currentOrderList', [updateaddToCartID])
-            #request.session["currentOrderList"] = [updateaddToCartID]
+            if (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
+                setSession(request, 'lastPageUrl', request.get_full_path())
+                #request.session['lastPageUrl'] = request.get_full_path()
+                print("ProductListOnClick_view 0 POST request.session['lastPageUrl']::",getSession(request,'lastPageUrl'))
+                return redirect('/login')
+            print("request.user.id::",request.user.id)
+            
+            
+            if request.POST.__contains__("ADDTOCART"):
+                print("ProductListOnClick_view request.POST['ADDTOCART']::", request.POST['ADDTOCART'])
+                updateaddToCartID = request.POST['ADDTOCART']
+                url = "/viewcart"
+            elif request.POST.__contains__("BUYNOW"):
+                print("ProductListOnClick_view request.POST['BUYNOW']::", request.POST['BUYNOW'])
+                updateaddToCartID = request.POST['BUYNOW']
+                url = "/product/purchase"
+                setSession(request, 'currentOrderList', [updateaddToCartID])
+                #request.session["currentOrderList"] = [updateaddToCartID]
+             
         elif(request.POST.__contains__("search")):
             print("ProductListOnClick_view handleSearchBox")
             url, matchNotFound, relaventSearch = handleSearchBox(request)
@@ -374,11 +377,12 @@ def ProductListOnClick_view(request, categoryName, brandName):
         else:
             print("ProductListOnClick_view some other case")
 
-        userObject = usertable.objects.filter(userId=request.user.id)[0]
-        print("ProductListOnClick_view POST userObject::", userObject)
+        
 
         addToCartItemsDict = {}
         if updateaddToCartID != "":
+            userObject = usertable.objects.filter(userId=request.user.id)[0]
+            print("ProductListOnClick_view POST userObject::", userObject)
             if userObject.addToCartItemsDict != "":
                 print("ProductListOnClick_view userObject.addToCartItemsDict::",userObject.addToCartItemsDict)
                 #addToCartItemsDict = dict( map(int, item.split(":")) for item in userObject.addToCartItemsDict.strip('}{').split(","))
@@ -426,7 +430,7 @@ def ProductListOnClick_view(request, categoryName, brandName):
         'matchNotFound'     :   matchNotFound,
         'relaventSearch'    :   relaventSearch
     }
-    return render(request, "product/searchItemsOnClick.html", context)
+    return render(request, "product/search/fromTitle.html", context)
 
 
 def Product_view(request, modelNumber):
@@ -478,7 +482,6 @@ def Product_view(request, modelNumber):
 
         addToCartItemsDict = {}
         if userObject.addToCartItemsDict != "":
-            #addToCartItemsDict = dict( map(int,item.split(":")) for item in userObject.addToCartItemsDict.strip('}{').split(","))
             addToCartItemsDict = dict( [item.split(":")[0].strip().strip("'"),int(item.split(":")[1].strip())]  for item in userObject.addToCartItemsDict.strip('}{').split(","))
 
         print("Product_view POST addToCartItemsDict::", addToCartItemsDict)
@@ -493,17 +496,21 @@ def Product_view(request, modelNumber):
         print("Product_view url::", url)
         if url != "":
             return redirect(url)
-
-    print("Product_view 1 modelNumber::",modelNumber, productsTableTernary.objects.filter(productId=modelNumber))
     
+    HoverImageDict = {}
+    HoverImageDict[1] = productsTablePrimary.objects.filter(modelNumber=modelNumber)[0].mainImage.url
+    objTernary = productsTableTernary.objects.filter(productId=modelNumber)
+    print("Product_view 1 modelNumber::",modelNumber, objTernary)
+
+    if len(objTernary):
+        HoverImageDict = objTernary[0].getHoverImageDict()
 
     print("Product_view 6::")
     dataData = {
-        "HoverImageDict"  : productsTableTernary.objects.filter(productId=modelNumber)[0].getHoverImageDict(),
+        "HoverImageDict"  : HoverImageDict,
         "Highlight" : {},
         "Spacification" : {}
     }
-    #print("Product_view 7::", productsTableSecodary.objects.filter(productId=modelNumber).values())
     #ignoreItems = ['id', 'productId']
     if productsTableSecodary.objects.filter(productId=modelNumber).exists():
         for key, value in productsTableSecodary.objects.filter(productId=modelNumber).values()[0].items():
