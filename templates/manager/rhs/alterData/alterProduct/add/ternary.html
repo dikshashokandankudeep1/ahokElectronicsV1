@@ -1,73 +1,69 @@
+
 <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
-    <table class="w3-card w3-table" id="ProductTable">
+    <table class="w3-card w3-table w3-small">
         <tr style="background-color:azure">
-            <th><br></th>
-            <th><br></th>
-            <th>ADD PRODUCT</th>
-            <th><br></th>
+            <th class="w3-hide-small"><br></th>
+            <th colspan="3" style="text-align: center;">ADD PRODUCT</th>
         </tr>
-        <tr >
-            <th><br></th>
-            <th class="w3-text-blue">Ternary Details</th>
+        <tr>
+            <th class="w3-hide-small"><br></th>
+            <th class="w3-text-blue" colspan="2">Hover Images</th>
             <th class="w3-text-green"> {{productId}} </th>
-            <th><br></th>
         </tr>
         {% for message in messages%}
         <tr>
-            <td><br></td>
-            <td class="w3-text-red">Warning:: {{ message }} </td>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
+            <td class="w3-text-red" colspan="2">Warning:: {{ message }} </td>
         </tr>
         {% endfor %}
-
         <tr>
-            <td><br></td>
-            <td>Hover Image 1</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">IMG 1</td>
             <td>
-                <input type="file" id="hoverImage_1" name="hoverImage_1">
+                <input class="w3-input w3-border-0" type="file" id="hoverImage_1" name="hoverImage_1" style="padding-left:0%;">
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Hover Image 2</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">IMG 2</td>
             <td>
-                <input type="file" id="hoverImage_2" name="hoverImage_2">
+                <input class="w3-input w3-border-0" type="file" id="hoverImage_2" name="hoverImage_2" style="padding-left:0%;">
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Hover Image 3</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">IMG 3</td>
             <td>
-                <input type="file" id="hoverImage_3" name="hoverImage_3">
+                <input class="w3-input w3-border-0" type="file" id="hoverImage_3" name="hoverImage_3" style="padding-left:0%;">
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Hover Image 4</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">IMG 4</td>
             <td>
-                <input type="file" id="hoverImage_4" name="hoverImage_4">
+                <input class="w3-input w3-border-0" type="file" id="hoverImage_4" name="hoverImage_4" style="padding-left:0%;">
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Hover Image 5</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">IMG 5</td>
             <td>
-                <input type="file" id="hoverImage_5" name="hoverImage_5">
+                <input class="w3-input w3-border-0" type="file" id="hoverImage_5" name="hoverImage_5" style="padding-left:0%;">
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Hover Image 6</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">IMG 6</td>
             <td>
-                <input type="file" id="hoverImage_6" name="hoverImage_6">
+                <input class="w3-input w3-border-0" type="file" id="hoverImage_6" name="hoverImage_6" style="padding-left:0%;">
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td><br></td>
             <td  class="w3-small">
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save</button>
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89fff5;" onclick="fillSkipFunc()">Skip</button>
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #89c4ff;">Save</button>
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #89fff5;" onclick="fillSkipFunc()">Skip</button>
             </td>
         </tr>
         <input type="hidden" name="productId" value="{{productId}}">

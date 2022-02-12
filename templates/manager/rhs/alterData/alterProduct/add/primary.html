@@ -1,19 +1,16 @@
 
-<table class="w3-card w3-table" id="ProductTable">
+<table class="w3-card w3-table w3-small">
     <tr style="background-color:azure">
-        <th><br></th>
-        <th><br></th>
-        <th>ADD PRODUCT</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th colspan="3" style="text-align: center;">ADD PRODUCT</th>
     </tr>
-    <tr >
-        <th><br></th>
-        <th class="w3-text-blue">Initial Details</th>
-        <th><br></th>
+    <tr>
+        <th class="w3-hide-small"><br></th>
+        <th class="w3-text-blue" colspan="2">Basic Details</th>
     </tr>
     {% for message in messages%}
     <tr>
-        <td><br></td>
+        <td class="w3-hide-small"><br></td>
         <td><br></td>
         {% if productId == "" %}
             <td class="w3-text-red">Error:: {{ message }} </td>
@@ -24,17 +21,17 @@
     {% endfor %}
     <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         <tr>
-            <td><br></td>
-            <td>Model Number</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Model Number</td>
             <td>
-                <input type="text" name="modelNumber" id="modelNumber" value="" placeholder="modelNumber" required>
+                <input class="w3-input w3-border" type="text" name="modelNumber" id="modelNumber" value="" placeholder="modelNumber" required>
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Category</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Category</td>
             <td>
-                <input type="text" name="category" id="category" list="categoryList" value="" placeholder="category" required>
+                <input class="w3-input w3-border" type="text" name="category" id="category" list="categoryList" value="" placeholder="category" required>
                 <datalist id="categoryList">
                     {% for item in categoryList%}
                         <option value="{{item}}">{{item}}</option>
@@ -43,59 +40,59 @@
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Sub-Category</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Sub-Category</td>
             <td>
-                <input type="text" name="subCategory" id="subCategory" value="" placeholder="subCategory" required>
+                <input class="w3-input w3-border" type="text" name="subCategory" id="subCategory" value="" placeholder="subCategory" required>
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Brand Name</td>
-            <td >
-                <input type="text" name="brandName" id="brandName" value="" placeholder="brandName" required >
-            </td>
-        </tr>
-        <tr>
-            <td><br></td>
-            <td>Title</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Brand Name</td>
             <td>
-                <input type="text" name="title" id="title" value="" placeholder="title" required onclick="loadTitleFromFillItems()" onfocus="loadTitleFromFillItems()">
+                <input class="w3-input w3-border" type="text" name="brandName" id="brandName" value="" placeholder="brandName" required >
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Price</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Title</td>
             <td>
-                <input type="number" name="price" value="" placeholder="price" required>
+                <input class="w3-input w3-border" type="text" name="title" id="title" value="" placeholder="title" required onclick="loadTitleFromFillItems()" onfocus="loadTitleFromFillItems()">
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Quantity</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Price</td>
             <td>
-                <input type="number" name="quantity" value="" placeholder="quantity" required>
+                <input class="w3-input w3-border" type="number" name="price" value="" placeholder="price" required>
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Warranty</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Quantity</td>
             <td>
-                <input type="text" name="warranty" value="2Yr, 3Month" placeholder="warranty (Ex. 2Yr, 3Mon)" required>
+                <input class="w3-input w3-border" type="number" name="quantity" value="" placeholder="quantity" required>
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Product Image</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Warranty</td>
             <td>
-                <input type="file" id="mainImage" name="mainImage" required>
+                <input class="w3-input w3-border" type="text" name="warranty" value="2Yr, 3Month" placeholder="warranty (Ex. 2Yr, 3Mon)" required>
             </td>
         </tr>
         <tr>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:3%;">Product Image</td>
+            <td>
+                <input class="w3-input w3-border-0" type="file" id="mainImage" name="mainImage" style="padding-left:0%;" required>
+            </td>
+        </tr>
+        <tr>
+            <td class="w3-hide-small"><br></td>
             <td><br></td>
-            <td><br></td>
-            <td  class="w3-small">
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;" onclick="categoryCheck()">
+            <td class="w3-small">
+                <button class="w3-button w3-round" type="submit" value="Save" style="background-color: #89c4ff;" onclick="categoryCheck()">
                     Save and Next
                 </button>
             </td>
@@ -106,6 +103,9 @@
     </form>
 </table>
 
+
+
+  
 <script>
     function loadTitleFromFillItems(){
         let brandName   = document.getElementById("brandName").value;

@@ -1,45 +1,41 @@
 <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
-    <table class="w3-card w3-table" id="ProductTable">
+    <table class="w3-card w3-table w3-small">
         <tr style="background-color:azure">
-            <th><br></th>
-            <th><br></th>
-            <th>ADD PRODUCT</th>
-            <th><br></th>
+            <th class="w3-hide-small"><br></th>
+            <th colspan="3" style="text-align: center;">ADD PRODUCT</th>
         </tr>
-        <tr >
-            <th><br></th>
-            <th class="w3-text-blue">Final Details</th>
+        <tr>
+            <th class="w3-hide-small"><br></th>
+            <th class="w3-text-blue" colspan="2">Description & Specifications</th>
             <th class="w3-text-green"> {{productId}} </th>
-            <th><br></th>
         </tr>
         {% for message in messages%}
         <tr>
-            <td><br></td>
-            <td class="w3-text-red">Warning:: {{ message }} </td>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
+            <td class="w3-text-red" colspan="2">Warning:: {{ message }} </td>
         </tr>
         {% endfor %}
         <tr>
-            <td><br></td>
-            <td>Description</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:5%;">Description</td>
             <td>
-                <textarea name="description" id="description" rows="4" cols="50" placeholder="Product Description"></textarea>
+                <textarea class="w3-input w3-border" name="description" id="description" rows="4" cols="50" placeholder="Product Description"></textarea>
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Specifications</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:5%;">Specifications</td>
             <td>
-                <textarea name="specifications" id="specifications" rows="4" cols="50" placeholder="Product Specifications"></textarea>
+                <textarea class="w3-input w3-border" name="specifications" id="specifications" rows="4" cols="50" placeholder="Product Specifications"></textarea>
             </td>
         </tr>
         
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td><br></td>
             <td  class="w3-small">
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save</button>
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89fff5;" onclick="fillSkipFunc()">Skip</button>
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #89c4ff;">Save</button>
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #89fff5;" onclick="fillSkipFunc()">Skip</button>
             </td>
         </tr>
         <input type="hidden" name="productId" value="{{productId}}">

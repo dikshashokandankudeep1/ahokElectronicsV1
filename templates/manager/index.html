@@ -10,17 +10,52 @@
 
     <script src="{% static 'js/common/universal/all.js' %}"></script>
     <script src="{% static 'js/adminPage.js' %}"></script>
-</head>
 
-<body>
+</head>
+<style>
+
+    #mainDiv{ 
+        /*margin-top: 5.5%;*/
+        margin-top: 80px;
+    }
+    #rhsPannel{ 
+        margin-left: 2%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{ 
+            /*margin-top: 15%;*/
+            margin-top: 60px;
+        }
+        #rhsPannel{ 
+            margin-left: 2%;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{ 
+            margin-top: 70px;
+        }
+        #rhsPannel{ 
+            margin-left: 2%;
+        }
+    }
+
+</style>
+
+
+<body style="padding-bottom:5%;" style="display: block;" >
     {% include 'common/header/header.html' %}
-    <div class="w3-row " style="margin-top: 5.5%;" onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-col l1 m1 s1 w3-center"><br></div>
-        <div class="w3-col l2 m2 w3-left" style="padding-right: 1%;">
+    <div class="w3-row" onmouseover="dropdownMenuProfileHide()" id="mainDiv">
+        <div class="w3-col l1 m1 s1 w3-hide-small w3-center"><br></div>
+        <div class="w3-col l2 m3 s4 w3-hide-small w3-small w3-left" style="padding-right:1%;">
+            {% include 'manager/lhs/Pannel.html' %}
+        </div>
+        <div class="w3-col l2 m2 s3 w3-hide-large w3-hide-medium w3-small w3-left">
             {% include 'manager/lhs/Pannel.html' %}
         </div>
 
-        <div class="w3-col l6 m8 w3-center" style="margin-left: 2%;">
+        <div class="w3-col l6 m7 s8 w3-center" id="rhsPannel">
             {% if touds == "home" %}
                 {% include 'manager/rhs/home.html' %}
             {% elif touds == "usersProfiles" %}
@@ -67,10 +102,17 @@
         </div>
     </div>
 <script>
-    window.onload = function() {
+
+    history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+
+    window.onload = function() {    
         document.getElementById("dropdownMenuProfile").style.display = "none";
     };
 
+    
     function dropdownMenuProfileHide(){
         document.getElementById("dropdownMenuProfile").style.display = "none";
     }

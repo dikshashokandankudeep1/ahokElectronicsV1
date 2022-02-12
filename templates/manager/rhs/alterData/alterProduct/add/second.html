@@ -1,196 +1,189 @@
 
-<table class="w3-card w3-table" id="ProductTable">
+<table class="w3-card w3-table w3-small">
     <style>
         #tablecolor{
             background-color: #eafcb6;
         };
     </style>
     <tr style="background-color:azure">
-        <th><br></th>
-        <th><br></th>
-        <th>ADD PRODUCT</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th colspan="3" style="text-align: center;">ADD PRODUCT</th>
     </tr>
-    <tr >
-        <th><br></th>
-        <th class="w3-text-blue">Secondary Details</th>
-        <th><br></th>
+    <tr>
+        <th class="w3-hide-small"><br></th>
+        <th class="w3-text-blue" colspan="2">More Details</th>
         <th class="w3-text-green"> {{productId}} </th>
     </tr>
     {% for message in messages%}
     <tr>
-        <td><br></td>
-        <td class="w3-text-red">Warning:: {{ message }} </td>
-        <td><br></td>
-        
+        <td class="w3-hide-small"><br></td>
+        <td class="w3-text-red" colspan="2">Warning:: {{ message }} </td>
     </tr>
     {% endfor %}
         
     <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
             <tr>
-                <td><br></td>
-                <td>Description 1</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 1</td>
                 <td>
-                    <input type="text" name="1_Name" id="1_Name" list="tickerList" value="" placeholder="Name" required>
-                    <datalist id="tickerList">
-                        {% for item in tickerList%}
-                            <option value="{{item}}">{{item}}</option>
-                        {% endfor %}
-                    </datalist>
+                    <input class="w3-input w3-border" type="text" name="1_Name" id="1_Name" list="tickerList" value="" placeholder="Name" required>
                 </td>
                 <td>
-                    <input type="text" name="1_Value" id="1_Value" value="" placeholder="Value" required>
+                    <input class="w3-input w3-border" type="text" name="1_Value" id="1_Value" value="" placeholder="Value" required>
                 </td>
             </tr>
             <tr id="tablecolor">
-                <td><br></td>
-                <td>Description 2</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 2</td>
                 <td>
-                    <input type="text" name="2_Name" id="2_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="2_Name" id="2_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="2_Value" id="2_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="2_Value" id="2_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td>Description 3</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 3</td>
                 <td>
-                    <input type="text" name="3_Name" id="3_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="3_Name" id="3_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="3_Value" id="3_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="3_Value" id="3_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr id="tablecolor">
-                <td><br></td>
-                <td>Description 4</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 4</td>
                 <td>
-                    <input type="text" name="4_Name" id="4_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="4_Name" id="4_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="4_Value" id="4_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="4_Value" id="4_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td>Description 5</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 5</td>
                 <td>
-                    <input type="text" name="5_Name" id="5_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="5_Name" id="5_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="5_Value" id="5_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="5_Value" id="5_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr id="tablecolor">
-                <td><br></td>
-                <td>Description 6</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 6</td>
                 <td>
-                    <input type="text" name="6_Name" id="6_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="6_Name" id="6_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="6_Value" id="6_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="6_Value" id="6_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td>Description 7</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 7</td>
                 <td>
-                    <input type="text" name="7_Name" id="7_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="7_Name" id="7_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="7_Value" id="7_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="7_Value" id="7_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr id="tablecolor">
-                <td><br></td>
-                <td>Description 8</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 8</td>
                 <td>
-                    <input type="text" name="8_Name" id="8_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="8_Name" id="8_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="8_Value" id="8_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="8_Value" id="8_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td>Description 9</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 9</td>
                 <td>
-                    <input type="text" name="9_Name" id="9_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="9_Name" id="9_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="9_Value" id="9_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="9_Value" id="9_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr id="tablecolor">
-                <td><br></td>
-                <td>Description 10</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 10</td>
                 <td>
-                    <input type="text" name="10_Name" id="10_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="10_Name" id="10_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="10_Value" id="10_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="10_Value" id="10_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td>Description 11</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 11</td>
                 <td>
-                    <input type="text" name="11_Name" id="11_Name" list="tickerList" value="" placeholder="Name" >
+                    <input class="w3-input w3-border" type="text" name="11_Name" id="11_Name" list="tickerList" value="" placeholder="Name" >
                 </td>
                 <td>
-                    <input type="text" name="11_Value" id="11_Value" value="" placeholder="Value" >
+                    <input class="w3-input w3-border" type="text" name="11_Value" id="11_Value" value="" placeholder="Value" >
                 </td>
             </tr>
             <tr id="tablecolor">
-                <td><br></td>
-                <td>Description 12</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 12</td>
                 <td>
-                    <input type="text" name="12_Name" id="12_Name" list="tickerList" value="" placeholder="Name">
+                    <input class="w3-input w3-border" type="text" name="12_Name" id="12_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
-                    <input type="text" name="12_Value" id="12_Value" value="" placeholder="Value">
+                    <input class="w3-input w3-border" type="text" name="12_Value" id="12_Value" value="" placeholder="Value">
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td>Description 13</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 13</td>
                 <td>
-                    <input type="text" name="13_Name" id="13_Name" list="tickerList" value="" placeholder="Name">
+                    <input class="w3-input w3-border" type="text" name="13_Name" id="13_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
-                    <input type="text" name="13_Value" id="13_Value" value="" placeholder="Value">
+                    <input class="w3-input w3-border" type="text" name="13_Value" id="13_Value" value="" placeholder="Value">
                 </td>
             </tr>
             <tr id="tablecolor">
-                <td><br></td>
-                <td>Description 14</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 14</td>
                 <td>
-                    <input type="text" name="14_Name" id="14_Name" list="tickerList" value="" placeholder="Name">
+                    <input class="w3-input w3-border" type="text" name="14_Name" id="14_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
-                    <input type="text" name="14_Value" id="14_Value" value="" placeholder="Value">
+                    <input class="w3-input w3-border" type="text" name="14_Value" id="14_Value" value="" placeholder="Value">
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td>Description 15</td>
+                <td class="w3-hide-small"><br></td>
+                <td>Detail 15</td>
                 <td>
-                    <input type="text" name="15_Name" id="15_Name" list="tickerList" value="" placeholder="Name">
+                    <input class="w3-input w3-border" type="text" name="15_Name" id="15_Name" list="tickerList" value="" placeholder="Name">
                 </td>
                 <td>
-                    <input type="text" name="15_Value" id="15_Value" value="" placeholder="Value">
+                    <input class="w3-input w3-border" type="text" name="15_Value" id="15_Value" value="" placeholder="Value">
                 </td>
             </tr>
             <tr>
-                <td><br></td>
-                <td><br></td>
-                <td><br></td>
-                <td  class="w3-small">
-                    <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Save and Next</button>
+                <td class="w3-hide-small"><br></td>
+                <td class="w3-small" colspan="3" style="text-align: right;">
+                    <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #89c4ff;">Save and Next</button>
                 </td>
             </tr>
+            <datalist id="tickerList">
+                {% for item in tickerList%}
+                    <option value="{{item}}">{{item}}</option>
+                {% endfor %}
+            </datalist>
         <input type="hidden" name="productId" value="{{productId}}">
         <input type="hidden" name="formAddProductAction" value="moreDetails">
         <input id="skip" type="hidden" name="skip" value="">

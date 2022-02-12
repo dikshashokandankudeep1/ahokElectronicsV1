@@ -1,38 +1,34 @@
 
-<table class="w3-card w3-table" id="ProductTable">
+<table class="w3-card w3-table w3-small" >
     <tr style="background-color:azure">
-        <th><br></th>
-        <th><br></th>
-        <th>ALTER HOME IMAGES</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th colspan="3" style="text-align: center;">ALTER HOME IMAGES</th>
     </tr>
     <tr >
-        <th><br></th>
-        <th class="w3-text-blue">Home</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th class="w3-text-blue" colspan="3">Home Category Image Update</th>
     </tr>
     {% for message in messages%}
     <tr>
-        <td><br></td>
-        <td><br></td>
+        <td class="w3-hide-small"><br></td>
         {% if productId == "" %}
-            <td class="w3-text-red">Error:: {{ message }} </td>
+            <td class="w3-text-red" colspan="2">Error:: {{ message }} </td>
         {% else %}
-            <td class="w3-text-green">Success:: {{ message }} </td>
+            <td class="w3-text-green" colspan="2">Success:: {{ message }} </td>
         {% endif %}
     </tr>
     {% endfor %}
 
     <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         <tr>
-            <td><br></td>
-            <td>Slider Image</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:5%;">Image</td>
             <td>
-                <input type="file" id="image" name="image" required>
+                <input class="w3-input w3-border-0" type="file" id="image" name="image" style="padding-left:0%;" required>
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>isActive</td>
             <td>
                 <input type="radio" name="isActive" id="isActive" value="True" required> Yes
@@ -40,24 +36,24 @@
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Category</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:5%;">Category</td>
             <td>
-                <input type="text" name="category" id="category" value="" placeholder="Category" required>
+                <input class="w3-input w3-border" type="text" name="category" id="category" value="" placeholder="Category" required>
             </td>
         </tr>
         <tr>
-            <td><br></td>
-            <td>Shape</td>
+            <td class="w3-hide-small"><br></td>
+            <td style="padding-top:5%;">Shape</td>
             <td>
-                <input type="text" name="shape" id="shape" value="" placeholder="verticle(V)/horizontal(H)/square(S)" required>
+                <input class="w3-input w3-border" type="text" name="shape" id="shape" value="" placeholder="verticle(V)/horizontal(H)/square(S)" required>
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td><br></td>
             <td class="w3-small">
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;">
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #def5f1;">
                     save
                 </button>
             </td>

@@ -1,39 +1,35 @@
 
-<table class="w3-card w3-table" id="ProductTable">
+<table class="w3-card w3-table w3-small">
     <tr style="background-color:azure">
-        <th><br></th>
-        <th><br></th>
-        <th>ALTER PRODUCT</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th colspan="3" style="text-align: center;">ALTER PRODUCT</th>
     </tr>
     <tr >
-        <th><br></th>
-        <th class="w3-text-blue">Home</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th class="w3-text-blue" colspan="2">Modify Products</th>
     </tr>
     {% for message in messages%}
     <tr>
-        <td><br></td>
-        <td><br></td>
+        <td class="w3-hide-small"><br></td>
         {% if productId == "" %}
-            <td class="w3-text-red">Error:: {{ message }} </td>
+            <td class="w3-text-red" colspan="2">Error:: {{ message }} </td>
         {% else %}
-            <td class="w3-text-green">Success:: {{ message }} </td>
+            <td class="w3-text-green" colspan="2">Success:: {{ message }} </td>
         {% endif %}
     </tr>
     {% endfor %}
 
     <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td  class="w3-small">
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;" onclick="fillAction('add')">
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #def5f1;" onclick="fillAction('add')">
                     add
                 </button>
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;" onclick="fillAction('update')">
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #def5f1;" onclick="fillAction('update')">
                     update
                 </button>
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;" onclick="fillAction('view')">
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #def5f1;" onclick="fillAction('view')">
                     view
                 </button>
             </td>

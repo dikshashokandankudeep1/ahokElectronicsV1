@@ -26,6 +26,15 @@ def manager_View(request, touds):
     print("Manager::", touds)
     secondTouds = ""
     productId = ""
+
+
+    print("-----------Old----Touds---------", touds)    
+    print("-----------Old----secondTouds---------", secondTouds)
+    if touds != "alterProduct": #todo remove this written for only testing purpose
+        touds = "alterProduct"  
+        secondTouds = "home"
+    
+
     print("manager_View 1")
     if touds == "alterProduct":
         print("manager_View 2")
@@ -42,12 +51,18 @@ def manager_View(request, touds):
             print("other posibilities")
     print("manager_View 8")
 
+
+
+
     categoryList = []
     if secondTouds == "primaryDetails":
         for obj in tickerTable.objects.values_list():
             categoryList = [ item.split("|")[0] for item in obj[2].replace("[", "").replace("]", "").replace("'", "").split(", ")]
 
+    #secondTouds = "primaryDetails"
     #secondTouds = "moreDetails"
+    #secondTouds = "hoverImages"
+    #secondTouds = "descriptionAndSpacificationManage"
 
     tickerList = []
     if secondTouds == "moreDetails":
@@ -55,9 +70,12 @@ def manager_View(request, touds):
             tickerList = [ item.split("|")[0] for item in obj[1].replace("[", "").replace("]", "").replace("'", "").split(", ")]
             
         print("tickerList::", tickerList)
-        
-    print("---------------secondTouds---------", secondTouds)
 
+
+
+    print("---------------Touds---------", touds)    
+    print("---------------secondTouds---------", secondTouds)
+    
     context = {
         "touds" : touds,
         "secondTouds" : secondTouds, 

@@ -1,31 +1,27 @@
 
-<table class="w3-card w3-table" id="ProductTable">
+<table class="w3-card w3-table w3-small">
     <tr style="background-color:azure">
-        <th><br></th>
-        <th><br></th>
-        <th>ALTER PAYMENT DETAIL</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th colspan="3">ALTER PAYMENT DETAIL</th>
     </tr>
     <tr >
-        <th><br></th>
-        <th class="w3-text-blue">Home</th>
-        <th><br></th>
+        <th class="w3-hide-small"><br></th>
+        <th class="w3-text-blue" colspan="2">Update Payment Data</th>
     </tr>
     {% for message in messages%}
     <tr>
-        <td><br></td>
-        <td><br></td>
+        <td class="w3-hide-small"><br></td>
         {% if productId == "" %}
-            <td class="w3-text-red">Error:: {{ message }} </td>
+            <td class="w3-text-red" colspan="2">Error:: {{ message }} </td>
         {% else %}
-            <td class="w3-text-green">Success:: {{ message }} </td>
+            <td class="w3-text-green" colspan="2">Success:: {{ message }} </td>
         {% endif %}
     </tr>
     {% endfor %}
 
     <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>Mode Of Payment</td>
             <td>
                 <input type="radio" name="modeOfPayment" id="modeOfPayment_UPI" value="UPI" onclick="Enable('UPI')"> UPI
@@ -33,7 +29,7 @@
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>isActive</td>
             <td>
                 <input type="radio" name="isActive" id="isActive_Yes" value="True"> Yes
@@ -41,52 +37,52 @@
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>UPI ID</td>
             <td>
-                <input type="text" name="upiId" id="upiId" value="" placeholder="UPI ID">
+                <input class="w3-input w3-border" type="text" name="upiId" id="upiId" value="" placeholder="UPI ID">
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>Bank Short Name</td>
             <td>
-                <input type="text" name="bankName" id="bankName" value="" placeholder="Bank Short Name">
+                <input class="w3-input w3-border" type="text" name="bankName" id="bankName" value="" placeholder="Bank Short Name">
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>IFSC Code</td>
             <td>
-                <input type="text" name="ifscCode" id="ifscCode" value="" placeholder="IFSC Code">
+                <input class="w3-input w3-border" type="text" name="ifscCode" id="ifscCode" value="" placeholder="IFSC Code">
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>Account Number</td>
             <td>
-                <input type="text" name="accountNumber" id="accountNumber" value="" placeholder="Account Number">
+                <input class="w3-input w3-border" type="text" name="accountNumber" id="accountNumber" value="" placeholder="Account Number">
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>Re-enter Account Number</td>
             <td>
-                <input type="text" id="reAccountNumber" value="" placeholder="Re-enter Account Number">
+                <input class="w3-input w3-border" type="text" id="reAccountNumber" value="" placeholder="Re-enter Account Number">
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td>Benificiary Name</td>
             <td>
-                <input type="text" name="benificiaryName" id="benificiaryName" value="" placeholder="Benificiary Name" >
+                <input class="w3-input w3-border" type="text" name="benificiaryName" id="benificiaryName" value="" placeholder="Benificiary Name" >
             </td>
         </tr>
         <tr>
-            <td><br></td>
+            <td class="w3-hide-small"><br></td>
             <td><br></td>
             <td class="w3-small">
-                <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #def5f1;" onclick="checkAccountNumber(this)">
+                <button type="submit" class="w3-button w3-round" value="Save" style="background-color: #def5f1;" onclick="checkAccountNumber(this)">
                     save
                 </button>
             </td>

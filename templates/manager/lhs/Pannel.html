@@ -1,89 +1,137 @@
 <div class="w3-card" style="background: #fff;  margin-top:2%;">
     <a href="/manager">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-            <div class="w3-col w3-center l3">
+            <div class="w3-col l3 m3 s3 w3-center">
                 <i class="fas fa-home"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
+            {% if touds == "home" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
                 Home
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Home
+            </div>
+            {% endif %}
         </div>
     </a>
     <div style="border-top: 1px solid #eaeaec;"></div>
     <a href="/manager/usersProfiles">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-            <div class="w3-col w3-center l3">
+            <div class="w3-col l3 m3 s3 w3-center">
                 <i class="fa fa-users"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
+            {% if touds == "usersProfiles" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
                 Users Profiles
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Users Profiles
+            </div>
+            {% endif %}
         </div>
     </a>
     <div style="border-top: 1px solid #eaeaec;"></div>
     <a href="/manager/alterProduct">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-            <div class="w3-col w3-center l3">
+            <div class="w3-col l3 m3 s3 w3-center">
                 <i class="fa fa-plus"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
-                Add Product
+            {% if touds == "alterProduct" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
+                Alter Product
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Alter Product
+            </div>
+            {% endif %}
         </div>
     </a>
     <div style="border-top: 1px solid #eaeaec;"></div>
     <a href="/manager/manageStoreItems">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-            <div class="w3-col w3-center l3">
+            <div class="w3-col l3 m3 s3 w3-center">
                 <i class="fas fa-store"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
-                Manage Store Items
+            {% if touds == "manageStoreItems" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
+                Manage Store
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Manage Store
+            </div>
+            {% endif %}
         </div>
     </a>
     <div style="border-top: 1px solid #eaeaec;"></div>
     <a href="/manager/alterPaymentDetails">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:3%;">
-            <div class="w3-col w3-center l3" >
+            <div class="w3-col l3 m3 s3 w3-center" >
                 <i class="fas fa-money-check-alt"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
-                Alter Payment Details
+            {% if touds == "alterPaymentDetails" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
+                Alter Payment
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Alter Payment
+            </div>
+            {% endif %}
         </div>
     </a>
     <div style="border-top: 1px solid #eaeaec;"></div>
     <a href="/manager/emailandMessaging">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:3%;">
-            <div class="w3-col w3-center l3" >
+            <div class="w3-col l3 m3 s3 w3-center" >
                 <i class="fa fa-envelope"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
+            {% if touds == "emailandMessaging" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
                 Email & Messaging
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Email & Messaging
+            </div>
+            {% endif %}
         </div>
     </a>
     <div style="border-top: 1px solid #eaeaec;"></div>
     <a href="/manager/console">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:3%;">
-            <div class="w3-col w3-center l3" >
+            <div class="w3-col l3 m3 s3 w3-center" >
                 <i class="fas fa-terminal"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
+            {% if touds == "console" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
                 Console
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Console
+            </div>
+            {% endif %}
         </div>
     </a>
     <div style="border-top: 1px solid #eaeaec;"></div>
     <a href="/manager/logout">
         <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:3%;">
-            <div class="w3-col w3-center l3" >
+            <div class="w3-col l3 m3 s3 w3-center" >
                 <i class=" fas fa-power-off"></i>
             </div>
-            <div class="w3-col l9 subHadding l9" style="padding-left:5%">
+            {% if touds == "logout" %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%; font-weight:500; color:#2874f0;">
                 Logout
             </div>
+            {% else %}
+            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
+                Logout
+            </div>
+            {% endif %}
         </div>
     </a>
 </div>
