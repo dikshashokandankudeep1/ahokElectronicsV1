@@ -31,7 +31,7 @@
 
 <body style="position: relative;">
     {% include 'common/header/checkout.html' %}
-    <div class="w3-content" style="max-width:1200px; margin-top:5%;" onmouseover="dropdownMenuProfileHide()">
+    <div class="w3-content w3-small" style="max-width:1200px; margin-top:5%;" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row">
             <div class="w3-col l6 m12 s12">
                 <div class="w3-row" style="padding-top:15%;">
@@ -40,10 +40,10 @@
                     </div>
                 </div>
                 <div class="w3-row" style="padding-top:5%;">
-                    <div class="w3-col w3-large l8 m12 s12 w3-border-top" style="padding-top:2%; padding-bottom:2%">
+                    <div class="w3-col w3-large l8 m9 s8 w3-border-top" style="padding-top:2%; padding-bottom:2%">
                         Shipment
                     </div>
-                    <div class="w3-col l2 w3-border-top" style="padding-top:2%; padding-bottom:2%">
+                    <div class="w3-col l2 m3 s4 w3-border-top" style="padding-top:2%; padding-bottom:2%">
                         <small class="w3-text-blue w3-hover-text-red" style="cursor: pointer;">
                             <a href="\" style="text-decoration: none;"><i class="fa fa-plus"></i>  Add more items</a> 
                         </small>
@@ -75,13 +75,12 @@
                                 <div class="w3-row " style="padding-bottom: 1%; ">
                                     <small class=" w3-text-grey ">Sub Total - </small>
                                     <small>₹ {% widthratio product.price 1 product.quantity %} </small>
-                                    
                                 </div>
                             </li>
                             {% endfor %}
                         </ul>
                     </div>
-                    <div class="w3-col l2 m12 s12 ">
+                    <div class="w3-col l2 m12 s12 w3-hide-small">
                         <br>
                     </div>
                 </div>
@@ -89,27 +88,27 @@
             <!-- Payment -->
             <div class="w3-col l6 m12 s12" id="noMaxLimitError">
                 <div class="w3-row " style="padding-top:15%; ">
-                    <div class="w3-col l2 m12 s12 ">
+                    <div class="w3-col l2 m12 s12  w3-hide-small">
                         <br>
                     </div>
-                    <div class="w3-col w3-xlarge l10 m12 s12 ">
+                    <div class="w3-col l10 m12 s12 w3-xlarge">
                         Confirm Payment
                     </div>
                 </div>
                 <div class="w3-row" style="padding-top:5%; ">
-                    <div class="w3-col l2 m12 s12 ">
+                    <div class="w3-col l2 m12 s12  w3-hide-small">
                         <br>
                     </div>
                     <div class="w3-col w3-large l10 m12 s12 w3-border-top " style="padding-top:2%; padding-bottom:2% ">
                         Products Total
                     </div>
                 </div>
-                <div class="w3-row ">
+                <div class="w3-row">
                     <!--/product/purchase/PaymentFinalGateway/{{ productsTotalCost }}-->
-                    <div class="w3-col l2 m12 s12 ">
+                    <div class="w3-col l2 m12 s12 w3-hide-small">
                         <br>
                     </div>
-                    <div class="w3-col l10 m12 s12 ">
+                    <div class="w3-col l10 m12 s12">
                         <div class="w3-row w3-text-grey" style="padding-bottom:3%;">
                             <small>
                                 {% for product in productDictList %}

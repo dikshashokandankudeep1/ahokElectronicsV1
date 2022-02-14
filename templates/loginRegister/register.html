@@ -40,85 +40,73 @@
 
 <body>
     {% include 'common/header/header.html' %}
-    <div class="w3-row w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-col l6 m8 s11 w3-center" style="padding-left:10%;padding-top:5%;padding-bottom:5%;">
+    <div class="w3-row w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()" style="text-align:center">
+        <div class="w3-col l4 m2 w3-hide-small"><br></div>
+        <div class="w3-col l6 m7 s11" style="padding-left:10%; padding-top:5%; padding-bottom:5%;">
             <form action="register" method="post"> {% csrf_token %}
                 <table class="w3-card w3-table">
-                    <tr style="background-color:azure">
-                        <th><br></td>
-                        <th>Sign Up</th>
-                        <th><br></td>
-                    </tr>
-                    {% for message in messages%}
                     <tr>
-                        <td><br></td>
-                        <td class="w3-text-red">Warning:: {{ message }} </td>
-                        <td><br></td>
+                        <td class="w3-small w3-medium w3-center" colspan="1"><b>Sign Up</b></td>
                     </tr>
-                    {% endfor %}
+                    {{messages.level}}
+                    {%if messages.level == 40 %}
+                        {% for message in messages %}
+                        <tr>
+                            <td class="w3-text-red">Error:: {{ message }} </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        {% for message in messages %}
+                        <tr>
+                            <td class="w3-text-green">Success:: {{ message }} </td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
                     <tr>
-                        <td><br></td>
-                        <td>FirstName</td>
                         <td>
-                            <input type="text" name="firstName" value="{{dataDict.firstName}}" placeholder="First Name" required>
+                            <input class="w3-input w3-border" type="text" name="firstname" value="{{dataDict.firstname}}" placeholder="Firstname" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
-                        <td>LastName</td>
                         <td>
-                            <input type="text" name="lastName" value="{{dataDict.lastName}}" placeholder="Last Name" required>
+                            <input class="w3-input w3-border" type="text" name="lastname" value="{{dataDict.lastname}}" placeholder="Last Name" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
-                        <td>Password</td>
                         <td>
-                            <input type="password" name="password1" value="{{dataDict.password1}}" placeholder="Password" required>
+                            <input class="w3-input w3-border" type="password" name="password1" value="" placeholder="Password" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
-                        <td>Confirm password</td>
                         <td>
-                            <input type="password" name="password2" value="{{dataDict.password2}}" placeholder="Confirm Password" required>
+                            <input class="w3-input w3-border" type="password" name="password2" value="" placeholder="Confirm Password" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
-                        <td>Mobile Number</td>
                         <td>
-                            <input type="text" name="mobilenumber" value="{{dataDict.mobilenumber}}" placeholder="Mobile Number" required>
+                            <input class="w3-input w3-border" type="number" name="mobilenumber" value="{{dataDict.mobilenumber}}" placeholder="Mobile Number" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
-                        <td>WhatsApp Number</td>
                         <td>
-                            <input type="text" name="whatsappnumber" value="{{dataDict.whatsappnumber}}" placeholder="WhatsApp Number" required>
+                            <input class="w3-input w3-border" type="number" name="whatsappnumber" value="{{dataDict.whatsappnumber}}" placeholder="WhatsApp Number" required>
                         </td>
                     </tr>
                     <tr>
-                        <td><br></td>
-                        <td>Email Address</td>
                         <td>
-                            <input type="text" name="emailaddress" value="{{dataDict.emailaddress}}" placeholder="Email Address" required>
+                            <input class="w3-input w3-border" type="email" name="emailaddress" value="{{dataDict.emailaddress}}" placeholder="Email Address" required>
                         </td>
                     </tr>
-                    <!--
                     <tr>
-                        <td><br></td>
-                        <td>Profile Picture</td>
-                        <td>
-                            <input type="file" id="userImage" name="userImage" required>
-                        </td>
-                    </tr>
-                    -->
-                    <tr>
-                        <td><br></td>
-                        <td><br></td>
                         <td  class="w3-small">
-                            <button type="submit" class="w3-btn w3-round-medium w3-center" value="Save" style="background-color: #89c4ff;">Register</button>
+                            <button class="w3-button w3-medium w3-block w3-round" style="background-color:#ffe11b;">
+                                REGISTER
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w3-small w3-text-grey" style="text-align:center">
+                            <p>Already have an account? <a href="\login" style="text-decoration:none; color:blue;">Log In</a></p>
                         </td>
                     </tr>
                 </table>
@@ -127,11 +115,13 @@
     </div>
 </body>
 <script>
+    /*
     window.onload = function() {
             document.getElementById("dropdownMenuProfile").style.display = "none";
         };
     function dropdownMenuProfileHide(){
             document.getElementById("dropdownMenuProfile").style.display = "none";
         }
+    */
 </script>
 </html>

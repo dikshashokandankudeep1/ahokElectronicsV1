@@ -1,5 +1,6 @@
 import json, datetime
 from pickle import TRUE
+from threading import *
 from posixpath import split
 #import re
 from urllib import response
@@ -10,14 +11,15 @@ from django.shortcuts import render, redirect
 from .models import usertable, userAddressBook, userordertable, userOrderGrouptable, \
                     homeSliderImageTable, homeProductListImagesTable,\
                     productsTablePrimary, productsTableSecodary, productsTableTernary, \
-                    paymentTable, tickerTable
+                    paymentTable, tickerTable, webCredentialsTable
 
 
 from django.contrib.auth.models import User, auth
 
-from .commom import  setSession, getSession
+from .commom import  setSession, getSession, myThreadPool
 
 from .helper import alterProductManagePOST, handleSearchBox
+
 
 def manager_default_View(request):
     return manager_View(request, "home")
@@ -572,7 +574,7 @@ def account_View(request, touds):
     print("account_View touds::", touds)
     if touds =="profileinformation":
         dataDictionary = {"userId" : userObject.userId, "username" : userObject.username, 
-                          "firstName" : userObject.firstName, "lastName" : userObject.lastName,
+                          "firstname" : userObject.firstname, "lastname" : userObject.lastname,
                           "emailaddress" : userObject.emailaddress,
                           "mobilenumber" : userObject.mobilenumber,"whatsappnumber" : userObject.whatsappnumber }
         dataShow = touds
@@ -822,8 +824,8 @@ def productPurchase_View(request):
                 userAddressBookItemDelete = int(request.POST['DELETE'])
         else:
             print("productPurchase_View Address alter")
-            firstName       = request.POST['firstName']
-            lastName        = request.POST['lastName']
+            firstname       = request.POST['firstname']
+            lastname        = request.POST['lastname']
             companyName     = request.POST['companyName']
             countryOrRegion = request.POST['countryOrRegion']
             streetAddress1  = request.POST['streetAddress1']
@@ -839,7 +841,7 @@ def productPurchase_View(request):
 
             if "MODIFYADDRESS" not in request.POST.keys():
                 print("productPurchase_View address:: Add new address")
-                userAddressBook_ = userAddressBook(userId=request.user.id, firstName=firstName, lastName=lastName, companyName=companyName,
+                userAddressBook_ = userAddressBook(userId=request.user.id, firstname=firstname, lastname=lastname, companyName=companyName,
                                         countryOrRegion=countryOrRegion, streetAddress1=streetAddress1, streetAddress2=streetAddress2,
                                         townOrCity=townOrCity, stateOrCounty=stateOrCounty, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
                                         emailAddress=emailAddress, orderNotes=orderNotes)
@@ -861,7 +863,8 @@ def productPurchase_View(request):
             else:
                 print("productPurchase_View Address Modify")
                 #print("MODIFYADDRESS::", request.POST['MODIFYADDRESS'])
-                userAddressBook_ = userAddressBook(id=int(request.POST['MODIFYADDRESS']), userId=request.user.id, firstName=firstName, lastName=lastName, companyName=companyName,
+                userAddressBook_ = userAddressBook(id=int(request.POST['MODIFYADDRESS']), userId=request.user.id, firstname=firstname, 
+                                        lastname=lastname, companyName=companyName,
                                         countryOrRegion=countryOrRegion, streetAddress1=streetAddress1, streetAddress2=streetAddress2,
                                         townOrCity=townOrCity, stateOrCounty=stateOrCounty, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
                                         emailAddress=emailAddress, orderNotes=orderNotes)
@@ -898,7 +901,7 @@ def productPurchase_View(request):
                 useraddressBookObj = useraddressBookObj[0]
                 dataDict = {}
                 dataDict["id"] = idData
-                dataDict["userFullName"]    = useraddressBookObj.firstName + " " + useraddressBookObj.lastName
+                dataDict["userFullName"]    = useraddressBookObj.firstname + " " + useraddressBookObj.lastname
                 dataDict["addr1"]   = useraddressBookObj.streetAddress1
                 dataDict["addr2"]   = useraddressBookObj.streetAddress2
                 dataDict["townCity"]= useraddressBookObj.townOrCity + ", " + useraddressBookObj.stateOrCounty  + " " + useraddressBookObj.postcodeOrZIP
@@ -933,7 +936,6 @@ def productPaymentGateway_View(request, addressId):
 
     if userObject.addToCartItemsDict != "":
         print("userObject.addToCartItemsDict::", userObject.addToCartItemsDict)
-        #addToCartItemsDict = dict( map(int,item.split(":")) for item in userObject.addToCartItemsDict.strip('}{').split(","))
         addToCartItemsDict = dict( [item.split(":")[0].strip().strip("'"),int(item.split(":")[1].strip())]  for item in userObject.addToCartItemsDict.strip('}{').split(","))
     orderDeliveryAddress = ""
 
@@ -1040,9 +1042,11 @@ def productPaymentGateway_View(request, addressId):
         useraddressBookObj = userAddressBook.objects.filter(id=addressId)
         if len(useraddressBookObj) == 1:
             useraddressBookObj = useraddressBookObj[0]
-            orderDeliveryAddress =  useraddressBookObj.firstName + " " + useraddressBookObj.lastName + ", " + useraddressBookObj.streetAddress1 + ", " + \
-                        useraddressBookObj.streetAddress2 + ", " + useraddressBookObj.townOrCity + ", " + useraddressBookObj.stateOrCounty  + " " + \
-                        useraddressBookObj.postcodeOrZIP + ", " + useraddressBookObj.countryOrRegion + ", " + "Contact No." + useraddressBookObj.phoneNo
+            orderDeliveryAddress =  useraddressBookObj.firstname + " " + useraddressBookObj.lastname + ", " + \
+                        useraddressBookObj.streetAddress1 + ", " + useraddressBookObj.streetAddress2 + ", " + \
+                        useraddressBookObj.townOrCity + ", " + useraddressBookObj.stateOrCounty  + " " + \
+                        useraddressBookObj.postcodeOrZIP + ", " + useraddressBookObj.countryOrRegion + ", " + \
+                        "Contact No." + useraddressBookObj.phoneNo
 
             print("orderDeliveryAddress: ", orderDeliveryAddress)
         else:
@@ -1120,90 +1124,114 @@ def login_View(request):
             return redirect("/login")
     else:
         print("login_view GET Method called")
-        return render(request, 'loginRegister/login.html')
+        return render(request, 'loginRegister/login.html', {"userID" : "",})
 
 def register_View(request):
     print("register_View")
 
     dataDict = {
-        "firstName" : "", "lastName" : "", "username" : "", "password1" : "", "password2" : "", 
-        "mobilenumber" : "", "whatsappnumber" : "", "emailaddress" : ""
+        "firstname" : "", "lastname" : "", "username" : "",  "mobilenumber" : "", "whatsappnumber" : "", "emailaddress" : ""
     }
     
-    if "firstName" in request.session:
-        dataDict["firstName"]       = getSession(request, "firstName")
-        dataDict["lastName"]        = getSession(request, "lastName")
-        dataDict["password1"]       = getSession(request, "password1")
-        dataDict["password2"]       = getSession(request, "password2")
+    if "firstname" in request.session:
+        dataDict["firstname"]       = getSession(request, "firstname")
+        dataDict["lastname"]        = getSession(request, "lastname")
         dataDict["mobilenumber"]    = getSession(request, "mobilenumber")
         dataDict["whatsappnumber"]  = getSession(request, "whatsappnumber")
         dataDict["emailaddress"]    = getSession(request, "emailaddress")
         
     if request.method == 'POST':
-        firstName = request.POST['firstName']
-        lastName = request.POST['lastName']
-        username = (request.POST['firstName'].lower()) + (request.POST['lastName'].lower())
+        firstname = (request.POST['firstname']).lower()
+        lastname = (request.POST['lastname']).lower()
         password1 = request.POST['password1']
         password2 = request.POST['password2']
         mobilenumber = request.POST['mobilenumber']
         whatsappnumber = request.POST['whatsappnumber']
-        emailaddress = request.POST['emailaddress']
-        #userImage = request.POST['userImage']
+        emailaddress = (request.POST['emailaddress']).lower()
 
-        setSession(request, 'firstName', firstName)
-        setSession(request, 'lastName', lastName)
-        setSession(request, 'password1', password1)
-        setSession(request, 'password2', password2)
+        setSession(request, 'firstname', firstname)
+        setSession(request, 'lastname', lastname)
         setSession(request, 'mobilenumber', mobilenumber)
         setSession(request, 'whatsappnumber', whatsappnumber)
         setSession(request, 'emailaddress', emailaddress)
-        
-        #request.session["firstName"] = firstName
-        #request.session["lastName"] = lastName
-        #request.session["password1"] = password1
-        #request.session["password2"] = password2
-        #request.session["mobilenumber"] = mobilenumber
-        #request.session["whatsappnumber"] = whatsappnumber
-        #request.session["emailaddress"] = emailaddress
-
+        context = {
+            "userID" : "",
+            "dataDict" : {"firstname" : firstname, "lastname" : lastname, "mobilenumber" : mobilenumber, 
+                            "whatsappnumber" : whatsappnumber, "emailaddress" : emailaddress}
+        }
         if password1 == password2:
-            if User.objects.filter(username=username).exists():
-                messages.info(request, "User Already Taken")
-                return redirect('/register')
-
+            if len(password1) < 6 :
+                messages.set_level(request, messages.ERROR)
+                messages.error(request, "password should at least 6 digit")
+                return render(request, 'loginRegister/register.html', context)
             elif User.objects.filter(email=emailaddress).exists():
-                messages.info(request, "Email Already Taken")
-                return redirect('/register')
+                messages.set_level(request, messages.ERROR)
+                messages.error(request, "Email already taken")
+                return render(request, 'loginRegister/register.html', context)
+            
             else:
+                username = firstname + lastname
+                testUserName = username
+                while(True):
+                    counter = 0
+                    if User.objects.filter(username=testUserName).exists():
+                        counter += 1
+                        testUserName =  username + str(counter)
+                    else:
+                        username = testUserName
+                        break
+                print("username created::", username)
                 user = User.objects.create_user(username=username, password=password1, email=emailaddress)
-                usertable_ = usertable(userId=user.id, username=username, firstName=firstName, 
-                                        lastName=lastName, password=password1,
-                                        mobilenumber=mobilenumber, whatsappnumber=whatsappnumber,
-                #                        userImage=userImage, emailaddress=emailaddress)
-                                        emailaddress=emailaddress)
+                usertable_ = usertable(userId=user.id, username=username, firstname=firstname, 
+                                        lastname=lastname, password=password1, mobilenumber=mobilenumber, 
+                                        whatsappnumber=whatsappnumber, emailaddress=emailaddress)
                 usertable_.save()
                 user.save()
 
-                messages.info(request, "User Created")
+                for obj in webCredentialsTable.objects.filter(credentialType="sentEmail"):
+                    websiteUrl  = obj.websiteUrl
+                    senderEmail = obj.senderEmail
+                    password    = obj.password
+                    
+                    subject = "User credentials"
+                    messageContent = "<p><b><span style='color:green'> Congratulations!</b> now you are member of "+ websiteUrl +" </b></p>"
+                    messageContent += "<p> Below are your login credentials </p>"
+                    messageContent += "<p> Username : "+ username +" </p>"
+                    messageContent += "<p> Password : "+ password +" </p>"
+                    
+                    taskDataDict = {}
+                    taskDataDict["senderEmail"] = senderEmail
+                    taskDataDict["emailaddress"] = emailaddress
+                    taskDataDict["password"] = password
+                    taskDataDict["subject"] = subject
+                    taskDataDict["messageContent"] = messageContent
+
+                    ''' #todo deamon thread
+                    def initAddTaskToThreadPool():
+                        addTaskToThreadPool("sentEmail", taskDataDict)
+                    T = Thread(target = initAddTaskToThreadPool)
+                    T.setDaemon(True)
+                    T.start()
+                    '''
+                    threadPool =  myThreadPool()
+                    threadPool.addTaskToThreadPool("sentEmail", taskDataDict)
+
+                    messages.set_level(request, messages.INFO)
+                    messages.info(request, "username and password sent through email")
+                    del request.session["firstname"]
+                    del request.session["lastname"]
+                    del request.session["mobilenumber"]
+                    del request.session["whatsappnumber"]
+                    del request.session["emailaddress"]
+
+                    return redirect('/login')
         else:
-            messages.info(request, "Password Mismatch")
-            #return redirect('/register')
-            context = {
-                "dataDict" : dataDict
-            }
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, "password mismatch")
             return render(request, 'loginRegister/register.html', context)
-
-        del request.session["firstName"]
-        del request.session["lastName"]
-        del request.session["password1"]
-        del request.session["password2"]
-        del request.session["mobilenumber"]
-        del request.session["whatsappnumber"]
-        del request.session["emailaddress"]
-
-        return redirect('/login')
     else:
         context = {
+            "userID" : "",
             "dataDict" : dataDict
         }
         return render(request, 'loginRegister/register.html', context)

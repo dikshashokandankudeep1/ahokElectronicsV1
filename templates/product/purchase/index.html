@@ -14,24 +14,51 @@
 
     <script src="{% static 'js/common/imagezoom.js' %}"></script>
     <script src="{% static 'js/common/universal/all.js' %}"></script>
+    <!--
     <style>
         .required {
             color: red;
         }
-    </style>
+    </style>-->
 
 </head>
 
+<style>
+    .checked {
+        color: orange;
+    }
+
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:50px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:70px;
+        }
+    }
+</style>
+
 <body style="position: relative;">
     {% include 'common/header/checkout.html' %}
-    <div class="w3-content" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
     <div class="w3-row">
         <div class="w3-col l12 m12 s12">
             <div class="w3-row">
                 <div class="w3-col l10 m12 s11">
                     {%if userAddressBookDictListCount %}
                     <div class="w3-row" style="padding-bottom: 2%; padding-top: 4%; padding-left: 2%;">
-                        <div class="w3-col l6 m12 s12">
+                        <div class="w3-col l6 m12 s10">
                             <b>Select a delivery address</b>
                         </div>
                     </div>
@@ -80,6 +107,7 @@
                     <div><br></div>
                 </div>
             </div>
+            <div class="w3-col l12 m8 s1 w3-hide-large w3-hide-medium"><br></div>
             <div class="w3-col l12 m8 s10">
                 <div class="w3-row">
                     <div class="w3-col l10 m12 s12" style="padding-top:1%; padding-bottom:3%;">
@@ -111,7 +139,7 @@
                                                         <b><medium>First Name<span class="required"> *</span></medium></b>
                                                     </td>
                                                     <td>
-                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='firstName' style='width:60%' placeholder='First Name' name='firstName' value="{{userAddressBookItemEditObj.firstName}}"
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='firstname' style='width:60%' placeholder='First Name' name='firstname' value="{{userAddressBookItemEditObj.firstname}}"
                                                                 required></medium>
                                                     </td>
                                                 </tr>
@@ -120,7 +148,7 @@
                                                         <b><medium>Last Name<span class="required"> *</span></medium></b>
                                                     </td>
                                                     <td>
-                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='lastName' style='width:60%' placeholder='Last Name' name='lastName' value="{{userAddressBookItemEditObj.lastName}}" required></medium>
+                                                        <medium><input class='w3-input w3-animate-input w3-round w3-border' type='text' id='lastname' style='width:60%' placeholder='Last Name' name='lastname' value="{{userAddressBookItemEditObj.lastname}}" required></medium>
                                                     </td>
                                                 </tr>
                                                 <tr>

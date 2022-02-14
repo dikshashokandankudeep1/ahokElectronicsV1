@@ -15,14 +15,39 @@
     <!--<script src="{% static 'js/user/addToCart/index.js' %}"></script>-->
 
 </head>
+<style>
+    .checked {
+        color: orange;
+    }
+
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:50px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:70px;
+        }
+    }
+</style>
+
 
 <body style="position: relative;">
     {% include 'common/header/header.html' %}
-    <div  style="margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
+    <div class="w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row" id="add-to-cart">
-            <div class="w3-col l1 m1 s1"><br></div>
-            <!--style="padding-left:2%;padding-top:2%;padding-bottom:5%;"-->
-            <div class="w3-col l8 m8 s8">
+            <div class="w3-col l1 m1 s1 w3-hide-small"><br></div>
+            <div class="w3-col l8 m8 s12">
                 <div class="w3-row" style="text-align: left;">
                     <h3><b>Shopping Cart</b></h3>
                 </div>
@@ -38,13 +63,14 @@
                 {% for product in dataDictionary.productDictList %}
                 <input type="hidden" id="{{product.itemID}}_SUBTOTALIDINFO" value="{{product.quantity}}/{{product.price}}" />
                 <div class="w3-row w3-border-bottom" style="padding-left:2%;padding-right:2%;padding-top:3%;padding-bottom:3%;">
-                    <div class="w3-col l12">
+                    <div class="w3-col l12 m12 s12">
                         <div class="w3-row">
                             <div class="w3-col l1 m1 s1" style="text-align:left;margin-top:3%;">
                                 <input type="checkbox" name="check" id="CHECK_{{product.itemID}}" onclick="checkUncheckOrder( '{{product.itemID}}', 'TOGGLE')" checked="check">
                             </div>
                             <div class="w3-col l2 m2 s2" style="text-align:left">
-                                <img src="{{product.imageurl}}" width="100px" height="100px">
+                                <img class="w3-hide-small" src="{{product.imageurl}}" width="100px" height="100px">
+                                <img class="w3-hide-large w3-hide-medium" src="{{product.imageurl}}" width="70px" height="80px">
                             </div>
                             <div class="w3-col l7 m7 s7">
                                 <div class="w3-row" style="text-align:left; padding-bottom: 2%;">
@@ -75,17 +101,23 @@
                 </div>
                 {% endfor %}
                 <div class="w3-row" id="FORPROCEEDTOBUYBUTTON" style="padding-left:2%;padding-right:2%;padding-top:1%;padding-bottom:3%;">
-                    <div class="w3-col l12" id="SUBTOTALBUTTON3" style="text-align: right;">No items selected</div>
-                    <div class="w3-col l12" id="SUBTOTALBUTTON4" style="text-align: right;">
+                    <div class="w3-col l12 m12 s12" id="SUBTOTALBUTTON3" style="text-align: right;">No items selected</div>
+                    <div class="w3-col l12 m12 s12" id="SUBTOTALBUTTON4" style="text-align: right;">
                         Subtotal ({{dataDictionary.totalQuantity}} items): ₹<b>{{dataDictionary.subtotal}}</b>
                     </div>
                 </div>
+                <div class="w3-row w3-right w3-hide-large w3-hide-medium" style="padding-left:2%;padding-right:2%;padding-top:1%;padding-bottom:3%;">
+                    <form action="" method="post" id="PROCEEDTOBUYFORM"> {% csrf_token %}
+                        <input type="hidden" id="UNBUYSTORE" name="PROCEEDTOBUYFORM" value="[]" />
+                        <small><button class="w3-button w3-green w3-tiny w3-hover-dark-grey" onclick="noItemProceedToBuyButtonValidation(this)" >Proceed to Buy</button></small>
+                    </form>
+                </div>
             </div>
-            <div class="w3-col l2 m2 s2" style="margin-left:5%" id="noMaxLimitError">
-                <div class="w3-row l9 m8 w3-border" style="padding:4%; margin-top:2%">
-                    <div class="w3-col l12">
+            <div class="w3-col l2 m2 s2 w3-hide-small" style="margin-left:5%" id="noMaxLimitError">
+                <div class="w3-row l9 m8 s8 w3-border" style="padding:4%; margin-top:2%">
+                    <div class="w3-col l12 m12 s12">
                         <div class="w3-row">
-                            <div class="w3-col l8">
+                            <div class="w3-col l8 m8 s8">
                                 <div class="w3-row" id="SUBTOTALBUTTON1" style="text-align:left; padding-bottom: 2%;">No items selected</div>
                                 <input type="hidden" id="SUBTOTALQUANTPRICE" value="{{dataDictionary.totalQuantity}}/{{dataDictionary.subtotal}}" />
                                 <div class="w3-row" id="SUBTOTALBUTTON2" style="text-align:left; padding-bottom: 2%;">
@@ -94,7 +126,7 @@
                                 <div class="w3-row" style="text-align:left; padding-bottom:2%; margin-top:2%">
                                     <form action="" method="post" id="PROCEEDTOBUYFORM"> {% csrf_token %}
                                         <input type="hidden" id="UNBUYSTORE" name="PROCEEDTOBUYFORM" value="[]" />
-                                        <small><button class="w3-button w3-green w3-hover-dark-grey" onclick="noItemProceedToBuyButtonValidation(this)" >Proceed to Buy</button></small>
+                                        <small><button class="w3-button w3-green w3-tiny w3-hover-dark-grey" onclick="noItemProceedToBuyButtonValidation(this)" >Proceed to Buy</button></small>
                                     </form>
                                 </div>
                             </div>

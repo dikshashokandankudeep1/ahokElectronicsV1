@@ -1,0 +1,4 @@
+1. when add new email in webCredentialsTable will face issue
+    Functioanlity:- sendEmail function
+    Issue Ex:- 535, b'5.7.8 Username and Password not accepted
+    solution:- open this url after login gmail  https://www.google.com/settings/security/lesssecureapps

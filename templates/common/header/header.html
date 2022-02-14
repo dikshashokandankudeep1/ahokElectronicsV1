@@ -183,7 +183,7 @@
                     My Account &nbsp;<i class="fas fa-angle-down"></i>
                 </div>
                 <div class="w3-text-white w3-hide-large w3-hide-medium w3-center" style="font-family:IconFont;" onmouseover="dropdownMenuProfileShow()"> 
-                    <button class="w3-button w3-white w3-hover-white w3-hover-text-grey"><i class="fa fa-bars" ></i> Menu</button>
+                    <button class="w3-button w3-white w3-hover-white w3-hover-text-grey" onclick="dropdownMenuProfileHideToggle()"><i class="fa fa-bars" ></i> Menu</button>
                 </div>
                 <div class="w3-card w3-small" id="dropdownMenuProfile">
                     <a href="/account">
@@ -256,8 +256,18 @@
 </div>
 
 <script>
+    toggleFlag = 0
     function dropdownMenuProfileShow() {
         document.getElementById("dropdownMenuProfile").style.display = "block";
+    }
+    
+    function dropdownMenuProfileHideToggle(){
+        if (document.getElementById("dropdownMenuProfile").style.display == "block"){
+            dropdownMenuProfileHide()
+        }
+        else{
+            dropdownMenuProfileShow()
+        }
     }
 
     $("#searchBox").on('keyup', function (e) {

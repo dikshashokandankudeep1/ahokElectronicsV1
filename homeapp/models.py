@@ -1,6 +1,13 @@
 from turtle import width
 from django.db import models
 
+class webCredentialsTable(models.Model):
+    credentialType  = models.CharField(blank = True, max_length=50, default="")
+    websiteUrl      = models.CharField(blank = True, max_length=50, default="")
+    senderEmail     = models.CharField(blank = True, max_length=50, default="")
+    password        = models.CharField(blank = True, max_length=50, default="")
+
+
 class paymentTable(models.Model):
     modeOfPayment   = models.CharField(blank = True, max_length=50, default="")
     isActive        = models.BooleanField(blank=True, default=True)
@@ -137,8 +144,8 @@ class productsTablePrimary(models.Model):
 
 class userAddressBook(models.Model):
     userId          =   models.CharField(blank = True, max_length=50, default="")
-    firstName       =   models.CharField(blank = True, max_length=50, default="")
-    lastName        =   models.CharField(blank = True, max_length=50, default="")
+    firstname       =   models.CharField(blank = True, max_length=50, default="")
+    lastname        =   models.CharField(blank = True, max_length=50, default="")
     companyName     =   models.CharField(blank = True, max_length=50, default="")
     countryOrRegion =   models.CharField(blank = True, max_length=50, default="")
     streetAddress1  =   models.CharField(blank = True, max_length=50, default="")#House No or street name
@@ -240,8 +247,8 @@ class usertable(models.Model):
     userId              =   models.CharField(blank = True, max_length=50, default="")
     isActive            =   models.BooleanField(blank=True, default=True)
     #userImage          =   models.ImageField(blank=True, null=True)   # user add profile picture
-    firstName           =   models.CharField(blank = True, max_length=50, default="")
-    lastName            =   models.CharField(blank = True, max_length=50, default="")
+    firstname           =   models.CharField(blank = True, max_length=50, default="")
+    lastname            =   models.CharField(blank = True, max_length=50, default="")
     username            =   models.CharField(blank = True, max_length=50, default="")
     password            =   models.CharField(blank = True, max_length=50, default="")
     mobilenumber        =   models.CharField(blank = True, max_length=50, default="")

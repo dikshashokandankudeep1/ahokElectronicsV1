@@ -17,11 +17,37 @@
 
 </head>
 
+<style>
+    .checked {
+        color: orange;
+    }
+
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:50px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:70px;
+        }
+    }
+</style>
+
 <!--<body class="w3-content" >-->
 <body style="position: relative;" onclick="dropdownMenuProfileHide()">
     {% include 'common/header/header.html' %}
-    <div class="w3-row w3-content" id="profile" style="max-width:1200px; margin-top:5.5%;" onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-col l3">
+    <div class="w3-row w3-content w3-small" id="mainDiv"  onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-col l3 m3 s4">
             <div class="w3-panel w3-card-2" style="padding:5%; margin-bottom:0%; margin-top:0%">
                 {% include 'user/account/lhs/profileBox.html' %}
             </div>
@@ -30,7 +56,7 @@
             </div>
         </div>
 
-        <div class="w3-col l9" style="padding-left:2%">
+        <div class="w3-col l9 m9 s8" style="padding-left:2%">
             <div class="w3-panel w3-card-2" style="padding:3%; margin-bottom:0%; margin-top:0%">
                 {% if dataShow == "profileinformation" %}
                     {% include 'user/account/rhs/profileInformation.html' %}
