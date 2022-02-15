@@ -16,15 +16,37 @@
     <script src="{% static 'js/user/index.js' %}"></script>
 </head>
 
+<style>
+    .checked {
+        color: orange;
+    }
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:10%;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:70px;
+        }
+    }
+</style>
+
 <!--<body class="w3-content" style="max-width:1200px">-->
 <body style="position: relative;">
     {% include 'common/header/header.html' %}
-    <!---->
-    <div class="w3-row" id="orders" style="margin-top: 5.5%;" onmouseover="dropdownMenuProfileHide()">
-        <!--<div class="w3-col l9 m8 w3-center" style="padding-left:20%;padding-top:5%;padding-bottom:5%;">-->
-        <!--<div class="w3-col w3-red l9 m8 w3-center" style="padding-left:10%;padding-top:5%;padding-bottom:5%;">-->
-        <div class="w3-col w3-hide-small l2 m2"><br></div>
-        <div class="w3-col l8 m8 w3-center">
+    <div class="w3-row w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-col w3-hide-small l2 m2 s2"><br></div>
+        <div class="w3-col l8 m8 s12 w3-center">
             {% if dataDictionary.productDictList|length == 0 %}
             <div class="w3-row w3-center" style="padding:1%">
                 <div style="padding-bottom: 5%;"><img src="/media/common/ordernotplaced.png" width="40%"></div>
@@ -32,7 +54,6 @@
                 <div class="" style="color: #9ba7ba;">Order section is empty. After placing order, You can track them from here!</div>
             </div>
             {% endif %}
-            <!---->
             {% for product in dataDictionary.productDictList %}
             <div class="w3-row w3-center w3-light-grey w3-border" style="padding:1%">
                 <div class="w3-col l2 m2 s2  w3-center">
@@ -93,7 +114,7 @@
                         <!-- todo show admin payment options detail when partial paid-->
                         {% if product.payAtHome != 0 %}
                         <div class="w3-col l4 m4 s6" style="text-align:left;padding-bottom:2%">Paid on: {{product.orderPaymentDate}}</div>
-                        <div class="w3-col w3-small l8 m8 s6 w3-text-red l8" style="text-align:left;padding-bottom:2%"><small>Pay due <b>Rs.{{product.payAtHome}}/-</b></small></div>
+                        <div class="w3-col w3-small l8 m8 s6 w3-text-red l8" style="text-align:left;padding-bottom:2%"><small>Due <b>Rs.{{product.payAtHome}}/-</b></small></div>
                         {% else %}
                         <div class="w3-col" style="text-align:left;padding-bottom:2%">Paid on: {{product.orderPaymentDate}}</div>
                         {% endif %}
