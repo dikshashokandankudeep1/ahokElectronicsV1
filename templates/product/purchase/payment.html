@@ -26,21 +26,55 @@
         }
     </style>
 </head>
-<script>
-</script>
+<style>
+    .checked {
+        color: orange;
+    }
+
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:50px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:70px;
+        }
+    }
+</style>
 
 <body style="position: relative;">
     {% include 'common/header/checkout.html' %}
-    <div class="w3-content w3-small" style="max-width:1200px; margin-top:5%;" onmouseover="dropdownMenuProfileHide()">
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row">
             <div class="w3-col l6 m12 s12">
-                <div class="w3-row" style="padding-top:15%;">
+                <div class="w3-row w3-hide-small" style="padding-top:15%;">
                     <div class="w3-col w3-xlarge l10 m12 s12">
                         Delivery Details
                     </div>
                 </div>
-                <div class="w3-row" style="padding-top:5%;">
-                    <div class="w3-col w3-large l8 m9 s8 w3-border-top" style="padding-top:2%; padding-bottom:2%">
+                <div class="w3-row w3-hide-large w3-hide-medium" >
+                    <div class="w3-col w3-large l10 m12 s12">
+                        Delivery Details
+                    </div>
+                </div>
+
+                <div class="w3-row" style="padding-top:3%;">
+                    <div class="w3-col w3-large l8 m9 s8 w3-border-top w3-hide-small" style="padding-top:2%; padding-bottom:2%">
+                        Shipment
+                    </div>
+                    <div class="w3-col w3-medium l8 m9 s8 w3-border-top w3-hide-large w3-hide-medium" style="padding-top:2%; padding-bottom:2%">
                         Shipment
                     </div>
                     <div class="w3-col l2 m3 s4 w3-border-top" style="padding-top:2%; padding-bottom:2%">
@@ -72,7 +106,7 @@
                                         <small><button>Update</button></small>
                                     </form>
                                 </div>
-                                <div class="w3-row " style="padding-bottom: 1%; ">
+                                <div class="w3-row" style="padding-bottom:1%;">
                                     <small class=" w3-text-grey ">Sub Total - </small>
                                     <small>₹ {% widthratio product.price 1 product.quantity %} </small>
                                 </div>
@@ -87,7 +121,7 @@
             </div>
             <!-- Payment -->
             <div class="w3-col l6 m12 s12" id="noMaxLimitError">
-                <div class="w3-row " style="padding-top:15%; ">
+                <div class="w3-row w3-hide-small" style="padding-top:15%; ">
                     <div class="w3-col l2 m12 s12  w3-hide-small">
                         <br>
                     </div>
@@ -95,11 +129,19 @@
                         Confirm Payment
                     </div>
                 </div>
-                <div class="w3-row" style="padding-top:5%; ">
-                    <div class="w3-col l2 m12 s12  w3-hide-small">
+                <div class="w3-row w3-hide-large w3-hide-medium" style="padding-top:5%;">
+                    <div class="w3-col l10 m12 s12 w3-large">
+                        Confirm Payment
+                    </div>
+                </div>
+                <div class="w3-row" style="padding-top:3%;">
+                    <div class="w3-col l2 m12 s12 w3-hide-small">
                         <br>
                     </div>
-                    <div class="w3-col w3-large l10 m12 s12 w3-border-top " style="padding-top:2%; padding-bottom:2% ">
+                    <div class="w3-col w3-large l10 m12 s12 w3-border-top w3-hide-small" style="padding-top:2%; padding-bottom:2% ">
+                        Products Total
+                    </div>
+                    <div class="w3-col w3-medium l10 m12 s12 w3-border-top w3-hide-large w3-hide-medium" style="padding-top:2%; padding-bottom:2% ">
                         Products Total
                     </div>
                 </div>
@@ -167,7 +209,7 @@
                         <div class="w3-row" style="padding-top:3%;">
                             <small>
                                 <div class="w3-col l6 m6 s6" style="padding-bottom: 5%;">
-                                    <input class='w3-input w3-round w3-border' type='text' id='orderFirstPaidTrxnID' name='orderFirstPaidTrxnID' style='width:100%' onchange="updateTempTransactionId(this)" placeholder='Payment Transaction ID'>
+                                    <input class='w3-input  w3-border' type='text' id='orderFirstPaidTrxnID' name='orderFirstPaidTrxnID' style='width:100%' onchange="updateTempTransactionId(this)" placeholder='Payment Transaction ID'>
                                 </div>
                                 <div class="w3-col l6 m6 s6" style="padding-left:5%">
                                     <button class="w3-button w3-black w3-hover-dark-grey" onclick="transactionReconfirmOnSubmitPress(this)">Submit</button>
