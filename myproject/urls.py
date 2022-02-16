@@ -22,8 +22,11 @@ from django.conf.urls.static import static
 from homeapp.views import Home_view, ProductList_view, ProductListOnClick_view, \
                         Product_view, ProductSearchList_view, \
                         login_View, register_View, \
-                        productPaymentGateway_View, account_View, account_profileInformation_View, \
-                        user_addToCart_View, manager_default_View, manager_View#, Admin_view, error_404, productPurchase_View, 
+                        productPaymentGateway_View, \
+                        user_addToCart_View#, Admin_view, error_404, productPurchase_View, 
+
+from homeapp.manager import manager_default_View, manager_View
+from homeapp.userAccount import account_profileInformation_View, account_View
 
 #handler404 = error_404
 
@@ -49,7 +52,7 @@ urlpatterns = [
 
     #path('user/<int:userID>/<int:typeofuserdatashow>', user_View, name="user_View"),       #0->profile, 1->add-to-cart, 2->orders
 
-    path('account', account_profileInformation_View, name="account_profileInformation_View"),               #profile Information
+    path('account', account_profileInformation_View, name="account_profileInformation_View"),  #profile Information
     path('account/<str:touds>', account_View, name="account_View"),    #Manage Addresses
     #path('account/orders', orders_View, name="orders_View"),          #redirect to order page
     #path('account/<str:password>', user_View, name="user_View"),      #change password

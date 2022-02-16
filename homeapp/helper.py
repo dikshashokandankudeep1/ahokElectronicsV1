@@ -1,9 +1,11 @@
 from django.contrib import messages
-from .models import productsTablePrimary, productsTableSecodary, productsTableQuaterly, paymentTable, tickerTable
+from django.shortcuts import redirect, render
+from .models import productsTablePrimary, productsTableSecodary, productsTableQuaterly, paymentTable, tickerTable, usertable
 
 from .forms import ProductsTablePrimaryForm, ProductsTableTernaryForm, HomeSliderImageTableForm, \
         HomeProductListImagesTableForm
 
+from .commom import  setSession
 
 def updateTikerTableCategoryList(request):
 
@@ -30,7 +32,6 @@ def updateTikerTableCategoryList(request):
 def updateTikerTableCategorySubCategoryMapList(request):
 
     for obj in tickerTable.objects.values_list():
-        #print("obj::", obj)
         categorySubCategoryMapList = {}
 
         if obj[4] == "{}":
@@ -47,8 +48,6 @@ def updateTikerTableCategorySubCategoryMapList(request):
         for obj in tickerTable.objects.all():
             obj.categorySubCategoryMapList = str(categorySubCategoryMapList)
             obj.save()    
-    
-        #print("categorySubCategoryMapList::", categorySubCategoryMapList)
 
 
     
@@ -67,7 +66,6 @@ def updateTikerTableTicker(request, dataList):
             tickerList = [ item.split("|")[0] for item in obj[1].replace("[", "").replace("]", "").replace("'", "").split(", ")]
             dbCommonDataList = list(set(tickerList + dataListSet))
 
-        #print("obj::", obj)
         print("obj[3]::", obj[3])
         categoryTickerMapList = {}
         productsTablePrimary_ = productsTablePrimary.objects.filter(modelNumber=request.POST["productId"])[0]
@@ -90,8 +88,6 @@ def updateTikerTableTicker(request, dataList):
             obj.save()
 
 def handleProductsTableSecodary(request):
-    #print("handleProductsTableSecodary 1 request.POST::", request.POST)
-    
     dataList = []
     counter = 0
     for index in ["%d" %i for i in range(1,16)]:
@@ -101,25 +97,19 @@ def handleProductsTableSecodary(request):
 
     updateTikerTableTicker(request, dataList)
     
-    #print("handleProductsTableSecodary 2")
     for index in ["%d" %i for i in range(counter, 16)]:
         dataList.append("")
 
-    #print("handleProductsTableSecodary 3")
     if request.POST.__contains__("productId"):
-        #print("handleProductsTableSecodary 4")
         _productsTableSecodary =  productsTableSecodary(productId=request.POST["productId"], 
                 otherFeature_1=dataList[0], otherFeature_2=dataList[1], otherFeature_3=dataList[2], 
                 otherFeature_4=dataList[3], otherFeature_5=dataList[4], otherFeature_6=dataList[5], 
                 otherFeature_7=dataList[6], otherFeature_8=dataList[7], otherFeature_9=dataList[8], 
                 otherFeature_10=dataList[9], otherFeature_11=dataList[10], otherFeature_12=dataList[11], 
                 otherFeature_13=dataList[12], otherFeature_14=dataList[13], otherFeature_15=dataList[14])
-        #print("handleProductsTableSecodary 5")
         
         _productsTableSecodary.save()
         
-        #print("handleProductsTableSecodary 6")
-
         return request, "hoverImages", request.POST["productId"]
 
     else:
@@ -249,25 +239,24 @@ def alterProductManagePOST(request):
 
 
 
-def handleSearchBox(request):
-    print("handleSearchBox 1")
-    searchProductTitle = request.POST["searchData"]
-    if searchProductTitle != "" :
-        print("handleSearchBox 1 if searchProductTitle::",searchProductTitle)
-        #searchProductTitle = searchProductTitle.replace(" ", "").lower()
-        #print("searchProductTitle::", searchProductTitle)
-        productproductTitleListObj  =  productsTablePrimary.objects.filter(searchTitle__contains=searchProductTitle.replace(" ", "").lower())
-        print("handleSearchBox 1 if productproductTitleListObj::",productproductTitleListObj)
-        if len(productproductTitleListObj) != 0:
-            url = "/product/search/" + searchProductTitle
-            print("handleSearchBox 1 if url::",url)
-            return url, "", ""
-        else:
-            print("handleSearchBox 1 else")
-            #todo add some page when search item not present in our database
-            relaventSearch  = "2"
-            url = "/product/search/" + relaventSearch
-            return url, searchProductTitle, relaventSearch
+def searchContentInSearchBar(request):
+    if request.POST["searchedContent"] != "" :
+        url = ""
+        url = "/product/search/" + request.POST["searchedContent"]
+        return redirect(url)    
     else:
+        print("searchContentInSearchBar====IF")
         print("handleSearchBox 2 else request.POST::",request.POST)
-        return "", "", ""
+        return redirect("/")
+
+
+def checkUserLogged(request, redirectedPageUrl):
+    if (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
+        setSession(request, 'redirectedPageUrl', redirectedPageUrl)
+        return redirect('/login')
+
+def getUserId(request):
+    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
+        return  request.user.id
+    else:
+        return ""

@@ -1,4 +1,5 @@
 import json, datetime
+
 from pickle import TRUE
 from threading import *
 from posixpath import split
@@ -11,83 +12,13 @@ from django.shortcuts import render, redirect
 from .models import usertable, userAddressBook, userordertable, userOrderGrouptable, \
                     homeSliderImageTable, homeProductListImagesTable,\
                     productsTablePrimary, productsTableSecodary, productsTableTernary, \
-                    paymentTable, tickerTable, webCredentialsTable
-
+                    paymentTable, webCredentialsTable
 
 from django.contrib.auth.models import User, auth
 
 from .commom import  setSession, getSession, myThreadPool
 
-from .helper import alterProductManagePOST, handleSearchBox
-
-
-def manager_default_View(request):
-    return manager_View(request, "home")
-
-def manager_View(request, touds):
-    print("Manager::", touds)
-    secondTouds = ""
-    productId = ""
-
-
-    print("-----------Old----Touds---------", touds)    
-    print("-----------Old----secondTouds---------", secondTouds)
-    if touds != "alterProduct": #todo remove this written for only testing purpose
-        touds = "alterProduct"  
-        secondTouds = "home"
-    
-
-    print("manager_View 1")
-    if touds == "alterProduct":
-        print("manager_View 2")
-        secondTouds = "home"
-    print("manager_View 3")
-    if request.method == 'POST':
-        print("manager_View POST 4")
-        if request.POST.__contains__("formAddProductAction"):
-            print("manager_View POST 5")
-            request, secondTouds, productId = alterProductManagePOST(request)
-            print("manager_View POST 6")
-        else:
-            print("manager_View POST 7")
-            print("other posibilities")
-    print("manager_View 8")
-
-    categoryList = []
-    if secondTouds == "primaryDetails":
-        for obj in tickerTable.objects.values_list():
-            categoryList = [ item.split("|")[0] for item in obj[2].replace("[", "").replace("]", "").replace("'", "").split(", ")]
-
-    #secondTouds = "primaryDetails"
-    #secondTouds = "moreDetails"
-    #secondTouds = "hoverImages"
-    #secondTouds = "descriptionAndSpacificationManage"
-
-    tickerList = []
-    if secondTouds == "moreDetails":
-        for obj in tickerTable.objects.values_list():
-            tickerList = [ item.split("|")[0] for item in obj[1].replace("[", "").replace("]", "").replace("'", "").split(", ")]
-            
-        print("tickerList::", tickerList)
-
-
-    print("---------------Touds---------", touds)    
-    print("---------------secondTouds---------", secondTouds)
-
-    userID = ""
-    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
-        userID = request.user.id
-    
-    context = {
-        "userID" : userID,
-        "touds" : touds,
-        "secondTouds" : secondTouds, 
-        "productId" : productId,
-        "categoryList" : categoryList,
-        "tickerList" : tickerList
-    }
-    return render(request, "manager/index.html", context)
-
+from .helper import searchContentInSearchBar, checkUserLogged, getUserId
 
 def Home_view(request):
     print("Home_view")
@@ -96,19 +27,9 @@ def Home_view(request):
         print("Home_view POST::", request.POST)
 
         if(request.POST.__contains__("search")):
-            url, matchNotFound, relaventSearch = handleSearchBox(request)
-            setSession(request, 'matchNotFound', matchNotFound)
-            setSession(request, 'relaventSearch', relaventSearch)
-            #request.session['matchNotFound'] = matchNotFound
-            #request.session['relaventSearch'] = relaventSearch
-            if url != "":
-                return redirect(url)
-
-        elif (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
-            setSession(request, 'lastPageUrl', request.get_full_path())
-            #request.session['lastPageUrl'] = request.get_full_path()
-            print("Home_view 0 POST request.session['lastPageUrl']::",getSession(request, 'lastPageUrl'))
-            return redirect('/login')
+            return searchContentInSearchBar(request)
+        else:
+            checkUserLogged(request, request.get_full_path())
 
     productHomeCategoryListObj = homeProductListImagesTable.objects.filter(isActive=True)
     productHomeSliderObj       = homeSliderImageTable.objects.filter(isActive=True)
@@ -116,13 +37,8 @@ def Home_view(request):
     print("productHomeCategoryListObj::", productHomeCategoryListObj)
     print("productHomeSliderObj::", productHomeSliderObj)
 
-    userID = ""
-    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
-        userID = request.user.id
-
-    print("userID::", userID)
     context = {
-        'userID'    :   userID,
+        'userID'    :   getUserId(request),
         'productHomeCategoryListObj'        : productHomeCategoryListObj,
         'productHomeCategoryListObjCount'   : productHomeCategoryListObj.count(),
         'productHomeSliderObj'              : productHomeSliderObj,
@@ -137,19 +53,10 @@ def ProductList_view(request, categoryName):
     if request.method == 'POST':
         print("ProductList_view request.POST::",request.POST)
         if request.POST.__contains__("search"):
-            url, matchNotFound, relaventSearch = handleSearchBox(request)
-            setSession(request, 'matchNotFound', matchNotFound)
-            setSession(request, 'relaventSearch', relaventSearch)
-            #request.session['matchNotFound'] = matchNotFound
-            #request.session['relaventSearch'] = relaventSearch
-            if url != "":
-                return redirect(url)
-        elif request.POST.__contains__("signIn"):
-            setSession(request, 'lastPageUrl', request.get_full_path())
-            #request.session['lastPageUrl'] = request.get_full_path()
-            print("ProductList_view 0 POST request.session['lastPageUrl']::",getSession(request, 'lastPageUrl'))
-            return redirect('/login')
-
+            return searchContentInSearchBar(request)
+        else:
+            checkUserLogged(request, request.get_full_path())
+        
     categoryObj     =   productsTablePrimary.objects.filter(category=categoryName).filter(isActive=True)
     brandNameObj    =   categoryObj.values_list('brandName', flat=True).distinct()
 
@@ -159,16 +66,12 @@ def ProductList_view(request, categoryName):
 
     print("ProductList_view dataDict::",dataDict)
 
-    userID = ""
-    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
-        userID = request.user.id
-
     context = {
-        'userID'        : userID,
+        'userID'        : getUserId(request),
         'dataDict'      : dataDict,
         'brandnameObj'  : brandNameObj,
         'brandnameObjCount' :   brandNameObj.count(),
-        'categoryName'  : categoryName
+        'categoryName'  : categoryName,
     }
     return render(request, "product/search/countingFromTitle.html", context)
 
@@ -214,23 +117,12 @@ def ProductSearchList_view(request, productTitle):
     productproductTitleListObj = productsTablePrimary.objects.filter(searchTitle__contains=productTitle.replace(" ", "").lower()).filter(isActive=True)
     filterDict = {"PRICE_BL_2000" : 0, "PRICE_BTW_2000_3000" : 0, "PRICE_BTW_3000_4000" : 0, "PRICE_BTW_4000_5000" : 0, "PRICE_ABW_5000" : 0}
     SORTBY = 'Popularity'
-    matchNotFound = ""
-    relaventSearch = ""
-
-    if request.session.__contains__("matchNotFound"):
-        matchNotFound = request.session['matchNotFound']
-    if request.session.__contains__("relaventSearch"):
-        relaventSearch = request.session['relaventSearch']
-
-    print("ProductSearchList_view matchNotFound, relaventSearch::",matchNotFound, relaventSearch)
 
     url = ""
     if request.method == 'POST':
         print("ProductSearchList_view POST::", request.POST)
         if(request.POST.__contains__("search")):
-            url, matchNotFound, relaventSearch = handleSearchBox(request)
-            if url != "":
-                redirect(url)
+            return searchContentInSearchBar(request)
         elif(request.POST.__contains__("FILTER:PRICE")):
             print("ProductSearchList_view FILTER:PRICE::",request.POST["FILTER:PRICE"])
             productproductTitleListObj = priceFilterCalculateObj(request.POST["filterDict"], productproductTitleListObj)
@@ -241,10 +133,6 @@ def ProductSearchList_view(request, productTitle):
             SORTBY = request.POST["dropdownSortButton"]
             print("ProductSearchList_view INITIAL productproductTitleListObj::",productproductTitleListObj)
             productproductTitleListObj = priceFilterCalculateObj(request.POST["dropdownSortButtonfilterDict"], productproductTitleListObj)
-
-            matchNotFound = request.POST["dropdownSortButtonmatchNotFound"]
-            relaventSearch = request.POST["dropdownSortButtonrelaventSearch"]
-
             print("productproductTitleListObj::",productproductTitleListObj)
             #todo handle other sort methods Newsest, Popularity --> currntly taken High to Low
             if request.POST["dropdownSortButton"] == "LTH":
@@ -252,25 +140,22 @@ def ProductSearchList_view(request, productTitle):
             else:
                 productproductTitleListObj = productproductTitleListObj.order_by('-price')
 
-    if url != "":
-        vec = url.split("/")
-        productTitle = vec[3]
-        redirect(url)
-
-
     print("ProductSearchList_view productTitle::",productTitle)
 
-    userID = ""
-    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
-        userID = request.user.id
-
-
-    print("ProductSearchList_view 3 matchNotFound, relaventSearch::", matchNotFound, relaventSearch)
+    relaventContent = ""
+    isSearchContentFound = ""
+    if productproductTitleListObj.count() == 0:
+        isSearchContentFound = 0
+        relaventContent = 'Red Mi'  #todo user old history search based data
+        productproductTitleListObj  =  productsTablePrimary.objects.filter(searchTitle__contains=relaventContent.replace(" ", "").lower())
+    else:
+        isSearchContentFound = 1
 
     context = {
-        'userID'            :   userID,
-        'matchNotFound'     :   matchNotFound,
-        'relaventSearch'    :   relaventSearch,
+        'userID'            :   getUserId(request),
+        'searchContent'     :   productTitle,
+        'isSearchContentFound' : isSearchContentFound,
+        'relaventContent'    :  relaventContent,
         'filterDict'        :   filterDict,
         'SORTBY'        :   SORTBY,
         'searchTitle'   :   productTitle,
@@ -323,21 +208,14 @@ def ProductListOnClick_view(request, categoryName, brandName):
     print("----------------", productBrandnameListObj.values())
     filterDict = {"PRICE_BL_2000" : 0, "PRICE_BTW_2000_3000" : 0, "PRICE_BTW_3000_4000" : 0, "PRICE_BTW_4000_5000" : 0, "PRICE_ABW_5000" : 0}
     SORTBY = 'Popularity'
-    matchNotFound = ''
-    relaventSearch = ''
+
     if request.method == 'POST':
         print("ProductListOnClick_view POST::", request.POST)
         updateaddToCartID = ""
         url = ""
         if request.POST.__contains__("ADDTOCART") or request.POST.__contains__("BUYNOW"):
-
             print("request.user.id::",request.user.id)
-
-            if (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
-                setSession(request, 'lastPageUrl', request.get_full_path())
-                #request.session['lastPageUrl'] = request.get_full_path()
-                print("ProductListOnClick_view 0 POST request.session['lastPageUrl']::",getSession(request,'lastPageUrl'))
-                return redirect('/login')
+            checkUserLogged(request, request.get_full_path())
             
             if request.POST.__contains__("ADDTOCART"):
                 print("ProductListOnClick_view request.POST['ADDTOCART']::", request.POST['ADDTOCART'])
@@ -348,19 +226,12 @@ def ProductListOnClick_view(request, categoryName, brandName):
                 updateaddToCartID = request.POST['BUYNOW']
                 url = "/product/purchase"
                 setSession(request, 'currentOrderList', [updateaddToCartID])
-                #request.session["currentOrderList"] = [updateaddToCartID]
              
             if url != "":
                 return redirect(url)
         elif(request.POST.__contains__("search")):
-            print("ProductListOnClick_view handleSearchBox")
-            url, matchNotFound, relaventSearch = handleSearchBox(request)
-            setSession(request, 'matchNotFound', matchNotFound)
-            setSession(request, 'relaventSearch', relaventSearch)
-            #request.session['matchNotFound'] = matchNotFound
-            #request.session['relaventSearch'] = relaventSearch
-            if url != "":
-                return redirect(url)
+            print("ProductListOnClick_view searchContent")
+            return searchContentInSearchBar(request)
         elif(request.POST.__contains__("FILTER:PRICE")):
             print("ProductListOnClick_view FILTER:PRICE::",request.POST["FILTER:PRICE"])
             productBrandnameListObj = priceFilterCalculateObj(request.POST["filterDict"], productBrandnameListObj)
@@ -370,12 +241,7 @@ def ProductListOnClick_view(request, categoryName, brandName):
             print("ProductListOnClick_view dropdownSortButton::",request.POST["dropdownSortButton"])
             SORTBY = request.POST["dropdownSortButton"]
             productBrandnameListObj = priceFilterCalculateObj(request.POST["dropdownSortButtonfilterDict"], productBrandnameListObj)
-
-            matchNotFound = request.POST["dropdownSortButtonmatchNotFound"]
-            relaventSearch = request.POST["dropdownSortButtonrelaventSearch"]
-
             print("productBrandnameListObj::",productBrandnameListObj)
-            #todo handle other sort methods Newsest, Popularity --> currntly taken High to Low
             if request.POST["dropdownSortButton"] == "LTH":
                 productBrandnameListObj = productBrandnameListObj.order_by('price')
             else:
@@ -414,19 +280,10 @@ def ProductListOnClick_view(request, categoryName, brandName):
         #todo if any error came
         print("Method is GET Bada dikkat he re deva....")
 
-    print("ProductListOnClick_view 2")
-
-    userID = ""
-    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
-        userID = request.user.id
-
-
     print("ProductListOnClick_view 3 productBrandnameListObj::",productBrandnameListObj)
 
     context = {
-        'userID'            :   userID,
-        'matchNotFound'     :   "",
-        'relaventSearch'    :   "",
+        'userID'            :   getUserId(request),
         'productBrandnameListObj'        : productBrandnameListObj,
         'productBrandnameListObjCount'   : productBrandnameListObj.count(),
         'categoryName'                   : categoryName,
@@ -434,8 +291,7 @@ def ProductListOnClick_view(request, categoryName, brandName):
         'filterDict'        :   filterDict,
         'searchTitle'   :   "",
         'SORTBY'            :   SORTBY,
-        'matchNotFound'     :   matchNotFound,
-        'relaventSearch'    :   relaventSearch
+        'searchContent'     :   brandName,
     }
     return render(request, "product/search/fromTitle.html", context)
 
@@ -451,39 +307,23 @@ def Product_view(request, modelNumber):
         print("Product_view POST")
 
         if(request.POST.__contains__("search")):
-            url, matchNotFound, relaventSearch = handleSearchBox(request)
-            setSession(request, 'matchNotFound', matchNotFound)
-            setSession(request, 'relaventSearch', relaventSearch)
-            #request.session['matchNotFound'] = matchNotFound
-            #request.session['relaventSearch'] = relaventSearch
-            if url != "":
-                return redirect(url)
-        elif (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
-            setSession(request, 'lastPageUrl', request.get_full_path())
-            #request.session['lastPageUrl'] = request.get_full_path()
-            print("Product_view 0 POST request.session['lastPageUrl']::",getSession(request, 'lastPageUrl'))
-            return redirect('/login')
-
+            return searchContentInSearchBar(request)
+        else:
+            checkUserLogged(request, request.get_full_path())
+        
         url = ""
         updateaddToCartID = ""
-        #updateaddToCartQuantity = ""
-
+        
         print("Product_view 1 POST request.POST::",request.POST)
         if(request.POST.__contains__("ADDTOCART")):
             updateaddToCartID = request.POST['ADDTOCART']
             url = "/viewcart"
-            #updateaddToCartQuantity = int(request.POST['QUANTITY'])
         else:
             print("Product_view request.POST['BUYNOW']::", request.POST['BUYNOW'])
-            #id_title = (request.POST['BUYNOW']).split("/")
-            #print("Product_view id_title::", id_title)
-            #updateaddToCartID = id_title[0]
             updateaddToCartID = request.POST['BUYNOW']
-            #updateaddToCartQuantity = int(id_title[1])
             url = "/product/purchase"
             setSession(request, 'currentOrderList', [updateaddToCartID])
-            #request.session["currentOrderList"] = [updateaddToCartID]
-
+           
         userObject = usertable.objects.filter(userId=request.user.id)[0]
         print("Product_view POST userObject::", userObject)
 
@@ -493,9 +333,9 @@ def Product_view(request, modelNumber):
 
         print("Product_view POST addToCartItemsDict::", addToCartItemsDict)
         if addToCartItemsDict.__contains__(updateaddToCartID):
-            addToCartItemsDict[updateaddToCartID] += 1#updateaddToCartQuantity
+            addToCartItemsDict[updateaddToCartID] += 1
         else:
-            addToCartItemsDict[updateaddToCartID] = 1#updateaddToCartQuantity
+            addToCartItemsDict[updateaddToCartID] = 1
 
         userObject.addToCartItemsDict = str(addToCartItemsDict)
         userObject.save()
@@ -518,87 +358,19 @@ def Product_view(request, modelNumber):
         "Highlight" : {},
         "Spacification" : {}
     }
-    #ignoreItems = ['id', 'productId']
     if productsTableSecodary.objects.filter(productId=modelNumber).exists():
         for key, value in productsTableSecodary.objects.filter(productId=modelNumber).values()[0].items():
-            #if key not in ignoreItems and value != 'None' and value:
             if key != 'id' and key != 'productId' and value:
                 value = value.split("|")
                 dataData["Highlight"][value[0]] = value[1]  #todo
     
-
     print("Product_view 8::")
-    userID = ""
-    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
-        userID = request.user.id
-
     context = {
-        'userID'       :   userID,
+        'userID'       :   getUserId(request),
         'instance'     :   productsTablePrimary.objects.filter(modelNumber=modelNumber)[0],
         'dataData'     :   dataData
     }
     return render(request, "product/detail.html", context)
-
-def account_profileInformation_View(request):
-    return account_View(request, "profileinformation")
-
-def account_View(request, touds):
-
-    if touds == "orders":
-        return orders_View(request)
-
-    dataShow = ""
-    dataDictionary = {}
-    userObject = usertable.objects.filter(userId=request.user.id)
-    if len(userObject) == 0:
-        context = {"url" : request.get_full_path()}
-        return render(request, "404.html", context)
-    else:
-        userObject = userObject[0]
-
-    print("account_View 0 userObject::", userObject)
-
-    if request.method == "POST":
-        print("I AM IN POST");
-        if request.POST.__contains__("menuSwitch"):
-            if request.POST["menuSwitch"] == "profileinformation":
-                return redirect("/account")
-            elif request.POST["menuSwitch"] == "manageaddresses":
-                return redirect("/account/addresses")
-            else:
-                url = "/account/" + request.POST["menuSwitch"]
-                return redirect(url)
-        else:
-            pass
-
-    print("account_View touds::", touds)
-    if touds =="profileinformation":
-        dataDictionary = {"userId" : userObject.userId, "username" : userObject.username, 
-                          "firstname" : userObject.firstname, "lastname" : userObject.lastname,
-                          "emailaddress" : userObject.emailaddress,
-                          "mobilenumber" : userObject.mobilenumber,"whatsappnumber" : userObject.whatsappnumber }
-        dataShow = touds
-    elif touds =="addresses":
-        dataDictionary = {"username" : userObject.username }
-        dataShow ="manageaddresses"
-    elif touds =="changepassword":
-        dataDictionary = {"username" : userObject.username }
-        dataShow = touds
-    elif touds =="logout":
-        user = auth.authenticate(userObject.username, password=userObject.password)
-        auth.logout(request)
-        return redirect("/")
-    else:
-        dataDictionary = {"username" : userObject.username }
-        dataShow = touds
-
-    print("account_View 2 dataDictionary::", dataDictionary)
-    context = {
-
-       "dataShow" : dataShow,
-       "dataDictionary"      : dataDictionary
-    }
-    return render(request,"user/account/index.html", context)
 
 def user_addToCart_View(request):
 
@@ -616,31 +388,22 @@ def user_addToCart_View(request):
     if request.method =="POST":
         print("user_addToCart_View 0 request.POST", request.POST)
         if request.POST.__contains__("PROCEEDTOBUYFORM"):
-            #print("user_addToCart_View perform order", request.POST["PROCEEDTOBUYFORM"])
             addToCartItemsDict = dict( [item.split(":")[0].strip().strip("'"),int(item.split(":")[1].strip())]  for item in userObject.addToCartItemsDict.strip('}{').split(","))
             addToCartKeys = list(addToCartItemsDict.keys())
-            #print("user_addToCart_View addToCartKeys::",addToCartKeys, request.POST["PROCEEDTOBUYFORM"])
             notPurchasedItemList = []
             print('request.POST["PROCEEDTOBUYFORM"]::', request.POST["PROCEEDTOBUYFORM"])
             if request.POST["PROCEEDTOBUYFORM"] !="[]":
                 notPurchasedItemList = request.POST["PROCEEDTOBUYFORM"].strip("[]").split(",")
             outputList = list(set(addToCartKeys) - set(notPurchasedItemList)) + list(set(notPurchasedItemList) - set(addToCartKeys))
             setSession(request, 'currentOrderList', outputList)
-            #request.session["currentOrderList"] = outputList
             print("user_addToCart_View currentOrderList::",getSession(request, "currentOrderList"))
             return redirect("/product/purchase")
         elif request.POST.__contains__("CHANGEDQUANTITY"):
             flgCHANGEDQUANTITY = True
 
         elif(request.POST.__contains__("search")):
-            print("ProductListOnClick_view handleSearchBox")
-            url, matchNotFound, relaventSearch = handleSearchBox(request)
-            setSession(request, 'matchNotFound', matchNotFound)
-            setSession(request, 'relaventSearch', relaventSearch)
-            #request.session['matchNotFound'] = matchNotFound
-            #request.session['relaventSearch'] = relaventSearch
-            if url != "":
-                return redirect(url)
+            print("ProductListOnClick_view searchContent")
+            return searchContentInSearchBar(request)
 
     print("user_addToCart_View 1 add-to-cart userObject.addToCartItemsDict::",userObject.addToCartItemsDict)
     addToCartItemsDict = {}
@@ -698,107 +461,10 @@ def user_addToCart_View(request):
     }
     return render(request,"user/addToCart/index.html", context)
 
-def orders_View(request):
-    '''
-    userObject = usertable.objects.filter(userId=request.user.id)
-    if len(userObject) == 0:
-        context = {"url" : request.get_full_path()}
-        return render(request, "404.html", context)
-    else:
-        userObject = userObject[0]
-
-    print("orders_View 0 userObject::", userObject)
-    '''
-
-    if request.method == "POST":
-        print("orders_View 0 request.POST", request.POST)
-        if(request.POST.__contains__("search")):
-            print("orders_View handleSearchBox")
-            url, matchNotFound, relaventSearch = handleSearchBox(request)
-            setSession(request, 'matchNotFound', matchNotFound)
-            setSession(request, 'relaventSearch', relaventSearch)
-            #request.session['matchNotFound'] = matchNotFound
-            #request.session['relaventSearch'] = relaventSearch
-            if url != "":
-                return redirect(url)
-
-    print("orders_View 1 orders")
-
-    orderTrackingStatusDict = {
-                                0: "Order not placed yet",
-                                1: "Packing started [HP]",
-                                2: "Packing started [FP]",
-                                3: "Packed [HP]",
-                                4: "Packed [FP]",
-                                5: "Delivery started [HP]",
-                                6: "Delivery started [FP]",
-                                7: "Out for delivery:Picked by courier guy [HP]",
-                                8: "Out for delivery:Picked by courier guy [FP]",
-                                9: "Delivery guy on the way [HP]",
-                                10: "Delivery guy on the way [FP]",
-                                11: "Guy reached on delivery location [HP]",
-                                12: "Guy reached on delivery location [FP]",
-                                13: "Not deliverd to the customer not paid rest amount or cancel order [HP]",
-                                14: "Deliverd to the customer with paid rest amount [HP]",
-                                15: "Deliverd to the customer [FP]",
-                                16: "canceled by admin:Due to wrong transaction ID [HP]",
-                                17: "canceled by admin:due to wrong transaction ID [FP]",
-                                18: "canceled by admin:product out of stock [HP]",
-                                19: "canceled by admin:product out of stock [FP]",
-                                20: "canceled by user, from::before delivery started Payment [HP]",
-                                21: "canceled by user, from::before delivery started Payment [FP]",
-                                22: "returned by user, from::door-step Payment [HP]",
-                                23: "returned by user, from::door-step Payment [FP]",
-                                24: "returned by user, from::after delivered::with delivery charge [FP][W-DC]",
-                                25: "returned by user, from::after delivered::except delivery charge [FP][E-DC]"
-                            }
-
-    print("orders_View 1 request.user.id::",request.user.id)
-    userordertable_list = userordertable.objects.filter(userId=request.user.id)
-    print("orders_View 1 userordertable_list::",userordertable_list)
-    productDictList = []
-    for userordertable_ in userordertable_list:
-        print("orders_View userordertable_.orderTrackingStatus::",userordertable_.orderTrackingStatus)
-        statusVec = orderTrackingStatusDict[userordertable_.orderTrackingStatus].split(":")
-        orderTrackingStatus = statusVec[0]
-        reason = ""
-        if len(statusVec) == 2:
-            reason = statusVec[1]
-        orderDeliveryAddressSplitdata   =   userordertable_.orderDeliveryAddress.split(",", 1)
-        orderDeliveryAddressHeading     =   orderDeliveryAddressSplitdata[0]
-        orderDeliveryAddressRestPart    =   orderDeliveryAddressSplitdata[1].split(",")
-        print("orders_View userordertable_.orderPlacedDate::", str(userordertable_.orderPlacedDate).split("-"))
-
-        payAtHome = 0
-        warning = 0
-        if userordertable_.paidAmount < userordertable_.finalPaidAmount:
-            payAtHome = userordertable_.finalPaidAmount - userordertable_.paidAmount
-
-        dataDict = { "orderPlacedDate" : userordertable_.orderPlacedDate, "finalPaidAmount" : userordertable_.finalPaidAmount,
-                    "onOrderPaidAmount" : userordertable_.onOrderPaidAmount, "payAtHome" : payAtHome, "warning" : warning,
-                    "orderDeliveryAddressHeading" : orderDeliveryAddressHeading, "orderDeliveryAddressRestPart" : orderDeliveryAddressRestPart,
-                    "orderId" : userordertable_.orderId, "orderTrackingStatus" : orderTrackingStatus, "reason":reason,
-                    "orderPaymentDate" : userordertable_.orderFirstPaymentDate, "orderedItemImage" : userordertable_.orderedItemImage,
-                    "orderTitle" : userordertable_.orderTitle, "orderItemId" : userordertable_.orderItemId, "orderSellingQuantity" : userordertable_.orderSellingQuantity
-        }
-        productDictList.append(dataDict)
-
-    dataDictionary = {}
-    if len(productDictList) == 0:
-        ordernotplaced = "Order Not Placed"
-        dataDictionary = { "productDictList" : productDictList, "ordernotplaced" : ordernotplaced }
-    else:
-        dataDictionary = { "productDictList" : productDictList }
-
-    print("orders_View 2 dataDictionary::", dataDictionary)
-    context = {
-        #"defaultUserDataShow" : defaultUserDataShow,
-        "dataDictionary"      : dataDictionary
-    }
-    return render(request, "user/orders/index.html", context)
-
-
 def productPurchase_View(request):
+    
+    checkUserLogged(request, request.get_full_path())
+
     print("productPurchase_View")
     userAddressBookList = []
     userAddressBookItemDelete = ""
@@ -807,12 +473,7 @@ def productPurchase_View(request):
     userObjects = usertable.objects.filter(userId=request.user.id)
     print("productPurchase_View userObjects::", userObjects)
 
-    if (request.user.id == None) or (len(userObjects) == 0):
-        setSession(request, 'lastPageUrl', request.get_full_path())
-        #request.session['lastPageUrl'] = request.get_full_path()
-        print("productPurchase_View lastPageUrl::",request.get_full_path())
-        return redirect('/login')
-    elif request.method == 'POST':
+    if request.method == 'POST':
         print("request POST::",request.POST)
         print("request POST userObjects::",userObjects)
 
@@ -848,8 +509,6 @@ def productPurchase_View(request):
                 userAddressBook_.save()
 
                 for obj in userObjects:
-                    #print("obj::", obj)
-                    #print("obj.userAddressBooks", obj.userAddressBooks)
                     if (obj.userAddressBooks != "") and (obj.userAddressBooks != "[]"):
                         userAddressBookList = list(map(int, obj.userAddressBooks.strip('][').split(', ')))
                         userAddressBookList.append(userAddressBook_.id)
@@ -862,7 +521,6 @@ def productPurchase_View(request):
                     obj.save()
             else:
                 print("productPurchase_View Address Modify")
-                #print("MODIFYADDRESS::", request.POST['MODIFYADDRESS'])
                 userAddressBook_ = userAddressBook(id=int(request.POST['MODIFYADDRESS']), userId=request.user.id, firstname=firstname, 
                                         lastname=lastname, companyName=companyName,
                                         countryOrRegion=countryOrRegion, streetAddress1=streetAddress1, streetAddress2=streetAddress2,
@@ -925,11 +583,7 @@ def productPurchase_View(request):
 def productPaymentGateway_View(request, addressId):
     print("productPaymentGateway_View...")
 
-    if (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
-        #print("productPaymentGateway_View 0 lastPageUrl::", request.get_full_path())
-        setSession(request, 'lastPageUrl', request.get_full_path())
-        #request.session['lastPageUrl'] = request.get_full_path()
-        return redirect('/login')
+    checkUserLogged(request, request.get_full_path())
 
     userObject = usertable.objects.filter(userId=request.user.id)[0]
     print("productPaymentGateway_View start userObject::", userObject)
@@ -1107,13 +761,12 @@ def login_View(request):
         user = auth.authenticate(username=username, password=password)
 
         redirectUrl = ""
-        if request.session.__contains__("lastPageUrl"):
-            redirectUrl = getSession(request, 'lastPageUrl')
+        if request.session.__contains__("redirectedPageUrl"):
+            redirectUrl = getSession(request, 'redirectedPageUrl')
 
         if user is not None:
             auth.login(request, user)   #redirectUrl used because after that request doesnot have session key
-            setSession(request, 'lastPageUrl', redirectUrl)
-            #request.session['lastPageUrl'] = redirectUrl
+            setSession(request, 'redirectedPageUrl', redirectUrl)
 
             if redirectUrl == "":
                 return redirect('/')

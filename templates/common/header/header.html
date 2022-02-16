@@ -147,7 +147,7 @@
     <div class="w3-col l7 m7 s7 w3-hide-small w3-hide-medium" style="padding-top:1%" onmouseover="dropdownMenuProfileHide()">
         <div class="search">
             <form class="search-form w3-white" action="" method="post">  {% csrf_token %}
-                <input type="text" placeholder="Search for products" name="searchData" style="padding-left:1%; padding-right:2%;">
+                <input type="text" placeholder="Search for products" name="searchedContent" style="padding-left:1%; padding-right:2%;">
                 <input type="hidden" name="search" value="search">
                 <input type="submit" value="search">
             </form>
@@ -157,7 +157,7 @@
     <div class="w3-col l7 m5 s7 w3-hide-large" style="padding-top:1%" onmouseover="dropdownMenuProfileHide()">
         <div class="search">
             <form class="search-form w3-white" action="" method="post">  {% csrf_token %}
-                <input type="text" placeholder="Search for products" id="searchBox" name="searchData" style="padding-left:1%; padding-right:2%;" >
+                <input type="text" placeholder="Search for products" id="searchBox" name="searchedContent" style="padding-left:1%; padding-right:2%;">
                 <input type="hidden" name="search" value="search">
             </form>
         </div>
@@ -272,8 +272,10 @@
 
     $("#searchBox").on('keyup', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
-            console.log("ENter pressed...")
+            console.log("Enter pressed...")
         }
     });
+
+    
 
 </script>

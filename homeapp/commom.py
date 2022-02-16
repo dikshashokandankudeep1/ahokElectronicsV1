@@ -127,4 +127,11 @@ def setSession(request, key, value):
     request.session[key] = value
 
 def getSession(request, key):
-    return request.session[key]
+    if request.session.__contains__(key):
+        print("getSession key contains....",key, request.session[key])
+        return request.session[key]
+    else:
+        print("getSession key not contains....")
+        return ""
+
+
