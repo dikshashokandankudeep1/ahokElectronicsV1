@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
+{% include 'common/title.html' %}
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
-    <script src="{% static 'js/adminPage.js' %}"></script>
-    <script src="{% static 'js/common/universal/all.js' %}"></script>
+    {% include 'common/head.html' %}
 </head>
 
 <style>
     .checked {
         color: orange;
     }
-
 
     #mainDiv{
         max-width:1200px; 
@@ -39,7 +34,7 @@
 
 <body>
     {% include 'common/header/header.html' %}
-    <div class="w3-row w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+    <div class="w3-row w3-small" id="mainDiv">
         <div class="w3-col l4 m2 w3-hide-small"><br></div>
         <div class="w3-col l5 m7 s11 w3-center" style="padding-left:10%; padding-top:5%; padding-bottom:5%;">
             <form action="login" method="post"> {% csrf_token %}
@@ -89,17 +84,5 @@
             </form>
         </div>
     </div>
-
 </body>
-<script>
-    /*
-    window.onload = function() {
-            document.getElementById("dropdownMenuProfile").style.display = "none";
-        };
-    function dropdownMenuProfileHide(){
-            document.getElementById("dropdownMenuProfile").style.display = "none";
-        }
-    */
-</script>
-
 </html>

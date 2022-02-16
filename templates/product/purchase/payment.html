@@ -1,21 +1,10 @@
 <!DOCTYPE html>
 <html>
-<title>Ashok Elcetronics</title>
+{% load static %}
+{% include 'common/title.html' %}
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--static load-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/searchItems.css' %}">
-    <link rel="stylesheet" href="{% static 'css/Imagezoom.css' %}">
-
-    <script src="{% static 'js/common/imagezoom.js' %}"></script>
-    <script src="{% static 'js/w3hideshow.js' %}"></script>
-    <script src="{% static 'js/common/universal/all.js' %}"></script>
-    <!--todo  <script src="{% static 'js/w3hideshow.js' %}"></script>  for w3.hide and w3.show https://www.w3schools.com/w3js/w3js_hide.asp -->
+    {% include 'common/head.html' %}
     <style>
         .dot {
             height: 25px;

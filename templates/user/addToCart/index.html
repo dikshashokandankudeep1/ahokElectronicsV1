@@ -1,25 +1,17 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<title>Ashok Elcetronics</title>
+{% include 'common/title.html' %}
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
-
-    <script src="{% static 'js/common/universal/all.js' %}"></script>
-    <script src="{% static 'js/w3hideshow.js' %}"></script>
-    <script src="{% static 'js/adminPage.js' %}"></script>
+    {% include 'common/head.html' %}
+    <!--<script src="{% static 'js/adminPage.js' %}"></script>-->
     <!--<script src="{% static 'js/user/addToCart/index.js' %}"></script>-->
-
 </head>
 <style>
     .checked {
         color: orange;
     }
-
 
     #mainDiv{
         max-width:1200px; 
@@ -169,28 +161,19 @@
         };
 
         function maxLimitValidation(){
-            //console.log("Reached 1")
             maxLimitErrorList = '{{dataDictionary.productDictList}}';
-            //console.log("Reached 2")
             maxLimitErrorList = maxLimitErrorList.replaceAll('&#x27;', "").replaceAll("[", '').replaceAll("]", '').replaceAll("{", '').split("},")
-            //console.log("maxLimitErrorList::", maxLimitErrorList);
             maxLimitErrorFlag = false
             for (var i=0; i<maxLimitErrorList.length; i++){  
-                //console.log("Reached 3.1::", maxLimitErrorList[i].split(", ")[4])
                 quantity = parseInt(maxLimitErrorList[i].split(", ")[4].replaceAll(" ", '').split(":")[1])
-                //console.log("Reached 3.2::", maxLimitErrorList[i].split(", ")[5])
                 storeQuantity = parseInt(maxLimitErrorList[i].split(", ")[5].replaceAll("}", '').replaceAll(" ", '').split(":")[1])
-                //console.log("Reached 4::", maxLimitErrorList[i].split(", ")[0].replaceAll(": ", ':').split(":")[1])
                 itemID = maxLimitErrorList[i].split(", ")[0].replaceAll(": ", ':').split(":")[1]
                 
-                //console.log("Reached 5")
                 if(storeQuantity < quantity){
-                    //console.log("Reached 6")
                     showId(itemID + "_maxLimitError")
                     maxLimitErrorFlag = true
                 }
                 else{
-                    //console.log("Reached 7::", itemID)
                     hideId(itemID + "_maxLimitError")
                 }
             }
@@ -223,13 +206,10 @@
         }
 
         function checkUncheckOrder(itemId, validateWith) {
-            //console.log("checkUncheckOrder::", itemId, validateWith)
             unBuyStorevect = [];
             if (document.getElementById("UNBUYSTORE").value != "[]") {
                 unBuyStorevect = document.getElementById("UNBUYSTORE").value.replace("[", "").replace("]", "").split(",");
             }
-            //console.log("checkUncheckOrder vect::", unBuyStorevect)
-            //console.log("checkUncheckOrder UNBUYSTORE::", document.getElementById("UNBUYSTORE").value)
             validationFlg = false
             if (validateWith == "TOGGLE") {
                 validationFlg = document.getElementById("CHECK_" + itemId).checked;
@@ -241,7 +221,6 @@
             }
 
             if (validationFlg) {
-                //console.log("unBuyStorevect::", unBuyStorevect)
                 for (var i = 0; i < unBuyStorevect.length; i++) {
                     if (unBuyStorevect[i] == itemId) {
                         unBuyStorevect.splice(i, 1);
@@ -312,13 +291,10 @@
                 validateWith = "UNCHECK";
             } else {
                 vect = document.getElementById("UNBUYSTORE").value.replace("[", "").replace("]", "").split(",");
-                //itemidList = itemidList.filter(n => !vect.includes(n))
                 itemidList = itemidList.filter(n => vect.includes(n))
             
                 validateWith = "CHECK";
             }
-            
-            
             
             for (var i = 0; i < itemidList.length; i++) {
                     checkUncheckOrder(itemidList[i], validateWith);

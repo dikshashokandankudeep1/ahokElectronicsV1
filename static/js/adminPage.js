@@ -1,3 +1,4 @@
+/*
 var ModelNumber = "<div> <input class = 'w3-input w3-animate-input w3-round w3-border' type='text' id='ModelNumber' onkeyup='handle()' style='width:40%' placeholder='please enter ModelNumber' name='ModelNumber'></div> ";
 var RAM = "<div> <input class = 'w3-input w3-animate-input w3-round w3-border' type='text' id='RAM' onkeyup='handle()' style='width:40%' placeholder='please enter RAM' name='RAM'></div> ";
 var InternalStorage = "<div> <input class = 'w3-input w3-animate-input w3-round w3-border' type='text' id='InternalStorage' onkeyup='handle()' style='width:40%' placeholder='please enter InternalStorage' name='InternalStorage'></div> ";
@@ -469,3 +470,4 @@ function productHomeSliderURLOprtionsFunction(selTag) {
         prevProductHomeSliderURLItem = productHomeSliderURLItem
     }
 }
+*/

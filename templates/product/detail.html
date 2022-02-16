@@ -1,18 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<title>Ashok Elcetronics</title>
+{% include 'common/title.html' %}
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/searchItems.css' %}">
+    {% include 'common/head.html' %}
+    <link rel="stylesheet" href="{% static 'css/home/categoryDataShow.css' %}">
     <link rel="stylesheet" href="{% static 'css/Imagezoom.css' %}">
-
     <script src="{% static 'js/common/imagezoom.js' %}"></script>
-    <script src="{% static 'js/common/universal/all.js' %}"></script>
+    
 
     <style>
         body {
@@ -138,8 +134,7 @@
     .checked {
         color: orange;
     }
-
-
+    
     #mainDiv{
         max-width:1200px; 
         margin-top:5.5%;

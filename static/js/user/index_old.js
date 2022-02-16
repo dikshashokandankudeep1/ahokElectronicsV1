@@ -1,3 +1,4 @@
+/*
 function showId(ID) {
     console.log("ShowID::", ID);
     document.getElementById(ID).style.display ="block";
@@ -246,3 +247,4 @@ function noItemProceedToBuyButtonValidation(button) {
         button.setCustomValidity('');
     }
 }
+*/

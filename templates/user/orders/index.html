@@ -1,19 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<title>Ashok Elcetronics</title>
+{% include 'common/title.html' %}
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/user/index.css' %}">
+    {% include 'common/head.html' %}
 
-    <script src="{% static 'js/common/universal/all.js' %}"></script>
-    <script src="{% static 'js/w3hideshow.js' %}"></script>
-    <script src="{% static 'js/adminPage.js' %}"></script>
-    <script src="{% static 'js/user/index.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/user/index.css' %}">
+    <!--<script src="{% static 'js/adminPage.js' %}"></script>-->
+    <!--<script src="{% static 'js/user/index.js' %}"></script>-->
 </head>
 
 <style>
@@ -41,7 +36,6 @@
     }
 </style>
 
-<!--<body class="w3-content" style="max-width:1200px">-->
 <body style="position: relative;">
     {% include 'common/header/header.html' %}
     <div class="w3-row w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">

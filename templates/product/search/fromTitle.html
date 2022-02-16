@@ -1,23 +1,17 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<title>Ashok Elcetronics</title>
+{% include 'common/title.html' %}
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--static load-->
-    <link rel="stylesheet" href="{% static 'css/common/universal/w3.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common/universal/fontawesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/searchItems.css' %}">
-    <script src="{% static 'js/common/universal/all.js' %}"></script>
+    {% include 'common/head.html' %}
+    <link rel="stylesheet" href="{% static 'css/home/categoryDataShow.css' %}">
 </head>
 
 <style>
     .checked {
         color: orange;
     }
-
 
     #mainDiv{
         max-width:1200px; 
@@ -40,7 +34,6 @@
 </style>
 
 <body style="position: relative;">
-    <!-- Common Product All Data -->
     {% include 'common/header/header.html' %}
     <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row">
@@ -175,7 +168,6 @@
 
             //for Price filter Intrigrity maintain
             document.getElementById('dropdownSortButtonfilterDict').value = calculatefilterDictTOfilterDictStr("showButtonSort", "")
-            //console.log("END val::", '{{searchContentNotfound}}', '{{relaventSearchContent}}')
             document.getElementById("dropdownSortButtonClick").click();
         }
 
