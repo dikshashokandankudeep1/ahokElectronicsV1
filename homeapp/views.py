@@ -43,7 +43,6 @@ def Home_view(request):
         'productHomeCategoryListObjCount'   : productHomeCategoryListObj.count(),
         'productHomeSliderObj'              : productHomeSliderObj,
         'productHomeSliderObjCountList'     : list(range(0, productHomeSliderObj.count())),
-
     }
     return render(request, "home/index.html", context)
 

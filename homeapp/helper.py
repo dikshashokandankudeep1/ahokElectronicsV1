@@ -147,7 +147,7 @@ def alterProductManagePOST(request):
         elif request.POST["action"] == "payment":  #todo work painding
             print("alterData 5")
             if request.POST["modeOfPayment"] == "UPI":
-                print("-------->", bool(request.POST["modeOfPayment"]))
+                #print("-------->", bool(request.POST["modeOfPayment"]))
                 paymentTable_ = paymentTable(modeOfPayment=request.POST["modeOfPayment"], 
                         isActive=bool(request.POST["modeOfPayment"]), upiId=request.POST["upiId"], 
                         bankName="", ifscCode="", accountNumber="", benificiaryName="")
@@ -159,7 +159,7 @@ def alterProductManagePOST(request):
                             benificiaryName=request.POST["benificiaryName"])
                 paymentTable_.save()
             else:
-                print("alterData 5::ERROR") 
+                print("alterData 5::ERROR - payment") 
             return request, "payment", ""
         elif request.POST["action"] == "promocode":  #todo work painding
             print("alterData 6") 
