@@ -12,11 +12,11 @@ from django.shortcuts import render, redirect
 from .models import usertable, userPaymentTable, userAddressBook, userordertable, userOrderGrouptable, \
                     homeSliderImageTable, homeProductListImagesTable,\
                     productsTablePrimary, productsTableSecodary, productsTableTernary, \
-                    paymentTable, webCredentialsTable, temporaryOrderStoreTable, globleVariables
+                    paymentTable, webCredentialsTable, temporaryOrderStoreTable, globleVariables, promoCodes
 
 from django.contrib.auth.models import User, auth
 
-from .commom import  setSession, getSession, toCamelCase, myThreadPool
+from .commom import  setSession, getSession, toCamelCase, toCommaSeperatedCurrency, myThreadPool
 
 from .helper import searchContentInSearchBar, checkUserLogged, getUserId
 
@@ -449,7 +449,6 @@ def user_addToCart_View(request):
                 notPurchasedItemList = request.POST["PROCEEDTOBUYFORM"].strip("[]").split(",")
             outputList = list(set(addToCartKeys) - set(notPurchasedItemList)) + list(set(notPurchasedItemList) - set(addToCartKeys))
             fillTemporaryOrderStoreTable(request.user.id, "", "", "", outputList)
-            #setSession(request, 'currentOrderList', outputList)
             print("user_addToCart_View currentOrderList::", getTemporaryOrderStoreTable(request.user.id, 0, 0, 0, 1))
             return redirect("/product/purchase/selectDeliveryAddress")
         elif request.POST.__contains__("CHANGEDQUANTITY"):
@@ -779,13 +778,16 @@ def confirmOrderDetails_View(request):
     if orderDeliveryAddress == "":
         addressId = getTemporaryOrderStoreTable(request.user.id, 1, 0, 0, 0)
         useraddressBookObj = userAddressBook.objects.filter(id=addressId)
-        if len(useraddressBookObj) == 1:
-            useraddressBookObj = useraddressBookObj[0]
-            orderDeliveryAddress =  useraddressBookObj.firstname + " " + useraddressBookObj.lastname + ", " + \
-                        useraddressBookObj.streetAddress1 + ", " + useraddressBookObj.streetAddress2 + ", " + \
-                        useraddressBookObj.townOrCity + ", " + useraddressBookObj.stateOrCounty  + " " + \
-                        useraddressBookObj.postcodeOrZIP + ", " + useraddressBookObj.countryOrRegion + ", " + \
-                        "Contact No." + useraddressBookObj.phoneNo
+        for obj in useraddressBookObj:
+            orderDeliveryAddress =  obj.firstname + " " \
+                                + obj.lastname + ", " \
+                                + obj.streetAddress1 + ", " \
+                                + obj.streetAddress2 + ", " \
+                                + obj.townOrCity + ", " \
+                                + obj.stateOrCounty  + " " \
+                                + obj.postcodeOrZIP + ", " \
+                                + obj.countryOrRegion + ", " \
+                                + "Contact No." + obj.phoneNo
 
             print("orderDeliveryAddress: ", orderDeliveryAddress)
         else:
@@ -804,21 +806,23 @@ def confirmOrderDetails_View(request):
         if currentOrderList:
             if not (itemID in currentOrderList):
                 continue
-        productObj = productsTablePrimary.objects.filter(modelNumber=itemID)
+        
         tokenPercentage = 20
         minimumTotalCost = 1000
         glbObj = globleVariables.objects.all()
         for objData in glbObj:
             tokenPercentage = objData.tokenPercentage
             minimumTotalCost = objData.minimumTotalCost
-            
-        if len(productObj) == 1:
-            productDictList.append({ "itemID" : itemID, "title" : productObj[0].title, "price" : productObj[0].price, "quantity" : itemQuantity, "storeQuantity": productObj[0].quantity})
-            productTotalCost = productObj[0].price * itemQuantity
+
+        productObj = productsTablePrimary.objects.filter(modelNumber=itemID)
+        for obj in productObj:
+            productDictList.append({ "itemID" : itemID, "title" : obj.title, "price" : obj.price, "quantity" : itemQuantity, "storeQuantity": obj.quantity})
+            productTotalCost = obj.price * itemQuantity
             productsTotalCost += productTotalCost
             tokenAmount += productTotalCost * (tokenPercentage/100)
             itemidList.append(itemID)
-        else:
+
+        if len(productObj) != 1:
             #TODO << Item out of stock >>
             print("WE have issue at productPaymentGateway productObj...", len(productObj))
 
@@ -923,15 +927,93 @@ def reviewOrderBeforePayment_View(request):
         return redirect(isNotLogged)
 
     isPromoCodeWrong = 0
+    isPromoCodeNotEntered = 1
+    discountPercentage = 0
     
     if request.method == 'POST':
-        pass
+        if request.POST.__contains__("buttonOpeartion"):
+            print("buttonOpeartion::", request.POST["buttonOpeartion"])
+            if request.POST["buttonOpeartion"] == "submit":
+                return redirect("/product/purchase/process-payment")
+            else:
+                return redirect("/")
+                
+        elif request.POST.__contains__("promoCode"):
+            promoObj = promoCodes.objects.filter(promoCodeId=request.POST["promoCode"].lower())
+            if promoObj:
+                discountPercentage = promoObj[0].discountPercentage
+                isPromoCodeNotEntered = 0
+            else:
+                isPromoCodeWrong = 1
+                
+        elif request.POST.__contains__("reEnterPromoCode"):
+            pass
     
     dataDict = {}
+    dataDict['isPromoCodeNotEntered'] = isPromoCodeNotEntered
     tempObj = temporaryOrderStoreTable.objects.filter(userId=request.user.id)
     for obj in tempObj:
-        print("reviewOrderBeforePayment_View:: selectedMode::", obj.selectedMode)
-        print("reviewOrderBeforePayment_View::currentOrderList::", obj.currentOrderList)
+
+        orderSummery = {}
+        tokenPercentage = 20
+        deliveryChargePercentage = 0
+        glbObj = globleVariables.objects.all()
+        for objData in glbObj:
+            tokenPercentage = objData.tokenPercentage
+            deliveryChargePercentage = objData.deliveryChargePercentage
+        
+        productsTotalCost = 0
+        tokenAmount = 0
+        totalItemQuantity = 0
+        promoDiscount = 0
+        deliveryCharge = 0
+
+        userObject = usertable.objects.filter(userId=request.user.id)
+        for userObj in userObject:
+            addToCartItemsDict = {}
+            addToCartItemsDict = dict( [item.split(":")[0].strip().strip("'"),int(item.split(":")[1].strip())]  for item in userObj.addToCartItemsDict.strip('}{').split(","))
+            for itemID, itemQuantity in addToCartItemsDict.items():
+                if obj.currentOrderList:
+                    if not (itemID in obj.currentOrderList):
+                        continue
+                
+                productObj = productsTablePrimary.objects.filter(modelNumber=itemID)
+                productTotalCost = 0
+                for objData in productObj:
+                    totalItemQuantity += itemQuantity
+                    productTotalCost = objData.price * itemQuantity
+                    productsTotalCost += productTotalCost
+                    tokenAmount += productTotalCost * (tokenPercentage / 100)
+                    
+        orderSummery["totalItems"] = totalItemQuantity
+        orderSummery["itemsPrice"] = toCommaSeperatedCurrency(productsTotalCost)
+        promoDiscount = productsTotalCost * (discountPercentage / 100)
+        promoDiscount = round(promoDiscount)
+        orderSummery["promoDiscount"] = toCommaSeperatedCurrency(promoDiscount)
+        deliveryCharge = productsTotalCost * (deliveryChargePercentage / 100)
+        deliveryCharge = round(deliveryCharge)
+        if deliveryCharge > 40:
+            deliveryCharge = 40
+        orderSummery["deliveryCharge"] = toCommaSeperatedCurrency(deliveryCharge)
+
+        orderTotal = (productsTotalCost - promoDiscount) + deliveryCharge
+        orderSummery["orderTotal"] = toCommaSeperatedCurrency(orderTotal)
+
+        if obj.selectedMode == "token":
+            orderSummery["isToken"] = 1
+            orderSummery["token"] = toCommaSeperatedCurrency(int(tokenAmount))
+            restAmount = orderTotal - int(tokenAmount)
+            orderSummery["restAmount"] = toCommaSeperatedCurrency(restAmount)
+            obj.tokenAmount = int(tokenAmount)
+            obj.restAmount = int(restAmount)
+            obj.orderTotal = int(orderTotal)
+        else:
+            orderSummery["isToken"] = 0
+            obj.tokenAmount = 0
+            obj.restAmount  = int(orderTotal)
+            obj.orderTotal  = int(orderTotal)    
+
+        dataDict['orderSummery'] = orderSummery
 
         deleveryAddress = []
         userAddrObj = userAddressBook.objects.filter(userId=request.user.id).filter(id=int(obj.deleveryAddressId))
@@ -956,19 +1038,39 @@ def reviewOrderBeforePayment_View(request):
             paymentMethod['id'] = obj.cvvOrUpi
         else:
             userPayObj = userPaymentTable.objects.filter(userId=request.user.id).filter(id=int(obj.accId))
-            for obj in userPayObj:
-                paymentMethod['method'] = obj.bankName + " " + obj.cardType
-                paymentMethod['id'] = "ending in **" + obj.cardNumber[-4:]
-        dataDict["paymentMethod"] = paymentMethod
+            for objData in userPayObj:
+                paymentMethod['method'] = objData.bankName + " " + objData.cardType
+                paymentMethod['id'] = "ending in **" + objData.cardNumber[-4:]
 
+        dataDict["paymentMethod"] = paymentMethod
         dataDict['isPromoCodeWrong'] = isPromoCodeWrong
 
+        obj.save()
 
     context = {
         'userId' : request.user.id,
         'dataDict' : dataDict
     }
     return render(request, "product/purchase/reviewOrderBeforePayment.html", context)
+
+
+def processTopay_View(request):
+
+    isNotLogged = checkUserLogged(request, request.get_full_path())
+    if isNotLogged:
+        return redirect(isNotLogged)
+    dataDict = {}
+    tempObj = temporaryOrderStoreTable.objects.filter(userId=request.user.id)
+    for obj in tempObj:
+        dataDict["tokenAmount"] = toCommaSeperatedCurrency(obj.tokenAmount)
+        dataDict["restAmount"]  = toCommaSeperatedCurrency(obj.restAmount)
+        dataDict["orderTotal"]  = toCommaSeperatedCurrency(obj.orderTotal)
+
+    context = {
+        'userId' : request.user.id,
+        'dataDict' : dataDict
+    }
+    return render(request, "product/purchase/processTopay.html", context)
 
 def placeOrder_View(request):
     paymentObj = paymentTable.objects.values_list()

@@ -26,6 +26,9 @@
         max-width:1200px; 
         margin-top:5.5%;
     }
+    #productTotal{
+        padding-top:3%;
+    }
 
     @media only screen and (max-width: 600px) {
         #mainDiv{
@@ -39,9 +42,12 @@
     @media only screen and (min-width: 600px) and (max-width: 992px) {
         #mainDiv{
             max-width:1200px; 
-            margin-top:40px;
+            margin-top:20px;
             margin-left:10px;
             margin-right:10px;
+        }
+        #productTotal{
+            padding-top:0%;
         }
     }
 </style>
@@ -113,7 +119,7 @@
             </div>
             <!-- Payment -->
             <div class="w3-col l6 m12 s12" id="noMaxLimitError">
-                <div class="w3-row w3-hide-small" style="padding-top:15%; ">
+                <div class="w3-row w3-hide-small w3-hide-medium" style="padding-top:15%;">
                     <div class="w3-col l2 m12 s12  w3-hide-small">
                         <br>
                     </div>
@@ -121,12 +127,12 @@
                         Confirm Payment
                     </div>
                 </div>
-                <div class="w3-row w3-hide-large w3-hide-medium" style="padding-top:5%;">
+                <div class="w3-row w3-hide-large" style="padding-top:5%;">
                     <div class="w3-col l10 m12 s12 w3-large">
                         Confirm Payment
                     </div>
                 </div>
-                <div class="w3-row" style="padding-top:3%;">
+                <div class="w3-row" id="productTotal">
                     <div class="w3-col l2 m12 s12 w3-hide-small">
                         <br>
                     </div>

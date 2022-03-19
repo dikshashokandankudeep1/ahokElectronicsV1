@@ -23,7 +23,7 @@ from homeapp.views import Home_view, ProductList_view, ProductListOnClick_view, 
                         Product_view, ProductSearchList_view, \
                         login_View, register_View, \
                         confirmOrderDetails_View, \
-                        selectDeliveryAddress_View, selectPaymentMethod_View, reviewOrderBeforePayment_View,\
+                        selectDeliveryAddress_View, selectPaymentMethod_View, reviewOrderBeforePayment_View, processTopay_View,\
                         user_addToCart_View#, Admin_view, error_404, selectDeliveryAddress_View, 
 
 from homeapp.manager import manager_default_View, manager_View
@@ -53,6 +53,7 @@ urlpatterns = [
     path('product/purchase/confirmOrderDetails', confirmOrderDetails_View, name="confirmOrderDetails_View"),
     path('product/purchase/selectPaymentMethod', selectPaymentMethod_View, name="selectPaymentMethod_View"),
     path('product/purchase/reviewOrderBeforePayment', reviewOrderBeforePayment_View, name="reviewOrderBeforePayment_View"),
+    path('product/purchase/process-payment', processTopay_View, name="processTopay_View"),
     
 
     #path('user/<int:userID>/<int:typeofuserdatashow>', user_View, name="user_View"),       #0->profile, 1->add-to-cart, 2->orders

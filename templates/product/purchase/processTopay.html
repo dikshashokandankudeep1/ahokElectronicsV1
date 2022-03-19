@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% include 'common/title.html' %}
+
+<head>
+    {% include 'common/head.html' %}
+    <style>
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<style>
+    .checked {
+        color: orange;
+    }
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:100px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:40px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    #loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        width: 120px;
+        height: 120px;
+        margin: -76px 0 0 -76px;
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        
+        border-top: 16px solid #3498db;
+        border-bottom: 16px solid #3498db;
+      }
+      
+      @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Add animation to "page content" */
+      .animate-bottom {
+        position: relative;
+        -webkit-animation-name: animatebottom;
+        -webkit-animation-duration: 1s;
+        animation-name: animatebottom;
+        animation-duration: 1s
+      }
+      
+      @-webkit-keyframes animatebottom {
+        from { bottom:-100px; opacity:0 } 
+        to { bottom:0px; opacity:1 }
+      }
+      
+      @keyframes animatebottom { 
+        from{ bottom:-100px; opacity:0 } 
+        to{ bottom:0; opacity:1 }
+      }
+</style>
+
+<body style="position: relative;">
+    {% include 'common/header/checkout.html' %}
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        
+        <div class="w3-row">
+            <div class="w3-col l1 m4 s4 w3-hide-small w3-hide-medium"><br></div>
+            <div class="w3-col l7 m7 s7" style="padding-top:80px">
+                <span class="w3-large">process to pay Window</span>
+                <div id="loader" style="margin-top:80px">
+                </div>
+                <div class="w3-card animate-bottom" style="padding:10px; margin-top:10px; display:none;" id="myDiv">
+                    <div class="w3-row">
+                        <div class="w3-red">! Under Construction</div>
+                        {% if dataDict.tokenAmount != "0.00" %}
+                            <p>Token amount: {{dataDict.tokenAmount}}</p>
+                            <p>Rest amount: {{dataDict.restAmount}}</p>
+                        {% else %}
+                            <p>Order total: {{dataDict.orderTotal}}</p>
+                        {% endif %}
+                        <!--
+                        <div class="w3-light-grey w3-round-xlarge">
+                            <div class="w3-container w3-blue w3-round-xlarge" id="myBar" style="width:25%">0%</div>
+                        </div>
+                        -->
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>    
+        
+        onLoadWindow();
+        function onLoadWindow(){
+            dropdownMenuProfileHide();
+            //moveProcessBar();
+            moveCircularBar();
+        }
+        
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        var myVar;
+        function moveCircularBar() {
+            myVar = setTimeout(showPage, 3000);
+        }
+          
+        function showPage() {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("myDiv").style.display = "block";
+        }
+        /*
+        function moveProcessBar() {
+            var elem = document.getElementById("myBar");   
+            var width = 1;
+            var id = setInterval(frame, 10);
+            function frame() {
+              if (width >= 100) {
+                clearInterval(id);
+              } else {
+                width++; 
+                elem.style.width = width + '%';
+                document.getElementById("myBar").innerHTML =   width + '%'
+              }
+            }
+          }
+          */
+    </script>
+
+</body>
+
+</html>

@@ -141,3 +141,8 @@ def toCamelCase(stringData):
         outputString += vec[0].upper() + vec[1:].lower() + " "
     return outputString.strip()
 
+def toCommaSeperatedCurrency(number):
+    commaSeparatedCurrency = "{:,}".format(number)
+    if '.' not in commaSeparatedCurrency:
+        commaSeparatedCurrency += ".00"
+    return commaSeparatedCurrency

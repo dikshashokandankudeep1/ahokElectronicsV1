@@ -24,6 +24,13 @@
         max-width:1200px; 
         margin-top:5.5%;
     }
+    #selectPayment{
+        padding-top: 80px;
+    }
+    #selectPaymentButton{
+        padding-top:106px; 
+        margin-left:5px;
+    }
 
     @media only screen and (max-width: 600px) {
         #mainDiv{
@@ -31,6 +38,12 @@
             margin-top:100px;
             margin-left:10px;
             margin-right:10px;
+        }
+        #selectPayment{
+            padding-top: 10px;
+        }
+        #selectPaymentButton{
+            padding-top : 10px; 
         }
     }
 
@@ -60,9 +73,8 @@
     {% include 'common/header/checkout.html' %}
     <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row">
-            <div class="w3-col l2 m4 s4"><br></div>
-            <div class="w3-col l6 m6 s6" style="padding-top:80px">
-                
+            <div class="w3-col l2 m4 s4 w3-hide-small w3-hide-medium"><br></div>
+            <div class="w3-col l6 m7 s12" id="selectPayment">
                 <span class="w3-large">Select a payment method</span>
                 <div class="w3-card" style="padding:10px; margin-top:10px">
                     {% if accIdsCount %}
@@ -149,7 +161,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w3-col l2 m4 s4 w3-center" style="padding-top:106px; margin-left:5px">
+            <div class="w3-col l2 m4 s5 w3-center" id="selectPaymentButton">
                 <div class="w3-card" style="padding:10px; margin-top:10px">
                     <form action="" method="post"> {% csrf_token %}
                         <input type="hidden" id="formNameOnCard" name="formNameOnCard" value="" />

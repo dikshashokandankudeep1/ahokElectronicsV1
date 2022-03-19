@@ -24,6 +24,13 @@
         max-width:1200px; 
         margin-top:5.5%;
     }
+    #reviewOrder{
+        padding-top : 80px;
+    }
+    #orderSummery{
+        padding-top : 106px; 
+        margin-left : 5px;
+    }
 
     @media only screen and (max-width: 600px) {
         #mainDiv{
@@ -31,6 +38,13 @@
             margin-top:100px;
             margin-left:10px;
             margin-right:10px;
+        }
+        #reviewOrder{
+            padding-top : 10px;
+        }
+        #orderSummery{
+            padding-top : 10px;
+            padding-bottom : 10px;
         }
     }
 
@@ -60,8 +74,8 @@
     {% include 'common/header/checkout.html' %}
     <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row">
-            <div class="w3-col l1 m4 s4"><br></div>
-            <div class="w3-col l7 m7 s7" style="padding-top:80px">
+            <div class="w3-col l1 m4 s4 w3-hide-small w3-hide-medium"><br></div>
+            <div class="w3-col l7 m7 s12" id="reviewOrder">
                 <span class="w3-large">Review your order</span>
                 <div class="w3-card" style="padding:10px; margin-top:10px">
                     <div class="w3-row"> 
@@ -88,9 +102,10 @@
                         </div>
                         <div class="w3-col l4 m4 s4">
                             <div class="w3-row" style="color:#333; margin-bottom:10px"> <b> Promo code </b></div>
+                            {% if dataDict.isPromoCodeNotEntered %}
                             <form action="" method="post"> {% csrf_token %}
                                 <div class="w3-row" style="margin-bottom:5px">
-                                    <input type="text" id="promoCode" name="promoCode" value="" placeholder="Enter Code" required> 
+                                    <input type="text" id="promoCode" name="promoCode" value="" style='width:60%' placeholder="Enter Code" required> 
                                 </div>
                                 {% if dataDict.isPromoCodeWrong %}
                                 <div class="w3-row" style="margin-bottom:5px">
@@ -103,35 +118,61 @@
                                     </button>
                                 </div>
                             </form>
+                            {% else %}
+                            <form action="" method="post"> {% csrf_token %}
+                                <div class="w3-row">
+                                    <input type="hidden" id="reEnterPromoCode" name="reEnterPromoCode" value="" />
+                                    <button class="w3-button w3-tiny w3-round" style="background-color:#ffe11b;" id="submit" onclick="setOnButtonClick('submit')">
+                                        <span id="submitButton">Re-enter promo code</span>
+                                    </button>
+                                </div>
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="w3-col l3 m4 s4 w3-center" style="padding-top:106px; margin-left:5px">
+            <div class="w3-col l3 m4 s7 w3-center" id="orderSummery">
                 <div class="w3-card" style="padding:10px; margin-top:10px">
-                    
                     <div class="w3-row">
                         <div class="w3-row w3-left" style="color:#333; margin-bottom:10px;"> <b>Order Summary</b></div>
                         <div class="w3-row"> 
-                            <div class="w3-col l6 m6 s6" style="text-align:left"> Item: </div>
-                            <div class="w3-col l6 m6 s6" style="text-align:right"> ₹30,484.00 </div> 
+                            <div class="w3-col l6 m6 s6" style="text-align:left">Total items: </div>
+                            <div class="w3-col l6 m6 s6 w3-text-green" style="text-align:right"> <b>{{dataDict.orderSummery.totalItems}}</b> </div> 
+                        </div>
+                        <div class="w3-row"> 
+                            <div class="w3-col l6 m6 s6" style="text-align:left"> Items price: </div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right"> ₹{{dataDict.orderSummery.itemsPrice}}</div> 
                         </div>
                         <div class="w3-row"> 
                             <div class="w3-col l6 m6 s6" style="text-align:left"> Promo discount: </div>
-                            <div class="w3-col l6 m6 s6 w3-text-red" style="text-align:right"> - ₹10,484.00 </div> 
+                            <div class="w3-col l6 m6 s6 w3-text-red" style="text-align:right"> - ₹{{dataDict.orderSummery.promoDiscount}} </div> 
                         </div>
                         <div class="w3-row w3-border-bottom" style="padding-bottom:5px; margin-bottom:5px;">
                             <div class="w3-col l6 m6 s6" style="text-align:left"> Delivery:</div>
-                            <div class="w3-col l6 m6 s6" style="text-align:right"> ₹0.00</div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right"> ₹{{dataDict.orderSummery.deliveryCharge}}</div>
                         </div>
-                        <div class="w3-row w3-text-red w3-border-bottom" style="padding-bottom:5px; margin-bottom:5px;">
-                            <div class="w3-col l6 m6 s6" style="text-align:left"> <b> Order Total: </b></div>
-                            <div class="w3-col l6 m6 s6" style="text-align:right"><b> ₹20,484.00 </b></div>
+                        <div class="w3-row  w3-border-bottom" style="padding-bottom:5px; margin-bottom:5px;">
+                            <div class="w3-col l6 m6 s6" style="text-align:left">Order Total:</div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right">₹{{dataDict.orderSummery.orderTotal}}</div>
                         </div>
+                        {% if dataDict.orderSummery.isToken %}
+                        <div class="w3-row w3-text-red" style=" margin-bottom:5px;">
+                            <div class="w3-col l6 m6 s6" style="text-align:left"><b>Pay token:</b></div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right"><b>₹{{dataDict.orderSummery.token}}</b></div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:5px; text-align:right">
+                            <span class="w3-text-red w3-tiny"><i>! pay due <b>₹{{dataDict.orderSummery.restAmount}}</b> at home</i></span>
+                        </div>
+                        {% else %}
+                        <div class="w3-row w3-text-red" style="padding-bottom:5px; margin-bottom:5px;">
+                            <div class="w3-col l6 m6 s6" style="text-align:left"><b>Pay:</b></div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right"><b>₹{{dataDict.orderSummery.orderTotal}}</b></div>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="w3-row" style="margin-top:15px;">
                         <form action="" method="post"> {% csrf_token %}
-                            <input type="hidden" id="methodOfPayment" name="methodOfPayment" value="" />
                             <input type="hidden" id="buttonOpeartion" name="buttonOpeartion" value="" />
                             <div class="w3-col l6 m6 s6" style="text-align:left">
                                 <small>
@@ -165,14 +206,8 @@
             document.getElementById("dropdownMenuProfile").style.display = "none";
         }
 
-        function showId(ID) {
-            //console.log("showId::", ID)
-            document.getElementById(ID).style.display = "block";
-        }
-
-        function hideId(ID) {
-            //console.log("hideId::", ID)
-            document.getElementById(ID).style.display = "none";
+        function setOnButtonClick(buttonOperation){
+            document.getElementById("buttonOpeartion").value = buttonOperation;
         }
     </script>
 

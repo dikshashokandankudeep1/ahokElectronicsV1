@@ -10,10 +10,15 @@ class temporaryOrderStoreTable(models.Model):
     cvvOrUpi = models.CharField(blank = True, max_length=50, default="")
     paymentModeId = models.CharField(blank = True, max_length=50, default="")
     currentOrderList = models.CharField(blank = True, max_length=500, default="")
+    
+    tokenAmount = models.IntegerField(blank=True, null=True, default=0)
+    restAmount  = models.IntegerField(blank=True, null=True, default=0)
+    orderTotal  = models.IntegerField(blank=True, null=True, default=0)
 
 class globleVariables(models.Model):
     tokenPercentage     = models.IntegerField(blank=True, null=True, default=0)
-    minimumTotalCost    = models.IntegerField(blank=True, null=True, default=0) 
+    minimumTotalCost    = models.IntegerField(blank=True, null=True, default=0)
+    deliveryChargePercentage   = models.IntegerField(blank=True, null=True, default=0)
 
 
 class webCredentialsTable(models.Model):
@@ -272,7 +277,6 @@ class userPaymentTable(models.Model):
 class usertable(models.Model):
     userId              =   models.CharField(blank = True, max_length=50, default="")
     isActive            =   models.BooleanField(blank=True, default=True)
-    #userImage          =   models.ImageField(blank=True, null=True)   # user add profile picture
     firstname           =   models.CharField(blank = True, max_length=50, default="")
     lastname            =   models.CharField(blank = True, max_length=50, default="")
     username            =   models.CharField(blank = True, max_length=50, default="")
