@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% include 'common/title.html' %}
+
+<head>
+    {% include 'common/head.html' %}
+    <style>
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<style>
+    .checked {
+        color: orange;
+    }
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:100px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:40px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
+</style>
+
+<body style="position: relative;">
+    {% include 'common/header/checkout.html' %}
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row">
+            <div class="w3-col l2 m4 s4"><br></div>
+            <div class="w3-col l6 m6 s6" style="padding-top:80px">
+                
+                <span class="w3-large">Select a payment method</span>
+                <div class="w3-card" style="padding:10px; margin-top:10px">
+                    {% if accIdsCount %}
+                    <div class="w3-row">
+                        <span><b>Your saved credit and debit cards</b></span>
+                    </div>
+                    <div class="w3-row w3-border-bottom" style="margin-bottom:10px; padding-bottom:2px">
+                        <div class="w3-col l7 m7 s7"><br></div>
+                        <div class="w3-col l3 m3 s3"><span style="color:#949aa2">Name on card</span></div>
+                        <div class="w3-col l2 m2 s2 w3-center"><span style="color:#949aa2">Expires on</span></div>
+                    </div>
+                    <div style="padding-left:5px;">
+                        {% for cardId, cardData in cardsDict.items %}
+                        <div class="w3-row w3-tiny" style="padding-bottom:10px;">
+                            <div class="w3-col l7 m7 s7">
+                                <input type="radio" id="{{cardId}}" name="paymentModeId" value="paymentid" onclick="onClickRadioButton('showCvv', '{{cardId}}')">
+                                <span style="color:#333"><b>{{cardData.bankName}} {{cardData.cardType}}</b></span>
+                                <span style="color:#949aa2">ending in {{cardData.cardNumber}}</span>
+                            </div>
+                            <div class="w3-col l3 m3 s3"><span style="color:#535353">{{cardData.cardHolderName}}</span></div>
+                            <div class="w3-col l2 m2 s2 w3-center"><span style="color:#535353">{{cardData.expiryDate}}</span></div>
+                        </div>
+                        <div class="w3-row w3-tiny" id="{{cardId}}_cvvDiv" style="padding-bottom:10px;"> 
+                            <span style="padding-left:15px;">
+                                <input type="number" id="{{cardId}}_cvv" name="{{cardId}}_cvv" value="" oninput="fillCvvOrUpi('acc', '{{cardId}}')" placeholder="CVV">
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="w3-row" style="padding-top:10px; margin-bottom:10px;">
+                        <span><b>Another payment method</b></span>
+                    </div>
+                    <div class="w3-row w3-border-bottom" style="margin-bottom:10px; padding-bottom:2px"></div>
+                    <div style="padding-left:5px;">
+                        <div class="w3-row w3-tiny" style="padding-bottom:10px;">
+                            <input type="radio" id="5" name="paymentModeId" value="paymentid" onclick="onClickRadioButton('addACard', '')">
+                            <span>Add a Debit/Credit/ATM card</span>
+                        </div>
+                        <div class="w3-row w3-tiny" id="addACard">
+                            <div class="w3-col w3-card l9 m9 s9" style="padding:10px; margin-bottom:10px">
+                                <div class="w3-row" style="padding:5px;">
+                                    <div class="w3-col l4 m4 s4"><b>Card number</b></div>
+                                    <div class="w3-col l6 m6 s6">
+                                        <input type="number" id="cardNumber" name="cardNumber" value="" placeholder="**** **** **** ****" oninput="cardNumberCount()">
+                                        <span class="w3-text-green" id="cardNumberCount"> </span>
+                                    </div>
+                                </div>
+                                <div class="w3-row" style="padding:5px;">
+                                    <div class="w3-col l4 m4 s4"><b>Name on card</b></div>
+                                    <div class="w3-col l6 m6 s6">
+                                        <input type="text" id="cardName" name="cardName" value="" placeholder="Ram Lal">
+                                    </div>
+                                </div>
+                                <div class="w3-row" style="padding:5px;">
+                                    <div class="w3-col l4 m4 s4"><b>Expiry date</b></div>
+                                    <div class="w3-col l6 m6 s6">
+                                        <input type="text" id="expiryDate" name="expiryDate" value="" placeholder="05/22">
+                                    </div>
+                                </div>
+                                <div class="w3-row" style="padding:5px;">
+                                    <div class="w3-col l4 m4 s4"><b>bank Name</b></div>
+                                    <div class="w3-col l6 m6 s6">
+                                        <input type="text" id="bankName" name="bankName" value="" placeholder="Bank of Baroda">
+                                    </div>
+                                </div>
+                                <div class="w3-row" style="padding:5px;">
+                                    <div class="w3-col l4 m4 s4"><b>Card type</b></div>
+                                    <div class="w3-col l6 m6 s6">
+                                        <input type="text" id="cardType" name="cardType" value="" placeholder="Debit/Credit card type">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w3-row w3-tiny" style="padding-bottom:10px;">
+                            <input type="radio" id="7" name="paymentModeId" value="paymentid" onclick="onClickRadioButton('otherUpiApp', '')" >
+                            <span>Other UPI Apps</span>
+                        </div>
+                        <div class="w3-row w3-tiny" id="upiId" style="padding-bottom:10px;"> 
+                            <span style="padding-left:15px;">
+                                <input type="text" id="upiData" name="upiData" value="" placeholder="example@upi" oninput="fillCvvOrUpi('upi', '1')">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-col l2 m4 s4 w3-center" style="padding-top:106px; margin-left:5px">
+                <div class="w3-card" style="padding:10px; margin-top:10px">
+                    <form action="" method="post"> {% csrf_token %}
+                        <input type="hidden" id="formNameOnCard" name="formNameOnCard" value="" />
+                        <input type="hidden" id="formCardNumber" name="formCardNumber" value="" />
+                        <input type="hidden" id="formExpiryDate" name="formExpiryDate" value="" />
+                        <input type="hidden" id="formBankName" name="formBankName" value="" />
+                        <input type="hidden" id="formCardType" name="formCardType" value="" />
+                        <input type="hidden" id="cvvOrUpi" name="cvvOrUpi" value="" />
+                        <input type="hidden" id="accId" name="accId" value="" />
+                        <input type="hidden" id="methodOfPayment" name="methodOfPayment" value="" />
+                        <input type="hidden" id="buttonOpeartion" name="buttonOpeartion" value="" />
+                        <small>
+                            <button class="w3-button w3-tiny w3-round" style="background-color:#ffe11b;" id="submit" onclick="setOnButtonClick('submit')">
+                                <span id="submitButton">Continue</span>
+                            </button>
+                        </small>
+                        <small>
+                            <button class="w3-button w3-tiny w3-round" style="background-color:#febd69;" id="cancel" onclick="setOnButtonClick('cancel')">
+                                Cancel
+                            </button>
+                        </small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+    <div class="w3-row">
+        <img src="../../static/media/testPaymentQRCode.jpeg" class="brandNameListId" style="width:300px;height:200px;padding-left:0%">
+    </div>
+    -->
+
+    <script>    
+        accIds = []
+        onLoadWindow();
+        function onLoadWindow(){
+            accIdsCount = '{{accIdsCount}}'
+            if (parseInt(accIdsCount)){
+                accIds = '{{accIds}}';
+                accIds = accIds.replaceAll('&#x27;', "").replaceAll('[', "").replaceAll(']', "").split(", ");
+            }
+            hideAllCvv();
+            dropdownMenuProfileHide();
+        }
+
+        function hideAllCvv(){
+            for( var i=0; i < accIds.length; i++){
+                cvv_id = accIds[i].toString() + "_cvv"
+                document.getElementById(cvv_id).value = ""
+                document.getElementById("cvvOrUpi").value = ""
+
+                cvvDiv_id = cvv_id + "Div"
+                hideId(cvvDiv_id)
+            }
+            hideId("addACard")
+            hideId("upiId")
+        }
+
+        function cardNumberCount(){
+            len = document.getElementById("cardNumber").value.length
+            if (len != 0){
+                document.getElementById("cardNumberCount").innerHTML = " WC:" + len.toString()
+            }
+            else{
+                document.getElementById("cardNumberCount").innerHTML = ""
+            }
+        }
+
+        function onClickRadioButton(taskName, arg1){
+            hideAllCvv()
+            if(taskName == "showCvv"){
+                Id = arg1
+                for( var i=0; i < accIds.length; i++){
+                    cvv_id = accIds[i].toString() + "_cvv"
+                    cvvDiv_id = cvv_id + "Div"
+                    if(accIds[i] != Id){
+                        hideId(cvvDiv_id)   
+                    }
+                    else{
+                        showId(cvvDiv_id)
+                        document.getElementById("accId").value = Id
+                    }
+                }
+                document.getElementById("methodOfPayment").value = "acc"
+                document.getElementById("submitButton").innerHTML = "Continue"
+            }
+            else if(taskName == "addACard"){
+                showId("addACard")
+                document.getElementById("methodOfPayment").value = "addACard"
+                document.getElementById("cvvOrUpi").value = ""
+                document.getElementById("submitButton").innerHTML = "Save Card"
+            }
+            else if(taskName == "otherUpiApp"){
+                showId("upiId")
+                document.getElementById("methodOfPayment").value = "upi"
+                document.getElementById("submitButton").innerHTML = "Continue"
+            }
+        }
+
+        function fillCvvOrUpi(mode, id){
+            if (mode == "acc"){
+                document.getElementById("methodOfPayment").value = mode;
+                cvv_id = id.toString() + "_cvv"
+                console.log("acc Value::", cvv_id, document.getElementById(cvv_id).value)
+                document.getElementById("cvvOrUpi").value = document.getElementById(cvv_id).value;
+            }
+            else if(mode =="upi"){
+                document.getElementById("methodOfPayment").value = mode;
+                document.getElementById("cvvOrUpi").value = document.getElementById("upiData").value;
+            }
+        }
+
+        function setOnButtonClick(buttonOperation){
+            document.getElementById("submit").setCustomValidity('')
+            document.getElementById("buttonOpeartion").value = buttonOperation;
+            if(buttonOperation != "cancel"){
+                if (document.getElementById("methodOfPayment").value == ""){
+                    document.getElementById(buttonOperation).setCustomValidity('please select a payment mode')
+                }
+                else if (document.getElementById("methodOfPayment").value == "acc"){
+                    cvvData = document.getElementById("cvvOrUpi").value
+                    if (cvvData == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('cvv should not empty')
+                    }
+                    else if(cvvData.length != 3){
+                        document.getElementById(buttonOperation).setCustomValidity('cvv should be 3 digits')
+                    }
+                }
+                else if (document.getElementById("methodOfPayment").value == "upi"){
+                    upiData = document.getElementById("cvvOrUpi").value
+                    if (upiData == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('upi should not empty')
+                    }
+                    else if(! upiData.includes("@")){
+                        document.getElementById(buttonOperation).setCustomValidity('upi should cantains @')
+                    }
+                    else if(upiData.split("@")[0] == "" || upiData.split("@")[1] == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('upi should be in format example@upi ')
+                    }
+                    else if(upiData.length <= 8){
+                        document.getElementById(buttonOperation).setCustomValidity('upi should grater then 8 character')
+                    }
+
+                }
+                else { //addACard
+                    cardNumberValue = document.getElementById("cardNumber").value
+                    expiryDateValue = document.getElementById("expiryDate").value
+                    if (cardNumberValue == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('card Number should not empty')
+                    }
+                    else if( cardNumberValue.length < 12  || cardNumberValue.length > 16){
+                        document.getElementById(buttonOperation).setCustomValidity('card number must in range [12, 16]')
+                    }
+                    else if (document.getElementById("cardName").value == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('card holder name should not empty')
+                    }
+                    else if(expiryDateValue == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('card expiry date should not empty')
+                    }
+                    else if( (! expiryDateValue.includes("/")) || 
+                        (expiryDateValue.split("/")[0] == "" || expiryDateValue.split("/")[1] == "")) {
+                        document.getElementById(buttonOperation).setCustomValidity('card expiry date should be in formate 05/22')
+                    }
+                    else if(document.getElementById("bankName").value == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('bank Name should not empty')
+                    }
+                    else if(document.getElementById("cardType").value == ""){
+                        document.getElementById(buttonOperation).setCustomValidity('card Type should not empty')
+                    }
+                    else{
+                        document.getElementById("formCardNumber").value = cardNumberValue
+                        document.getElementById("formNameOnCard").value = document.getElementById("cardName").value
+                        document.getElementById("formExpiryDate").value = expiryDateValue
+                        document.getElementById("formBankName").value = document.getElementById("bankName").value
+                        document.getElementById("formCardType").value = document.getElementById("cardType").value
+                    }
+                }
+            }
+        }
+        
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        function showId(ID) {
+            //console.log("showId::", ID)
+            document.getElementById(ID).style.display = "block";
+        }
+
+        function hideId(ID) {
+            //console.log("hideId::", ID)
+            document.getElementById(ID).style.display = "none";
+        }
+    </script>
+
+</body>
+
+</html>

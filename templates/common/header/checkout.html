@@ -1,49 +1,111 @@
 <style type="text/css"> 
-    /*
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
+    .search
+    {
+        overflow: auto;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;    
     }
-    */
-    #header {
-        background-color:white;
-        padding-bottom: 1%;
-        margin-bottom: 2%;
-        border-bottom: 1px solid #f2f2f2;
+    
+    .search form {
+        color: #555;
+        display: flex;
+        padding: 2px;
+        border: 1px solid currentColor;
+        border-radius: 5px;
+        background-color:#fff
+    }
+
+    .search input[type="text"]
+    {
+        border: 0px;
+        width:88%;
+        padding: 7px;
+        margin-left:7px;
+        background: transparent;
+        font-size: 14px;
+        color: inherit;
+    }
+
+    .search input[type="search"]::placeholder {
+        color: #bbb;
+    }
+    
+    .search input[type="text"]:focus
+    {
+        outline: 0;
+    }
+      
+    .search button[type="submit"]:hover {
+        opacity: 1;
+    }
+
+    .mainHadding {
+        font-weight: 550;
+        color: #878787;
+        /*#989898;*/
+    }
+
+    .subHadding {
+        font-size: 95%;
+        cursor: pointer;
+        text-align:left;
+    }
+
+    .subHadding:hover {
+        font-size: 95%;
+        cursor: pointer;
+        color: #2874f0;
+    }
+
+
+    .headSection {
+        background-color: #ffe141; /*grofers*/
+        z-index:3;
+        top:0px; 
+        position:fixed; 
+        width:100%;
     }
 
     #dropdownMenuProfile {
         z-index: 3; 
         position:absolute; 
         overflow:hidden; 
-        background: #fff; 
-        width:12%; 
-        margin-top:2%;
+        background: #ffe141;
+        width:120px; 
+        margin-top:25px;
+        padding:6px;
     }
 
-    #loginDiv{
-        padding-top:4.5%;
+    .headSection #loginButton{
+        padding-top:6px;
+        text-align:center;
+        font-size: 14px; 
+        font-weight: lighter; 
+        color:black";
     }
-    
+
+    .headSection #logo{
+        //padding-top:15px;
+        font-family:'Source Sans Pro',sans-serif; 
+        letter-spacing: 1px; 
+        color: black;
+    }
+
 
     @media only screen and (max-width: 600px) {
-    
-        #header {
-            background-color:white;
-            padding-bottom: 1%;
-            margin-bottom: 2%;
-            border-bottom: 1px solid #f2f2f2;
-        }
         #dropdownMenuProfile {
             z-index: 3; 
             position:absolute; 
             overflow:hidden; 
-            background: #fff; 
-            width: 22%;
-            margin-top:1%;
+            margin-top:2px;
         }
-        #loginDiv{
-            padding-top:10%;
+        
+        .headSection #loginButton{
+            padding-top:0px;
+            font-weight: lighter;
+            text-align:right;
+            padding-top:10px;
         }
     }
 
@@ -54,149 +116,203 @@
             z-index: 3; 
             position:absolute; 
             overflow:hidden; 
-            background: #fff; 
-            width:22%; 
-            margin-top:2%;
+            margin-top:15px;
+        }
+        .headSection #loginButton{
+            
+            font-weight: lighter;
+            text-align:right;
+            padding-top:10px;
         }
     }
+    /*
+    #onhoverloginShow{
+        visibility: hidden;
+    }
+    #loginIcon:hover ~ #onhoverloginShow{
+        visibility: visible;
+    }
+    */
+    
+    </style>
+    <head>
+        <!--due to search box placeholder search button -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://kit.fontawesome.com/yourcode.js"></script>
+    </head>
 
     
-    /*font-family: 'Source Sans Pro', sans-serif; letter-spacing: 1px; color: #f1f1f1; font-size: 17px; 
-        background-color: #282A35;*/
-    </style>
 
-    <style>
-        .mainHadding {
-            font-weight: 550;
-            color: #878787;
-        }
+<div class="w3-row headSection">
+    <div style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;">
 
-        .subHadding {
-            font-size: 95%;
-            cursor: pointer;
-        }
-
-        .subHadding:hover {
-            font-size: 95%;
-            cursor: pointer;
-            color: #2874f0;
-        }
-    </style>
-
-<div class="w3-row" id="header" style="z-index:3; top:0px; position:fixed; width:100%;">
-
-    <div class="w3-col l2 m3 s2 w3-hide-small w3-center w3-text-white" style="padding-top:1%" onmouseover="dropdownMenuProfileHide()">
-        <a href="/" style="text-decoration: none;">
-            <span style="font-family:'Source Sans Pro',sans-serif; letter-spacing: 1px; color:black;">Ashok Electronics</span>
-        </a>
-    </div>
-
-    <div class="w3-col l2 m2 s2 w3-hide-large w3-hide-medium w3-large w3-center w3-text-white" style="padding-top:1%" onmouseover="dropdownMenuProfileHide()">
-        <a href="/" style="text-decoration: none;">
-            <span style="font-family:'Source Sans Pro',sans-serif; letter-spacing: 1px; color: black;">A&E</span>
-        </a>
-    </div>
-    
-
-    <div class="w3-col l7 m5 s7 w3-center" style="padding-top:1%" onmouseover="dropdownMenuProfileHide()">
-        <div>
-            <span style="font-family:'Source Sans Pro',sans-serif; letter-spacing: 1px; color:black; font-weight:550;">
-                Checkout
-            </span>
-        </div>
-    </div>
-
-
-    <div class="w3-col l3 m4 s2">
-        {% if userID == "" %}
-        <div class="w3-row" id="loginDiv" >
-            <a href="/login">
-                <div class="w3-col w3-center w3-hide-large w3-hide-medium l8 m8 s8" style="cursor:pointer;">
-                    <div class="w3-text-black" style="font-family:IconFont;"> Login/SignUp</div>
-                </div>
-                <div class="w3-col w3-center w3-hide-small l8 m8 s8" style="cursor: pointer;">
-                    <div class="w3-text-white" style="font-family:IconFont;"> Login/SignUp</div>
-                </div>
-            </a>
-        </div>
-        {% else %}
-        <div class="w3-row" style="padding-top:5%">
-            <div class="w3-col l6 m6 s12" style="cursor: pointer;" >
-                <div class="w3-text-black  w3-hide-small w3-center" style="font-family:IconFont;" onmouseover="dropdownMenuProfileShow()"> 
-                    My Account &nbsp;<i class="fas fa-angle-down"></i>
-                </div>
-                <div class="w3-text-white w3-hide-large w3-hide-medium w3-center" style="font-family:IconFont; color:black;" onmouseover="dropdownMenuProfileShow()"> 
-                    <button class="w3-button w3-white w3-hover-white w3-hover-text-grey" onclick="dropdownMenuProfileHideToggle()">
-                        <i class="fa fa-bars" ></i> Menu
-                    </button>
-                </div>
-                <div class="w3-card w3-small" id="dropdownMenuProfile">
-                    <a href="/account">
-                        <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-                            <div class="w3-col l3 m3 s3 w3-center">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
-                                My Profile
-                            </div>
-                        </div>
-                    </a>
-                    <div style="border-top: 1px solid #eaeaec;"></div>
-                    <a href="/account/orders">
-                        <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-                            <div class="w3-col l3 m3 s3 w3-center">
-                                <i class="fas fa-store"></i>
-                            </div>
-                            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
-                                Orders
-                            </div>
-                        </div>
-                    </a>
-                    <div style="border-top: 1px solid #eaeaec;"></div>
-                    <a href="/viewcart">
-                        <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-                            <div class="w3-col l3 m3 s3 w3-center">
-                                <i class="fas fa-store"></i>
-                            </div>
-                            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
-                                Cart
-                            </div>
-                        </div>
-                    </a>
-                    <div style="border-top: 1px solid #eaeaec;"></div>
-                    <a href="/account/wishlist">
-                        <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
-                            <div class="w3-col l3 m3 s3 w3-center">
-                                <i class="fas fa-heart"></i>
-                            </div>
-                            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
-                                Whishlist
-                            </div>
-                        </div>
-                    </a>
-                    <div style="border-top: 1px solid #eaeaec;"></div>
-                    <a href="/account/logout">
-                        <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:3%;">
-                            <div class="w3-col l3 m3 s3 w3-center" >
-                                <i class=" fas fa-power-off"></i>
-                            </div>
-                            <div class="w3-col l9 m9 s9 subHadding" style="padding-left:5%">
-                                Logout
-                            </div>
-                        </div>
-                    </a>
-                </div>
+        <div class="w3-row">
+            <div class="w3-col l1 m3 s2 w3-center w3-hide-small w3-hide-medium" id="logo" onmouseover="dropdownMenuProfileHide()">
+                <a href="/" style="text-decoration: none;">
+                    <img src="/media/common/blinkit_logo-3898547.png" style="width:100px;height:40px">
+                </a>
             </div>
-            
-            <a href="/viewcart">
-                <div class="w3-col l4 m4 s4 w3-hide-small w3-center " style="cursor: pointer;" onmouseover="dropdownMenuProfileHide()">
-                    <div class="w3-text-black" style="font-family:IconFont;"> 
-                        <i class="fa fa-shopping-cart"></i> &nbsp;Cart 
+
+            <div class="w3-col l3 m7 s8" onmouseover="dropdownMenuProfileHide()">
+                <div class="w3-row">
+                    <div class="w3-col l2 m1 s2" style="padding-top:5px; text-align:center">
+                        <img src="/media/common/out_for_delivery_icon.png" style="width:30px;height:30px">
+                    </div>
+                    <div class="w3-col l10 m11 s10">
+                        <div class="w3-row">
+                            <b>delivery in 8 minutes</b>
+                        </div>
+                        <div class="w3-row w3-small">
+                            Sector 3, HSR Layout, Bengaluru...
+                        </div>
                     </div>
                 </div>
-            </a>
+            </div>
+
+            <div class="w3-col l5 m6 s7 w3-hide-small w3-hide-medium w3-center" style="padding-top:10px" onmouseover="dropdownMenuProfileHide()">
+                <div class="w3-small w3-text-green">
+                    <span><b>Checkout</b></span>
+                </div>
+            </div>
+
+            <div class="w3-col l3 m5 s4">
+                {% if userID == "" %}
+                <div class="w3-row" onmouseover="dropdownMenuProfileHide()">
+                    <a href="/login">
+                        <div class="w3-col l12 m12 s12" id="loginButton" style="cursor:pointer;">
+                            <span class="w3-hide-small w3-hide-medium " style="text-align:right;">login</span>
+                            <span class="w3-hide-large w3-large" id="loginIcon" style="padding-right:13px;">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                {% else %}
+                <div class="w3-row">
+                    <div class="w3-col l1 m1 s1 w3-hide-small"><br></div>
+                    <div class="w3-col l3 m3 s4" id="loginButton" style="cursor: pointer;" >
+                        <div class="w3-hide-small w3-center" onmouseover="dropdownMenuProfileShow()"> 
+                            <span class="w3-hide-small" style="text-align:right;">profile</span>
+                        </div>
+                        <div class="w3-hide-large w3-hide-medium w3-center w3-small" style="font-family:IconFont;" onmouseover="dropdownMenuProfileShow()"> 
+                            <button class="w3-button w3-hover-yellow w3-hover-text-black" onclick="dropdownMenuProfileHideToggle()">
+                                <i class="fa fa-bars"></i>&nbsp;Menu
+                            </button>
+                        </div>
+                        <div class="w3-card w3-small" id="dropdownMenuProfile">
+                            <a href="/account">
+                                <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
+                                    <div class="w3-col l3 m3 s3 w3-center">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="w3-col l9 m9 s9 subHadding">
+                                        My Profile
+                                    </div>
+                                </div>
+                            </a>
+                            <div style="border-top: 1px solid #eaeaec;"></div>
+                            <a href="/account/orders">
+                                <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
+                                    <div class="w3-col l3 m3 s3 w3-center">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                    <div class="w3-col l9 m9 s9 subHadding">
+                                        Orders
+                                    </div>
+                                </div>
+                            </a>
+                            <div style="border-top: 1px solid #eaeaec;"></div>
+                            <a href="/viewcart">
+                                <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
+                                    <div class="w3-col l3 m3 s3 w3-center">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                    <div class="w3-col l9 m9 s9 subHadding">
+                                        Cart
+                                    </div>
+                                </div>
+                            </a>
+                            <div style="border-top: 1px solid #eaeaec;"></div>
+                            <a href="/account/wishlist">
+                                <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:5%;">
+                                    <div class="w3-col l3 m3 s3 w3-center">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <div class="w3-col l9 m9 s9 subHadding">
+                                        Whishlist
+                                    </div>
+                                </div>
+                            </a>
+                            <div style="border-top: 1px solid #eaeaec;"></div>
+                            <a href="/account/logout">
+                                <div class="w3-row" id="profileinformation_def" style="padding-top:5%; padding-bottom:3%;">
+                                    <div class="w3-col l3 m3 s3 w3-center" >
+                                        <i class=" fas fa-power-off"></i>
+                                    </div>
+                                    <div class="w3-col l9 m9 s9 subHadding">
+                                        Logout
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="/viewcart">
+                        {% if 0 %}
+                        <!--when no items in cart-->
+                        <div class="w3-col w3-hide-small w3-center l5 m6 s4" style="cursor: pointer; padding-top:3px" onmouseover="dropdownMenuProfileHide()">
+                            <button class="w3-btn w3-round-large" style="background-color:#0c831f; color:#fff; text-align:center;">
+                                <span class="w3-small">
+                                    <div class="w3-col l3 m3 s6" style=" text-align:left">
+                                        <i class="fas fa-shopping-cart"></i>&nbsp;
+                                    </div>
+                                    <div class="w3-col l9 m9 s6" style="text-align:left; padding-left:5px">
+                                        <div class="w3-row">my cart</div>
+                                    </div>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="w3-col w3-hide-large w3-hide-medium w3-center l6 m6 s6" style="cursor: pointer; padding-top:10px" onmouseover="dropdownMenuProfileHide()">
+                            <button class="w3-btn w3-tiny w3-round-xlarge" style="background-color:#0c831f; color:#fff; text-align:center;">
+                                <span class="w3-small">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </span>
+                            </button>
+                        </div>
+                        
+                        {% else %}
+                        <!--when items in cart-->
+                        <div class="w3-col w3-hide-small w3-center l8 m8 s4" style="cursor: pointer; padding-top:3px" onmouseover="dropdownMenuProfileHide()">
+                            <button class="w3-btn w3-round-xlarge" style="background-color:#0c831f; color:#fff; text-align:center;">
+                                <span class="w3-small">
+                                    <div class="w3-col l2 m2 s6 w3-border-right" style=" text-align:left">
+                                        <i class="fas fa-shopping-cart"></i>&nbsp;
+                                    </div>
+                                    <div class="w3-col l10 m10 s6" style="text-align:left; padding-left:5px">
+                                        <div class="w3-row w3-tiny"><b>3331 items | ₹250000</b></div>
+                                    </div>
+                                </span>
+                            </button>
+                        </div>
+
+                        <div class="w3-col w3-hide-large w3-hide-medium w3-center l6 m6 s8" style="cursor: pointer; padding-top:15px" onmouseover="dropdownMenuProfileHide()">
+                            <button class="w3-btn w3-tiny w3-round-xxlarge" style="background-color:#0c831f; color:#fff; text-align:center;">
+                                <span class="w3-tiny">
+                                    <i class="fas fa-shopping-cart"></i>&nbsp; 1
+                                </span>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
+        <div class="w3-row w3-hide-large w3-center" style="padding-top:2%;" onmouseover="dropdownMenuProfileHide()">
+            <div class="w3-small w3-text-green">
+                <span><b>Checkout</b></span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -215,10 +331,13 @@
         }
     }
 
+    /*
     $("#searchBox").on('keyup', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
-            console.log("ENter pressed...")
+            console.log("Enter pressed...")
         }
     });
+    */
+    
 
 </script>

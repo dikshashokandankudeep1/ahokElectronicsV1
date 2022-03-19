@@ -134,4 +134,10 @@ def getSession(request, key):
         print("getSession key not contains....")
         return ""
 
+def toCamelCase(stringData):
+    vect = stringData.split(" ")
+    outputString = ""
+    for vec in vect:
+        outputString += vec[0].upper() + vec[1:].lower() + " "
+    return outputString.strip()
 

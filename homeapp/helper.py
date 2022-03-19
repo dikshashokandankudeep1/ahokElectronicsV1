@@ -251,10 +251,12 @@ def searchContentInSearchBar(request):
 
 
 def checkUserLogged(request, redirectedPageUrl):
-    if (request.user.id == None) or (not usertable.objects.filter(userId=request.user.id).exists()):
+    if (request.user.id == None) or (not (usertable.objects.filter(userId=request.user.id)).exists()):
         setSession(request, 'redirectedPageUrl', redirectedPageUrl)
-        return redirect('/login')
-
+        return '/login'
+    else:
+        return ""
+    
 def getUserId(request):
     if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
         return  request.user.id

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% include 'common/title.html' %}
+
+<head>
+    {% include 'common/head.html' %}
+    <script src="{% static 'js/common/common.js' %}"></script>
+    <style>
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<style>
+
+    .checked {
+        color: orange;
+    }
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:100px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:40px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+</style>
+
+<body style="position: relative;">
+    {% include 'common/header/checkout.html' %}
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row">
+            <div class="w3-col l6 m12 s12">
+                <div class="w3-row w3-hide-small" style="padding-top:15%;">
+                    <div class="w3-col w3-xlarge l10 m12 s12">
+                        Delivery Details
+                    </div>
+                </div>
+                <div class="w3-row w3-hide-large w3-hide-medium" >
+                    <div class="w3-col w3-large l10 m12 s12">
+                        Delivery Details
+                    </div>
+                </div>
+
+                <div class="w3-row" style="padding-top:3%;">
+                    <div class="w3-col w3-large l8 m9 s8 w3-border-top w3-hide-small" style="padding-top:2%; padding-bottom:2%">
+                        Shipment
+                    </div>
+                    <div class="w3-col w3-medium l8 m9 s8 w3-border-top w3-hide-large w3-hide-medium" style="padding-top:2%; padding-bottom:2%">
+                        Shipment
+                    </div>
+                    <div class="w3-col l2 m3 s4 w3-border-top" style="padding-top:2%; padding-bottom:2%">
+                        <small class="w3-text-blue w3-hover-text-red" style="cursor: pointer;">
+                            <a href="\" style="text-decoration: none;"><i class="fa fa-plus"></i>  Add more items</a> 
+                        </small>
+                    </div>                    
+                </div>
+                <div class="w3-row">
+                    <div class="w3-col l10 m12 s12">
+                        <div class="w3-row w3-text-grey">
+                            <small>Deliver to: {{orderDeliveryAddress}}</small>
+                        </div>
+                        <ul>
+                            {% for product in productDictList %}
+                            <li>
+                                <b><small>{{product.title}}</small></b>
+                                <!--if product.storeQuantity != product.quantity-->
+                                <span id="{{product.itemID}}_maxLimitError"><b class="w3-text-red" style="padding-left:5%"><small>In store only {{product.storeQuantity}} items</small></b></span>
+                                <div class="w3-row">
+                                    <small class="w3-text-grey ">Price ₹ <span class="currency">{{ product.price }}</span> | </small>
+                                    <small id="onloadQuantity">Quantity: {{product.quantity}}</small>
+                                    <small onclick="showId('{{product.itemID}}_onclickchangeQuantity')" class="w3-text-blue w3-hover-text-red" style="cursor: pointer;">change</small>
+
+                                    <form action="" method="post" id="{{product.itemID}}_onclickchangeQuantity"> {% csrf_token %}
+                                        <small class=" w3-text-grey">Quantity: <input type="number" name="CHANGEDQUANTITY" style='width:10%' value="{{product.quantity}}" /> </small>
+                                        <input type="hidden" name="DELIVERYADDRESS" value="{{orderDeliveryAddress}}" />
+                                        <input type="hidden" name="ITEMID" value="{{product.itemID}}" />
+                                        <small><button>Update</button></small>
+                                    </form>
+                                </div>
+                                <div class="w3-row" style="padding-bottom:1%;">
+                                    <small class=" w3-text-grey ">Sub Total :- </small>
+                                    <small>₹ <span class="currency">{% widthratio product.price 1 product.quantity %}</span> </small>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="w3-col l2 m12 s12 w3-hide-small">
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <!-- Payment -->
+            <div class="w3-col l6 m12 s12" id="noMaxLimitError">
+                <div class="w3-row w3-hide-small" style="padding-top:15%; ">
+                    <div class="w3-col l2 m12 s12  w3-hide-small">
+                        <br>
+                    </div>
+                    <div class="w3-col l10 m12 s12 w3-xlarge">
+                        Confirm Payment
+                    </div>
+                </div>
+                <div class="w3-row w3-hide-large w3-hide-medium" style="padding-top:5%;">
+                    <div class="w3-col l10 m12 s12 w3-large">
+                        Confirm Payment
+                    </div>
+                </div>
+                <div class="w3-row" style="padding-top:3%;">
+                    <div class="w3-col l2 m12 s12 w3-hide-small">
+                        <br>
+                    </div>
+                    <div class="w3-col w3-large l10 m12 s12 w3-border-top w3-hide-small" style="padding-top:2%; padding-bottom:2% ">
+                        Products Total
+                    </div>
+                    <div class="w3-col w3-medium l10 m12 s12 w3-border-top w3-hide-large w3-hide-medium" style="padding-top:2%; padding-bottom:2% ">
+                        Products Total
+                    </div>
+                </div>
+                <div class="w3-row">
+                    <div class="w3-col l2 m12 s12 w3-hide-small">
+                        <br>
+                    </div>
+                    <div class="w3-col l10 m12 s12">
+                        <div class="w3-row w3-text-grey" style="padding-bottom:3%;">
+                            <small>
+                                {% for product in productDictList %}
+                                <span class="currency">{{ product.price }}</span> * {{ product.quantity }}
+                                {% if  forloop.counter < productDictList|length  %} + {% endif %}
+                                {% endfor %}
+                                </small>
+                            <b><div class="w3-text-black "><small>Total Price - ₹ <span class="currency">{{productsTotalCost}}</span></small></div></b>
+                        </div>
+                        <div class="w3-row" id="paymenttypes" style="margin-bottom:3%;">
+                            <div class="w3-row">
+                                <input type="radio" id="partialPayment" name="paidInitialAmount" value="{{tokenAmount}}" onchange="showRestAmountMessage('{{tokenAmount}}', '{{productsTotalCost}}')" required> <small>Token amount</small>
+                                <b><small>₹ <span class="currency">{{tokenAmount}}</span>/-</small></b>
+                            </div>
+                            <div class="w3-row">
+                                <input type="radio" id="fullPayment" name="paidInitialAmount" value="{{productsTotalCost}}" onchange="showRestAmountMessage('{{productsTotalCost}}', '{{productsTotalCost}}')"> <small>Full payment</small>
+                                <b><small>₹ <span class="currency">{{productsTotalCost}}</span>/-</small></b>
+                            </div>
+                        </div>
+                        <div class="w3-row" id="ShowpaidDetail" style="margin-bottom:5%;">
+                            <small><div class="w3-text-red" id="ShowpaidDetail1"></div></small>
+                            <small><div class="w3-text-red" id="ShowpaidDetail2"></div></small>
+                        </div>
+                        <div class="w3-row" id="ShowpaidDetailButton" style="margin-bottom:5%;">
+                            <div class="w3-col l12 m12 s12">
+                                <form action="" method="post"> {% csrf_token %}
+                                    <input type="hidden" id="selectedMode" name="selectedMode" value="" />
+                                    <input type="hidden" id="buttonOpeartion" name="buttonOpeartion" value="" />
+                                    <small><button class="w3-button w3-tiny w3-round" style="background-color:#ffe11b;" onclick="setOnButtonClick('submit')">Confirm Details</button></small>
+                                    <small><button class="w3-button w3-tiny w3-round" style="background-color:#febd69;" onclick="setOnButtonClick('cancel')">Cancel</button></small>
+                                </form>
+                            </div>               
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="w3-row">
+        <img src="../../static/media/testPaymentQRCode.jpeg" class="brandNameListId" style="width:300px;height:200px;padding-left:0%">
+    </div>-->
+
+    <script>
+        window.onload = function() {
+            maxLimitValidation();
+            otherValidations();
+        };
+
+        let currencyTagdata = document.querySelectorAll(".currency");
+        for (let i = 0, len = currencyTagdata.length; i < len; i++) {
+            currencyTagdata[i].innerHTML = toCommaSeperatedCurrency(currencyTagdata[i].innerHTML)
+        }
+
+        function maxLimitValidation(){
+            maxLimitErrorList = '{{productDictList}}';
+            maxLimitErrorList = maxLimitErrorList.replaceAll('&#x27;', "").replaceAll("[", '').replaceAll("]", '').replaceAll("{", '').split("},")
+            maxLimitErrorFlag = false
+            for (var i=0; i<maxLimitErrorList.length; i++){                
+                quantity = parseInt(maxLimitErrorList[i].split(", ")[3].replaceAll(" ", '').split(":")[1])
+                storeQuantity = parseInt(maxLimitErrorList[i].split(", ")[4].replaceAll("}", '').replaceAll(" ", '').split(":")[1])
+                itemID = maxLimitErrorList[i].split(", ")[0].replaceAll(": ", ':').split(":")[1]
+                if(storeQuantity < quantity){
+                    showId(itemID + "_maxLimitError")
+                    document.getElementById(itemID + "_maxLimitError").style = "padding-left:5%";
+                    maxLimitErrorFlag = true
+                }
+                else{
+                    hideId(itemID + "_maxLimitError")
+                }
+            }
+            if(maxLimitErrorFlag){
+                hideId("noMaxLimitError");
+            }
+            else{
+                showId("noMaxLimitError");
+            }
+        }
+
+        function otherValidations(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+            updateQuantityOnPageload('{{itemidList}}')
+            console.log("Data::", '{{productsTotalCost}}', '{{minimumTotalCost}}')
+            
+            if ('{{productsTotalCost}}' < parseInt('{{minimumTotalCost}}')) {
+                showId("ShowpaidDetail")
+                hideId("paymenttypes")
+                hideId("ShowpaidDetailButton")
+                minimumTotalCost = toCommaSeperatedCurrency('{{minimumTotalCost}}')
+                document.getElementById("ShowpaidDetail1").innerHTML = "Online order <b>purchase amount</b> should be grater then <b>₹" + minimumTotalCost + "/-</b>";
+                document.getElementById("ShowpaidDetail2").innerHTML = "Please Increase quantity or Buy more Items";
+                document.getElementById("ShowpaidDetail1").className = "w3-text-red";
+                document.getElementById("ShowpaidDetail2").className = "w3-text-blue";
+            }
+        }
+
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        function showId(ID) {
+            console.log("showId::", ID)
+            document.getElementById(ID).style.display = "block";
+        }
+
+        function hideId(ID) {
+            console.log("hideId::", ID)
+            document.getElementById(ID).style.display = "none";
+        }
+
+        function updateQuantityOnPageload(itemidList) {
+            itemidList = itemidList.replaceAll('&#x27;', "").replaceAll("[", '').replaceAll("]", '').replaceAll(", ", ',').split(",")
+            for (index = 0; index < itemidList.length; index++) {
+                hideId((itemidList[index]) + "_onclickchangeQuantity");
+            }
+        }
+
+        function showRestAmountMessage(paidAmt, totalAmt) {
+            showId("paymenttypes")
+            showId("ShowpaidDetail")
+            showId("ShowpaidDetailButton")
+            if (parseInt(paidAmt) < parseInt(totalAmt)) {
+                document.getElementById("selectedMode").value = "token";
+                document.getElementById("ShowpaidDetail1").innerHTML = "Pay token amount <b> ₹ " + toCommaSeperatedCurrency(paidAmt) + "/-</b>";
+                document.getElementById("ShowpaidDetail2").innerHTML = "pay on delivery <b> ₹ " + toCommaSeperatedCurrency((totalAmt - paidAmt).toString()) + "/-</b>";
+                document.getElementById("ShowpaidDetail1").className = "w3-text-blue";
+                document.getElementById("ShowpaidDetail2").className = "w3-text-red";
+            } else {
+                document.getElementById("selectedMode").value = "full";
+                document.getElementById("ShowpaidDetail1").innerHTML = "Pay full amount <b> ₹ " + toCommaSeperatedCurrency(totalAmt) + "/-</b>";
+                document.getElementById("ShowpaidDetail2").innerHTML = ""
+                document.getElementById("ShowpaidDetail1").className = "w3-text-green";
+            }
+        }
+
+        function setOnButtonClick(buttonOperation){
+            document.getElementById("buttonOpeartion").value = buttonOperation;
+        }
+        
+
+    </script>
+</body>
+</html>

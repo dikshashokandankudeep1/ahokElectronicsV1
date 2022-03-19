@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% include 'common/title.html' %}
+
+<head>
+    {% include 'common/head.html' %}
+    <style>
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<style>
+    .checked {
+        color: orange;
+    }
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:100px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:40px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
+</style>
+
+<body style="position: relative;">
+    {% include 'common/header/checkout.html' %}
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row">
+            <div class="w3-col l1 m4 s4"><br></div>
+            <div class="w3-col l7 m7 s7" style="padding-top:80px">
+                <span class="w3-large">Review your order</span>
+                <div class="w3-card" style="padding:10px; margin-top:10px">
+                    <div class="w3-row"> 
+                        <div class="w3-col l4 m4 s4">
+                            <div class="w3-row" style="color:#333; margin-bottom:5px;"> 
+                                <b>Delivery address</b> 
+                                <a href="/product/purchase/selectDeliveryAddress" style="text-decoration:none">
+                                    <span class="w3-text-blue" style="cursor:pointer">change</span>
+                                </a>
+                            </div>
+                            {% for data in dataDict.deleveryAddress %}
+                                <div class="w3-row" style="padding-right:15px"> {{data}} </div>
+                            {% endfor %}
+                        </div>
+                        <div class="w3-col l4 m4 s4">
+                            <div class="w3-row" style="color:#333; margin-bottom:5px"> 
+                                <b>Payment method</b>
+                                <a href="/product/purchase/selectPaymentMethod" style="text-decoration:none">
+                                    <span class="w3-text-blue" style="cursor:pointer">change</span>
+                                </a>
+                            </div>
+                            <div class="w3-row"> {{dataDict.paymentMethod.method}} </div>
+                            <div class="w3-row"> {{dataDict.paymentMethod.id}} </div>
+                        </div>
+                        <div class="w3-col l4 m4 s4">
+                            <div class="w3-row" style="color:#333; margin-bottom:10px"> <b> Promo code </b></div>
+                            <form action="" method="post"> {% csrf_token %}
+                                <div class="w3-row" style="margin-bottom:5px">
+                                    <input type="text" id="promoCode" name="promoCode" value="" placeholder="Enter Code" required> 
+                                </div>
+                                {% if dataDict.isPromoCodeWrong %}
+                                <div class="w3-row" style="margin-bottom:5px">
+                                    <span class="w3-text-red w3-tiny"><i>! The promoCode you entered is wrong</i></span>
+                                </div>
+                                {% endif %}
+                                <div class="w3-row">
+                                    <button class="w3-button w3-tiny w3-round" style="background-color:#ffe11b;" id="submit" onclick="setOnButtonClick('submit')">
+                                        <span id="submitButton">Apply promo code</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-col l3 m4 s4 w3-center" style="padding-top:106px; margin-left:5px">
+                <div class="w3-card" style="padding:10px; margin-top:10px">
+                    
+                    <div class="w3-row">
+                        <div class="w3-row w3-left" style="color:#333; margin-bottom:10px;"> <b>Order Summary</b></div>
+                        <div class="w3-row"> 
+                            <div class="w3-col l6 m6 s6" style="text-align:left"> Item: </div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right"> ₹30,484.00 </div> 
+                        </div>
+                        <div class="w3-row"> 
+                            <div class="w3-col l6 m6 s6" style="text-align:left"> Promo discount: </div>
+                            <div class="w3-col l6 m6 s6 w3-text-red" style="text-align:right"> - ₹10,484.00 </div> 
+                        </div>
+                        <div class="w3-row w3-border-bottom" style="padding-bottom:5px; margin-bottom:5px;">
+                            <div class="w3-col l6 m6 s6" style="text-align:left"> Delivery:</div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right"> ₹0.00</div>
+                        </div>
+                        <div class="w3-row w3-text-red w3-border-bottom" style="padding-bottom:5px; margin-bottom:5px;">
+                            <div class="w3-col l6 m6 s6" style="text-align:left"> <b> Order Total: </b></div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right"><b> ₹20,484.00 </b></div>
+                        </div>
+                    </div>
+                    <div class="w3-row" style="margin-top:15px;">
+                        <form action="" method="post"> {% csrf_token %}
+                            <input type="hidden" id="methodOfPayment" name="methodOfPayment" value="" />
+                            <input type="hidden" id="buttonOpeartion" name="buttonOpeartion" value="" />
+                            <div class="w3-col l6 m6 s6" style="text-align:left">
+                                <small>
+                                    <button class="w3-button w3-tiny w3-round" style="background-color:#ffe11b;" id="submit" onclick="setOnButtonClick('submit')">
+                                        <span id="submitButton">Place order</span>
+                                    </button>
+                                </small>
+                            </div>
+                            <div class="w3-col l6 m6 s6" style="text-align:right">
+                                <small>
+                                    <button class="w3-button w3-tiny w3-round" style="background-color:#febd69;" id="cancel" onclick="setOnButtonClick('cancel')">
+                                        Redirect to home
+                                    </button>
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>    
+        
+        onLoadWindow();
+        function onLoadWindow(){
+            dropdownMenuProfileHide();
+        }
+        
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        function showId(ID) {
+            //console.log("showId::", ID)
+            document.getElementById(ID).style.display = "block";
+        }
+
+        function hideId(ID) {
+            //console.log("hideId::", ID)
+            document.getElementById(ID).style.display = "none";
+        }
+    </script>
+
+</body>
+
+</html>

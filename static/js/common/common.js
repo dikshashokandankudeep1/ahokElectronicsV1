@@ -6,6 +6,16 @@ function hideId(ID) {
     document.getElementById(ID).style.display = "none";
 }
 
+function toCommaSeperatedCurrency(number){
+    numberStr = number.toString()
+    if(! numberStr.includes('.')){
+        numberStr += ".00"    
+    }
+    
+    return numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+/*
 function toCommaSeperatedCurrency(currency, flag="float"){
     let finalOutput = ""
     let currencySplit = currency.split(".")
@@ -68,7 +78,7 @@ function toCommaSeperatedCurrency(currency, flag="float"){
         }
     }
 }
-
+*/
 function commaSeperatedCurrencyToFloatOrInt(currency, flg="float"){
     let finalStr = ""
     for (var i = 0; i < currency.length; i++) {

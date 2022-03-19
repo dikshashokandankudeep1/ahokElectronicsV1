@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% include 'common/title.html' %}
+
+<head>
+    {% include 'common/head.html' %}
+    <style>
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<style>
+    .checked {
+        color: orange;
+    }
+
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:100px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:40px;
+            margin-left:10px;
+            margin-right:10px;
+        }
+    }
+</style>
+
+<body style="position: relative;">
+    {% include 'common/header/checkout.html' %}
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+        <div class="w3-row">
+            <div class="w3-col l6 m12 s12">
+                <div class="w3-row" id="transactionModes">
+                    <div class="w3-bar" style="padding-top:3%;">
+                        {% for payment in paymentObj.items %}
+                            <a class="w3-btn w3-round w3-green w3-hover-dark-gray" id="bt:{{payment.0}}" onclick="loadPaymentMode('{{payment.0}}')">
+                                {{payment.0}}
+                            </a>
+                        {% endfor %}
+                    </div>
+                    
+                    {% for payment in paymentObj.items %}
+                        <div class="w3-row" id="{{payment.0}}" style="padding-top:5%;">
+                            {% if payment.0 == "UPI" %}
+                                {% for val in payment.1 %}
+                                    <div class="w3-row w3-text-black">
+                                        <input type="radio" id="R:{{payment.0}}" name="{{payment.0}}" value="{{val.3}}|{{val.0}}" onchange="updateTempPaymentIdWithMode('{{val.0}}')" checked> <small>{{val.3}}</small>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                            
+                                {% for val in payment.1 %}
+                                    <div class="w3-row w3-text-black">
+                                        <input type="radio" id="R:{{payment.0}}" name="{{payment.0}}" value="{{val.4}}|{{val.6}}|{{val.5}}|{{val.7}}|{{val.0}}" onchange="updateTempPaymentIdWithMode('{{val.0}}')" checked> 
+                                            <small> {{val.4}}
+                                                <p style="margin-left:4%;">Account No : {{val.6}}</p>
+                                                <p style="margin-left:4%;">IFSC CODE : {{val.5}}</p>
+                                                <p style="margin-left:4%;">Beneficiary Name : {{val.7}}</p>
+                                            </small>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                
+                </div>
+                
+                <div class="w3-row" style="padding-top:3%;">
+                    <small>
+                        <div class="w3-col l6 m6 s6" style="padding-bottom: 5%;">
+                            <input class='w3-input  w3-border' type='text' id='orderFirstPaidTrxnID' name='orderFirstPaidTrxnID' style='width:100%' onchange="updateTempTransactionId(this)" placeholder='Payment Transaction ID'>
+                        </div>
+                        <div class="w3-col l6 m6 s6" style="padding-left:5%">
+                            <button class="w3-button w3-black w3-hover-dark-grey" onclick="transactionReconfirmOnSubmitPress(this)">Submit</button>
+                        </div>
+                    </small>
+                </div>
+                
+                <div id="validationMessage" class="w3-text-red"></div>
+                <input type="hidden" id="temp_payment" value="" />
+                <input type="hidden" id="temp_paymentId" value="" />
+                <input type="hidden" id="temp_transactionId" value="" />
+                
+                <form action="" method="post"> {% csrf_token %}
+                    <div id="verifyPaymentDetail" class="w3-modal">
+                        <div class="w3-modal-content w3-animate-zoom" style="padding:32px">
+                            <div class="w3-row">
+                                <a href=""><i onclick="document.getElementById('verifyPaymentDetail').style.display='none';" class="fa fa-times-circle w3-right  w3-xlarge"></i></a>
+                            </div>
+                            <div class="w3-row w3-center">
+                                <h3 class="w3-wide">Reconfirm Selected Details</h3>
+                            </div>
+                            <p><b>Paid Amount : </b><span id="vrfy:paidAmount"></span><b>  out of : </b><span id="vrfy:totalAmount"></span></p>
+                            <p><b>Mode of Transaction : </b><span id="vrfy:paymentIdWithMode"></span></p>
+                            <p><b>Transaction ID : </b><span id="vrfy:transactionId"></span></p>
+                            
+                            <p id="P:upiId"><b>UPI ID : </b><span id="vrfy:upiId"></span></p>
+                            <p id="P:bankName"><b>Bank Name : </b><span id="vrfy:bankName"></span></p>
+                            <p id="P:accNo"><b>Account Number : </b><span id="vrfy:accNo"></span></p>
+                            <p id="P:ifscCode"><b>IFSC Code : </b><span id="vrfy:ifscCode"></span></p>
+                            <p id="P:beneficiaryName"><b>Beneficiary Name : </b><span id="vrfy:beneficiaryName"></span></p>
+
+                            <div class="w3-row w3-center">
+                                <input type="hidden" id="TYPEOFPAYMENT" name="TYPEOFPAYMENT" value="" />
+                                <input type="hidden" id="PAYMENTID" name="PAYMENTID" value="" />
+                                <input type="hidden" id="DELIVERYADDRESS" name="DELIVERYADDRESS" value="{{orderDeliveryAddress}}" />
+                                <input type="hidden" id="ORDERFIRSTTRXNID" name="ORDERFIRSTTRXNID" value="" />
+                                <input type="hidden" id="onOrderPaidAmount" name="onOrderPaidAmount" value="" />
+                                <p><button type="submit" class="w3-button w3-padding-large w3-red w3-margin-bottom" onclick="document.getElementById('verifyPaymentDetail').style.display='none';">Place Order</button></p>
+                            </div>
+                            <div class="w3-row"></div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="w3-row" id="gotohomepage">
+                    <button class="w3-button w3-green w3-hover-dark-grey w3-round">Go to Home Page</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="w3-row">
+        <img src="../../static/media/testPaymentQRCode.jpeg" class="brandNameListId" style="width:300px;height:200px;padding-left:0%">
+    </div>
+    -->
+
+    <script>
+        window.onload = function() {
+            loadPaymentMode('UPI')
+            hideId("verifyPaymentDetail")
+            document.getElementById("temp_payment").value = 2020;
+        };
+
+        function dropdownMenuProfileHide(){
+            document.getElementById("dropdownMenuProfile").style.display = "none";
+        }
+
+        function showId(ID) {
+            console.log("showId::", ID)
+            document.getElementById(ID).style.display = "block";
+        }
+
+        function hideId(ID) {
+            console.log("hideId::", ID)
+            document.getElementById(ID).style.display = "none";
+        }
+        
+        function updateTempPaymentIdWithMode(PaymentIdWithMode) {
+            document.getElementById("temp_paymentId").value = PaymentIdWithMode;
+            console.log("updateTempPaymentIdWithMode::", document.getElementById("temp_paymentId").value)
+        }
+
+        
+        function updateTempTransactionId(self) {
+            document.getElementById("temp_transactionId").value = self.value
+            console.log("updateTempTransactionId::", document.getElementById("temp_transactionId").value)
+        }
+
+        function transactionReconfirmOnSubmitPress(button) {
+            message = "";
+            if (document.getElementById("orderFirstPaidTrxnID").value == '') {
+                message += "ERROR! Please enter Transaction ID<br>";
+            }
+
+            if (message != '') {
+                showId("validationMessage");
+                document.getElementById("validationMessage").innerHTML = "<p><small>" + message + "</small></p>";
+            } else {
+                hideId("validationMessage");
+                document.getElementById("vrfy:paidAmount").innerHTML = '₹' + document.getElementById("temp_payment").value + '/-';
+                document.getElementById("vrfy:transactionId").innerHTML = document.getElementById("temp_transactionId").value
+                document.getElementById("vrfy:totalAmount").innerHTML = '₹' + '{{productsTotalCost}}' + '/-';
+
+                document.getElementById("ORDERFIRSTTRXNID").value = document.getElementById("temp_transactionId").value;
+                document.getElementById("onOrderPaidAmount").value = document.getElementById("temp_payment").value;
+                document.getElementById("PAYMENTID").innerHTML = document.getElementById("temp_paymentId").value;
+                showId("verifyPaymentDetail")
+            }
+        }
+
+        function loadPaymentMode(PaymentMode) {
+            if (PaymentMode == "UPI") {
+                hideId("ACCOUNT")
+                showId("UPI")
+                document.getElementById("bt:UPI").className = "w3-btn w3-round w3-green w3-hover-dark-grey";
+                document.getElementById("bt:ACCOUNT").className = "w3-btn w3-round w3-gray w3-hover-dark-green";
+                
+                hideId("P:bankName")
+                hideId("P:accNo")
+                hideId("P:ifscCode")
+                hideId("P:beneficiaryName")
+                showId("P:upiId")
+                detils = document.getElementById("R:UPI").value.split("|")
+                document.getElementById("vrfy:upiId").innerHTML = detils[0]
+                
+                document.getElementById("vrfy:paymentIdWithMode").innerHTML = "UPI"
+                updateTempPaymentIdWithMode(detils[1])
+            } else {
+                hideId("UPI")
+                showId("ACCOUNT")
+                document.getElementById("bt:UPI").className = "w3-btn w3-round w3-gray w3-hover-dark-green";
+                document.getElementById("bt:ACCOUNT").className = "w3-btn w3-round w3-green w3-hover-dark-grey";
+                showId("P:bankName")
+                showId("P:accNo")
+                showId("P:ifscCode")
+                showId("P:beneficiaryName")
+                hideId("P:upiId")
+                
+                detils = document.getElementById("R:ACCOUNT").value.split("|")
+                document.getElementById("vrfy:bankName").innerHTML = detils[0]
+                document.getElementById("vrfy:accNo").innerHTML = detils[1]
+                document.getElementById("vrfy:ifscCode").innerHTML = detils[2]
+                document.getElementById("vrfy:beneficiaryName").innerHTML = detils[3]
+
+                document.getElementById("vrfy:paymentIdWithMode").innerHTML = "ACCOUNT"
+                updateTempPaymentIdWithMode(detils[4]);
+            }
+        }
+        
+    </script>
+
+</body>
+
+</html>

@@ -1,6 +1,21 @@
 from turtle import width
 from django.db import models
 
+
+class temporaryOrderStoreTable(models.Model):
+    userId = models.CharField(blank = True, max_length=50, default="")
+    deleveryAddressId = models.CharField(blank = True, max_length=50, default="")
+    selectedMode = models.CharField(blank = True, max_length=50, default="")
+    accId = models.CharField(blank = True, max_length=50, default="")
+    cvvOrUpi = models.CharField(blank = True, max_length=50, default="")
+    paymentModeId = models.CharField(blank = True, max_length=50, default="")
+    currentOrderList = models.CharField(blank = True, max_length=500, default="")
+
+class globleVariables(models.Model):
+    tokenPercentage     = models.IntegerField(blank=True, null=True, default=0)
+    minimumTotalCost    = models.IntegerField(blank=True, null=True, default=0) 
+
+
 class webCredentialsTable(models.Model):
     credentialType  = models.CharField(blank = True, max_length=50, default="")
     websiteUrl      = models.CharField(blank = True, max_length=50, default="")
@@ -242,6 +257,17 @@ class userOrderGrouptable(models.Model):
 
 
 
+class userPaymentTable(models.Model):
+    userId               =   models.CharField(blank = True, max_length=50, default="")
+    cardNumber           =   models.CharField(blank = True, max_length=50, default="")
+    cardHolderName       =   models.CharField(blank = True, max_length=50, default="")
+    expiryDate           =   models.CharField(blank = True, max_length=50, default="")
+    cvv                  =   models.CharField(blank = True, max_length=50, default="")
+    bankName             =   models.CharField(blank = True, max_length=50, default="")
+    cardIssuer           =   models.CharField(blank = True, max_length=50, default="")
+    cardType             =   models.CharField(blank = True, max_length=50, default="")
+
+
 
 class usertable(models.Model):
     userId              =   models.CharField(blank = True, max_length=50, default="")
@@ -258,9 +284,11 @@ class usertable(models.Model):
     userAddressBooks    =   models.CharField(blank = True, max_length=200, default="")
     userOrderBooks      =   models.CharField(blank = True, max_length=200, default="")
 
+    accountList         =   models.CharField(blank = True, max_length=500, default="")
     ordersList          =   models.CharField(blank = True, max_length=500, default="")
     wishList            =   models.CharField(blank = True, max_length=500, default="")
     reviewIdsList       =   models.CharField(blank = True, max_length=500, default="")
+    
 
 class messagetable(models.Model):
     senderId            =   models.IntegerField(blank=True, null=True, default=0)

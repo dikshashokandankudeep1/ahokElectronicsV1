@@ -29,7 +29,7 @@
     @media only screen and (max-width: 600px) {
         #mainDiv{
             max-width:100%; 
-            margin-top:50px;
+            margin-top:100px;
             margin-left:10px;
             margin-right:10px;
         }
@@ -38,7 +38,9 @@
     @media only screen and (min-width: 600px) and (max-width: 992px) {
         #mainDiv{
             max-width:1200px; 
-            margin-top:70px;
+            margin-top:40px;
+            margin-left:10px;
+            margin-right:10px;
         }
     }
 </style>
@@ -151,8 +153,8 @@
                         </div>
                         <div class="w3-row" id="paymenttypes" style="margin-bottom:3%;">
                             <div class="w3-row">
-                                <input type="radio" id="partialPayment" name="paidInitialAmount" value="{{productsPartialCost}}" onchange="showRestAmountMessage('{{productsPartialCost}}', '{{productsTotalCost}}')" required> <small>Token Amount</small>
-                                <b><small>₹ {{productsPartialCost}}/-</small></b>
+                                <input type="radio" id="partialPayment" name="paidInitialAmount" value="{{tokenAmount}}" onchange="showRestAmountMessage('{{tokenAmount}}', '{{productsTotalCost}}')" required> <small>Token Amount</small>
+                                <b><small>₹ {{tokenAmount}}/-</small></b>
                             </div>
                             <div class="w3-row">
                                 <input type="radio" id="fullPayment" name="paidInitialAmount" value="{{productsTotalCost}}" onchange="showRestAmountMessage('{{productsTotalCost}}', '{{productsTotalCost}}')"> <small>Pay Full Payment</small>

@@ -20,14 +20,14 @@
     @media only screen and (max-width: 600px) {
         #mainDiv{
             max-width:100%; 
-            margin-top:50px;
+            margin-top:100px;
         }
     }
 
     @media only screen and (min-width: 600px) and (max-width: 992px) {
         #mainDiv{
             max-width:1200px; 
-            margin-top:70px;
+            margin-top:100px;
         }
     }
 </style>
@@ -63,9 +63,15 @@
                             </div>
                             {% endif %}
                             <div class="w3-row">
+                                <form action="" method="post"> {% csrf_token %}
+                                    <input type="hidden" name="DELIVERYADDRESS" value="{{data.id}}">
+                                    <button class="w3-button w3-round w3-teal"><small>Deliver to this Address</small></button>
+                                </form>
+                                <!--
                                 <a href="/product/purchase/paymentGateway/{{ data.id }}">
                                     <button class="w3-button w3-round w3-teal"><small>Deliver to this Address</small></button>
                                 </a>
+                                -->
                             </div>
                             <div class="w3-row" style="padding-top:4%;">
                                 <div class="w3-col l4 m3 s2" style="margin-right:1%;">

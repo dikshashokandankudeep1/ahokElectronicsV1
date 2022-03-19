@@ -22,8 +22,9 @@ from django.conf.urls.static import static
 from homeapp.views import Home_view, ProductList_view, ProductListOnClick_view, \
                         Product_view, ProductSearchList_view, \
                         login_View, register_View, \
-                        productPaymentGateway_View, \
-                        user_addToCart_View#, Admin_view, error_404, productPurchase_View, 
+                        confirmOrderDetails_View, \
+                        selectDeliveryAddress_View, selectPaymentMethod_View, reviewOrderBeforePayment_View,\
+                        user_addToCart_View#, Admin_view, error_404, selectDeliveryAddress_View, 
 
 from homeapp.manager import manager_default_View, manager_View
 from homeapp.userAccount import account_profileInformation_View, account_View
@@ -41,13 +42,17 @@ urlpatterns = [
     path('product-category/<str:categoryName>/<str:brandName>', ProductListOnClick_view, name="ProductListOnClick_view"),
     path('product/<str:modelNumber>', Product_view, name="Product_view"),
     path('product/search/<str:productTitle>', ProductSearchList_view, name="ProductSearchList_view"),
-    #path('product/purchase', productPurchase_View, name="productPurchase_View"),
+    #path('product/purchase', selectDeliveryAddress_View, name="selectDeliveryAddress_View"),
 
     #path('productAddToCart/<int:productId>', productAddToCart_View, name="productAddToCart_View"),
     #path('productRemoveFromCart/<int:productId>', productRemoveFromCart_View, name="productRemoveFromCart_View"),
     #path('clearCart', clearCart_View, name="clearCart_View"),
 
-    path('product/purchase/paymentGateway/<int:addressId>', productPaymentGateway_View, name="productPaymentGateway_View"),
+    #path('product/purchase/paymentGateway/<int:addressId>', confirmOrderDetails_View, name="confirmOrderDetails_View"),
+    path('product/purchase/selectDeliveryAddress', selectDeliveryAddress_View, name="selectDeliveryAddress_View"),
+    path('product/purchase/confirmOrderDetails', confirmOrderDetails_View, name="confirmOrderDetails_View"),
+    path('product/purchase/selectPaymentMethod', selectPaymentMethod_View, name="selectPaymentMethod_View"),
+    path('product/purchase/reviewOrderBeforePayment', reviewOrderBeforePayment_View, name="reviewOrderBeforePayment_View"),
     
 
     #path('user/<int:userID>/<int:typeofuserdatashow>', user_View, name="user_View"),       #0->profile, 1->add-to-cart, 2->orders
