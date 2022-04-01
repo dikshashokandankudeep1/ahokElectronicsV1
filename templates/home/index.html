@@ -67,20 +67,31 @@
       <style>
       #mainDiv{
           max-width:1200px; 
-          margin-top:5.5%;
+          margin-top:80px;
+      }
+      #subMainDiv{
+          margin-left:100px; 
+          margin-right:100px; 
+          margin-top:100px;
       }
   
       @media only screen and (max-width: 600px) {
           #mainDiv{
               max-width:100%; 
-              margin-top:60px;
-          }   
+              #margin-top:60px;
+          }
+          #subMainDiv{
+            margin-top:140px;
+          }
       }
   
       @media only screen and (min-width: 600px) and (max-width: 992px) {
           #mainDiv{
               max-width:1200px; 
-              margin-top:70px;
+              #margin-top:70px;
+          }
+          #subMainDiv{
+              margin-top:150px;
           }
       }
       </style>
@@ -89,8 +100,7 @@
 <body style="position: relative;">
     {% include 'common/header/header.html' %}
     <div class="w3-content" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-main" style="margin-left:100px; margin-right:100px; margin-top:130px;">
-            
+        <div class="w3-main" id="subMainDiv">
             <section class="regular slider" >
                 {% for instance in productHomeSliderObj %}
                 <div>
@@ -131,11 +141,9 @@
                   {% endif %}
               {% endfor %}
           </div>
-
         </div>
     </div>
 </body>
-{% include 'home/footer.html' %}
 <script>
     window.onload = function() {
         document.getElementById("dropdownMenuProfile").style.display = "none";

@@ -22,7 +22,7 @@
     @media only screen and (max-width: 600px) {
         #mainDiv{
             max-width:100%; 
-            margin-top:50px;
+            margin-top:120px;
         }
     }
 
@@ -37,19 +37,37 @@
 <body style="position: relative;" onclick="dropdownMenuProfileHide()">
     {% include 'common/header/header.html' %}
     <div class="w3-row w3-content w3-small" id="mainDiv"  onmouseover="dropdownMenuProfileHide()">
-        <div class="w3-col l3 m3 s4">
+        <div class="w3-panel w3-text-blue" id="lhsShowMenu" style=" margin-bottom:0%; margin-top:0%; cursor:pointer;" onclick="toggleLeftPannel('showMenu')">
+            <span> Show Menu </span>
+        </div>
+        <div class="w3-panel w3-text-blue" id="lhshideMenu" style=" margin-bottom:0%; margin-top:0%; cursor:pointer;" onclick="toggleLeftPannel('hideMenu')">
+            <span> Hide Menu </span>
+        </div>
+        <div class="w3-col l3 m3 s6" style="padding:2%">
             {% include 'user/account/lhs/index.html' %}
         </div>
-        <div class="w3-col l9 m9 s8" style="padding-left:2%">
-            {% include 'user/account/rhs/index.html' %}
+        
+        <div class="w3-col l9 m9 s12" style="padding:2%">
+           {% include 'user/account/rhs/index.html' %}
         </div>
 </body>
 
 <script>
     window.onload = function() {
+        console.log("resolution::", window.innerWidth, window.outerWidth)
         document.getElementById("dropdownMenuProfile").style.display = "none";
         funcOnClickSubHeading('{{dataShow}}');
         hideId("dropdownMenuProfile");
+        if(window.innerWidth < 600 ){
+            hideId("lhshideMenu")
+            showId("lhsShowMenu")
+            hideId("lhsPannel2")
+        }
+        else{
+            hideId("lhshideMenu")
+            hideId("lhsShowMenu")
+            showId("lhsPannel2")
+        }
     };
 
     function dropdownMenuProfileHide(){
@@ -66,6 +84,27 @@
         document.getElementById(ID).style.display = "none";
     }
 
+    function toggleLeftPannel(tagName){
+        if(window.innerWidth < 600 ){
+
+            if(tagName == "showMenu"){
+                hideId("lhsShowMenu")
+                showId("lhshideMenu")
+                showId("lhsPannel2")
+            }
+            else{
+                hideId("lhshideMenu")
+                showId("lhsShowMenu")
+                hideId("lhsPannel2")
+            }
+        }
+        else{
+            hideId("lhsShowMenu")
+            hideId("lhshideMenu")
+            showId("lhsPannel2")
+        }
+    }
+
     function funcOnClickSubHeading(idType) {
         if ('profileinformation' == idType) {
             hideId('personalInfo_name');
@@ -77,8 +116,8 @@
             hideId('mobileNumber_cancel');
 
         } else if ('manageaddresses' == idType) {
-            hideId("editDelete");
-            hideId("addormodifyaddress_datafillform");
+            //hideId("editDelete");
+            //hideId("addormodifyaddress_datafillform");
             //todo
         } else if ('changepassword' == idType) {
             //todo
@@ -88,20 +127,6 @@
     function funcOnClickButtonPress(idType) {
         console.log("funcOnClickButtonPress::", idType);
         document.getElementById(idType).submit();
-    }
-
-    function funcOnClickAddOrModifyAddress(idType) {
-        hideId("addormodifyaddress_addbuttonform");
-        hideId("addormodifyaddress_datashowtable");
-        if (idType == "add") {
-            showId("addormodifyaddress_datafillform");
-        }
-    }
-
-    function funcOnClickCancelHideAddOrModifyAddress() {
-        hideId("addormodifyaddress_datafillform");
-        showId("addormodifyaddress_addbuttonform");
-        showId("addormodifyaddress_datashowtable");
     }
 
     function dropdownMenuProfileHide(){

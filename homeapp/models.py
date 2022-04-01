@@ -166,17 +166,17 @@ class userAddressBook(models.Model):
     userId          =   models.CharField(blank = True, max_length=50, default="")
     firstname       =   models.CharField(blank = True, max_length=50, default="")
     lastname        =   models.CharField(blank = True, max_length=50, default="")
-    companyName     =   models.CharField(blank = True, max_length=50, default="")
-    countryOrRegion =   models.CharField(blank = True, max_length=50, default="")
-    streetAddress1  =   models.CharField(blank = True, max_length=50, default="")#House No or street name
-    streetAddress2  =   models.CharField(blank = True, max_length=50, default="")#Apartment, suit, unit, etc. (optional)
+    address         =   models.CharField(blank = True, max_length=50, default="")
     townOrCity      =   models.CharField(blank = True, max_length=50, default="")
-    stateOrCounty   =   models.CharField(blank = True, max_length=50, default="")
+    state           =   models.CharField(blank = True, max_length=50, default="")
+    country         =   models.CharField(blank = True, max_length=50, default="")
     postcodeOrZIP   =   models.CharField(blank = True, max_length=50, default="")
+    landmark        =   models.CharField(blank = True, max_length=50, default="")
     phoneNo         =   models.CharField(blank = True, max_length=50, default="")
     emailAddress    =   models.CharField(blank = True, max_length=50, default="")
     orderNotes      =   models.CharField(blank = True, max_length=50, default="")
-
+    locationType    =   models.CharField(blank = True, max_length=50, default="")
+    
 class userordertable(models.Model):
     userId                  =   models.IntegerField(blank=True, null=True, default=0)
     orderDeliveryAddress    =   models.CharField(blank=True, max_length=50, default="")

@@ -1,0 +1,52 @@
+<div class="w3-col l10 m12 s11">
+    {%if userAddressBookDictListCount %}
+    <div class="w3-row" style="padding-bottom: 2%; padding-top: 4%; padding-left: 2%;">
+        <div class="w3-col l6 m12 s10">
+            <b>Select a delivery address</b>
+        </div>
+    </div>
+    <div class="w3-row" style="padding-bottom:2%;">
+        {% for data in userAddressBookDictList%}
+        <div class="w3-col w3-round l3 m5 s12 w3-card" style="padding:2%; margin-left:2%; margin-bottom:2%;">
+            <p><b>{{ data.userFullName }}</b></p>
+            <small>{{ data.address }}</small>
+            <small>{{ data.landmark }}</small>
+            <small>{{ data.townCity }}</small>
+            <small>{{ data.country }}</small>
+            <!---->
+            <div class="w3-row" style="padding:-1%;"><small>Contact No. {{ data.phoneNo }}</small></div>
+            {% if data.orderNotes != "" %}
+                <div class="w3-row w3-text-blue"><small><p>Should be with {{ data.orderNotes }}</p></small></div>
+            {% else %}
+                <div class="w3-row w3-text-blue">
+                    <div class="w3-row w3-text-blue"><small><p>Should be with covid safety</p></small></div>
+                </div>
+            {% endif %}
+            <div class="w3-row">
+                <form action="" method="post"> {% csrf_token %}
+                    <input type="hidden" name="DELIVERYADDRESS" value="{{data.id}}">
+                    <button class="w3-button w3-round w3-teal"><small>Deliver to this Address</small></button>
+                </form>
+            </div>
+            <div class="w3-row" style="padding-top:4%;">
+                <div class="w3-col l4 m3 s2" style="margin-right:1%;">
+                    <form action="" method="post"> {% csrf_token %}
+                        <input type="hidden" name="EDIT" value="{{data.id}}">
+                        <button class="w3-button w3-round w3-tiny w3-cyan">Edit</button>
+                    </form>
+                </div>
+                <div class="w3-col l4 m3 s2">
+                    <form action="" method="post"> {% csrf_token %}
+                        <input type="hidden" name="DELETE" value="{{data.id}}">
+                        <button class="w3-button w3-round w3-tiny w3-cyan">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+<div class="w3-col l2 m12 s12">
+    <div><br></div>
+</div>

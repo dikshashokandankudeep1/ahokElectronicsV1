@@ -5,6 +5,7 @@ from threading import *
 from posixpath import split
 #import re
 from urllib import response
+from urllib import request
 from urllib.request import Request
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -18,7 +19,8 @@ from django.contrib.auth.models import User, auth
 
 from .commom import  setSession, getSession, toCamelCase, toCommaSeperatedCurrency, myThreadPool
 
-from .helper import searchContentInSearchBar, checkUserLogged, getUserId
+from .helper import searchContentInSearchBar, checkUserLogged, getUserId, getAddToCartData, getUserName
+
 
 def Home_view(request):
     print("Home_view")
@@ -38,13 +40,13 @@ def Home_view(request):
 
     print("productHomeCategoryListObj::", productHomeCategoryListObj)
     print("productHomeSliderObj::", productHomeSliderObj)
+    
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
-        'userID'    :   getUserId(request),
+        'headerDict'    :   headerDict,
         'productHomeCategoryListObj'        : productHomeCategoryListObj,
-        'productHomeCategoryListObjCount'   : productHomeCategoryListObj.count(),
         'productHomeSliderObj'              : productHomeSliderObj,
-        'productHomeSliderObjCountList'     : list(range(0, productHomeSliderObj.count())),
     }
     return render(request, "home/index.html", context)
 
@@ -69,11 +71,11 @@ def ProductList_view(request, categoryName):
 
     print("ProductList_view dataDict::",dataDict)
 
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+
     context = {
-        'userID'        : getUserId(request),
+        'headerDict'    :   headerDict,
         'dataDict'      : dataDict,
-        'brandnameObj'  : brandNameObj,
-        'brandnameObjCount' :   brandNameObj.count(),
         'categoryName'  : categoryName,
     }
     return render(request, "product/search/countingFromTitle.html", context)
@@ -127,16 +129,11 @@ def ProductSearchList_view(request, productTitle):
         if(request.POST.__contains__("search")):
             return searchContentInSearchBar(request)
         elif(request.POST.__contains__("FILTER:PRICE")):
-            print("ProductSearchList_view FILTER:PRICE::",request.POST["FILTER:PRICE"])
             productproductTitleListObj = priceFilterCalculateObj(request.POST["filterDict"], productproductTitleListObj)
-            print("ProductSearchList_view productproductTitleListObj::",productproductTitleListObj)
-
+            
         elif(request.POST.__contains__("dropdownSortButton")):
-            print("ProductSearchList_view dropdownSortButton::",request.POST["dropdownSortButton"])
             SORTBY = request.POST["dropdownSortButton"]
-            print("ProductSearchList_view INITIAL productproductTitleListObj::",productproductTitleListObj)
             productproductTitleListObj = priceFilterCalculateObj(request.POST["dropdownSortButtonfilterDict"], productproductTitleListObj)
-            print("productproductTitleListObj::",productproductTitleListObj)
             #todo handle other sort methods Newsest, Popularity --> currntly taken High to Low
             if request.POST["dropdownSortButton"] == "LTH":
                 productproductTitleListObj = productproductTitleListObj.order_by('price')
@@ -154,8 +151,9 @@ def ProductSearchList_view(request, productTitle):
     else:
         isSearchContentFound = 1
 
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
-        'userID'            :   getUserId(request),
+        'headerDict'    :   headerDict,
         'searchContent'     :   productTitle,
         'isSearchContentFound' : isSearchContentFound,
         'relaventContent'    :  relaventContent,
@@ -278,10 +276,7 @@ def ProductListOnClick_view(request, categoryName, brandName):
                 updateaddToCartID = request.POST['BUYNOW']
                 url = "/product/purchase/selectDeliveryAddress"
                 fillTemporaryOrderStoreTable(request.user.id, "", "", "", [updateaddToCartID])
-                #setSession(request, 'currentOrderList', [updateaddToCartID])
              
-            #if url != "":
-            #    return redirect(url)
         elif(request.POST.__contains__("search")):
             print("ProductListOnClick_view searchContent")
             return searchContentInSearchBar(request)
@@ -299,11 +294,8 @@ def ProductListOnClick_view(request, categoryName, brandName):
                 productBrandnameListObj = productBrandnameListObj.order_by('price')
             else:
                 productBrandnameListObj = productBrandnameListObj.order_by('-price')
-
         else:
             print("ProductListOnClick_view some other case")
-
-        
 
         addToCartItemsDict = {}
         if updateaddToCartID != "":
@@ -313,7 +305,6 @@ def ProductListOnClick_view(request, categoryName, brandName):
                 print("ProductListOnClick_view userObject.addToCartItemsDict::",userObject.addToCartItemsDict)
                 addToCartItemsDict = dict( [item.split(":")[0].strip().strip("'"),int(item.split(":")[1].strip())]  for item in userObject.addToCartItemsDict.strip('}{').split(","))
                 print("addToCartItemsDict::", addToCartItemsDict)
-                #todo pradeep
                 if addToCartItemsDict.__contains__(updateaddToCartID):
                     addToCartItemsDict[updateaddToCartID] += 1
                 else:
@@ -326,23 +317,23 @@ def ProductListOnClick_view(request, categoryName, brandName):
             print("ProductListOnClick_view POST =============== userObject.addToCartItemsDict::", userObject.addToCartItemsDict)
         print("ProductListOnClick_view url::", url)
 
-        if url != "":
+        if url and url != "/viewcart":
             return redirect(url)
-
     else:
         #todo if any error came
         print("Method is GET Bada dikkat he re deva....")
 
     print("ProductListOnClick_view 3 productBrandnameListObj::",productBrandnameListObj)
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
-        'userID'            :   getUserId(request),
+        'headerDict'                     : headerDict,
+        'searchTitle'                    : "",
         'productBrandnameListObj'        : productBrandnameListObj,
         'productBrandnameListObjCount'   : productBrandnameListObj.count(),
         'categoryName'                   : categoryName,
         'brandName'                      : brandName,
         'filterDict'        :   filterDict,
-        'searchTitle'   :   "",
         'SORTBY'            :   SORTBY,
         'searchContent'     :   brandName,
     }
@@ -394,7 +385,7 @@ def Product_view(request, modelNumber):
         userObject.save()
 
         print("Product_view url::", url)
-        if url != "":
+        if url and url != "/viewcart":
             return redirect(url)
     
     HoverImageDict = {}
@@ -418,10 +409,11 @@ def Product_view(request, modelNumber):
                 dataData["Highlight"][value[0]] = value[1]  #todo
     
     print("Product_view 8::")
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
-        'userID'       :   getUserId(request),
-        'instance'     :   productsTablePrimary.objects.filter(modelNumber=modelNumber)[0],
-        'dataData'     :   dataData
+        'headerDict'    :   headerDict,
+        'instance'      :   productsTablePrimary.objects.filter(modelNumber=modelNumber)[0],
+        'dataData'      :   dataData
     }
     return render(request, "product/detail.html", context)
 
@@ -487,19 +479,21 @@ def user_addToCart_View(request):
             else:
                 print("ERROR::user_addToCart_View 1 addToCartItemsDict does not have CHANGEDQUANTITY")
         for itemID, itemQuantity in addToCartItemsDict.items():
-            productObj = productsTablePrimary.objects.filter(modelNumber=itemID)
-            if len(productObj) == 1:
-                productDictList.append({ "itemID" : itemID, "title" : productObj[0].title, 
-                                        "price" : productObj[0].price, "imageurl": productObj[0].mainImage.url, 
-                                        "quantity" : itemQuantity, "storeQuantity" : productObj[0].quantity } )
+            productObjs = productsTablePrimary.objects.filter(modelNumber=itemID)
+            for productObj in productObjs:
+                productDictList.append({ "itemID" : itemID, "title" : productObj.title, 
+                                        "price" : toCommaSeperatedCurrency(productObj.price), 
+                                        "imageurl": productObj.mainImage.url, 
+                                        "quantity" : itemQuantity, "storeQuantity" : productObj.quantity } )
                 itemidList.append(itemID)
                 totalQuantity += itemQuantity
-                subtotal += (productObj[0].price * itemQuantity)
+                subtotal += (productObj.price * itemQuantity)
             else:
                 #TODO << Item out of stock >>
-                print("WE have issue at productPaymentGateway productObj...", len(productObj))
+                print("WE have issue at productPaymentGateway productObj...", len(productObjs))
 
-        dataDictionary = {"productDictList" : productDictList, "itemidList" : itemidList,"totalQuantity":totalQuantity,"subtotal" : subtotal}
+        dataDictionary = {"productDictList" : productDictList, "itemidList" : itemidList,
+                            "totalQuantity" : totalQuantity, "subtotal" : toCommaSeperatedCurrency(subtotal)}
     else:
         print("user_addToCart_View 1 add-to-cart ELSE")
         dataDictionary = {"productDictList" : [], "itemidList" : [],"totalQuantity": 0,"subtotal" : 0}
@@ -509,7 +503,9 @@ def user_addToCart_View(request):
     if dataDictionary["productDictList"] == []:
         return redirect("/")
 
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
+       'headerDict'    :   headerDict,
        "dataDictionary"      : dataDictionary
     }
     return render(request,"user/addToCart/index.html", context)
@@ -544,14 +540,14 @@ def selectDeliveryAddress_View(request):
             return redirect("/product/purchase/confirmOrderDetails")
         else:
             print("selectDeliveryAddress_View Address alter")
-            firstname       = request.POST['firstname']
-            lastname        = request.POST['lastname']
-            companyName     = request.POST['companyName']
-            countryOrRegion = request.POST['countryOrRegion']
-            streetAddress1  = request.POST['streetAddress1']
-            streetAddress2  = request.POST['streetAddress2']
-            townOrCity      = request.POST['townOrCity']
-            stateOrCounty   = request.POST['stateOrCounty']
+            firstname       = toCamelCase(request.POST['firstname'])
+            lastname        = toCamelCase(request.POST['lastname'])
+            locationType    = toCamelCase(request.POST['locationType'])
+            country         = toCamelCase(request.POST['country'])
+            address         = toCamelCase(request.POST['address'])
+            landmark        = toCamelCase(request.POST['landmark'])
+            townOrCity      = toCamelCase(request.POST['townOrCity'])
+            state           = toCamelCase(request.POST['state'])
             postcodeOrZIP   = request.POST['postcodeOrZIP']
             phoneNo         = request.POST['phoneNo']
             emailAddress    = request.POST['emailAddress']
@@ -561,9 +557,9 @@ def selectDeliveryAddress_View(request):
 
             if "MODIFYADDRESS" not in request.POST.keys():
                 print("selectDeliveryAddress_View address:: Add new address")
-                userAddressBook_ = userAddressBook(userId=request.user.id, firstname=firstname, lastname=lastname, companyName=companyName,
-                                        countryOrRegion=countryOrRegion, streetAddress1=streetAddress1, streetAddress2=streetAddress2,
-                                        townOrCity=townOrCity, stateOrCounty=stateOrCounty, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
+                userAddressBook_ = userAddressBook(userId=request.user.id, firstname=firstname, lastname=lastname, locationType=locationType,
+                                        country=country, address=address, landmark=landmark,
+                                        townOrCity=townOrCity, state=state, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
                                         emailAddress=emailAddress, orderNotes=orderNotes)
                 userAddressBook_.save()
 
@@ -581,9 +577,9 @@ def selectDeliveryAddress_View(request):
             else:
                 print("selectDeliveryAddress_View Address Modify")
                 userAddressBook_ = userAddressBook(id=int(request.POST['MODIFYADDRESS']), userId=request.user.id, firstname=firstname, 
-                                        lastname=lastname, companyName=companyName,
-                                        countryOrRegion=countryOrRegion, streetAddress1=streetAddress1, streetAddress2=streetAddress2,
-                                        townOrCity=townOrCity, stateOrCounty=stateOrCounty, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
+                                        lastname=lastname, locationType=locationType,
+                                        country=country, address=address, landmark=landmark,
+                                        townOrCity=townOrCity, state=state, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
                                         emailAddress=emailAddress, orderNotes=orderNotes)
                 userAddressBook_.save()
 
@@ -591,10 +587,10 @@ def selectDeliveryAddress_View(request):
         for obj in userObjects:
             print("obj::",obj)
             print("obj.userAddressBooks::",obj.userAddressBooks)
-            if (obj.userAddressBooks != "") and (obj.userAddressBooks != "[]"):
-                if userAddressBookItemEditObj == "":
+            if obj.userAddressBooks and obj.userAddressBooks != "[]":
+                if not userAddressBookItemEditObj:
                     userAddressBookList = list(map(int, obj.userAddressBooks.strip('][').split(', ')))
-                if userAddressBookItemDelete != "":
+                if userAddressBookItemDelete:
                     print("userAddressBookList, userAddressBookItemDelete::", userAddressBookList, userAddressBookItemDelete)
                     userAddressBookList.remove(userAddressBookItemDelete)
                     userAddressBookItemDelete = ""
@@ -619,25 +615,28 @@ def selectDeliveryAddress_View(request):
                 dataDict = {}
                 dataDict["id"] = idData
                 dataDict["userFullName"]    = useraddressBookObj.firstname + " " + useraddressBookObj.lastname
-                dataDict["addr1"]   = useraddressBookObj.streetAddress1
-                dataDict["addr2"]   = useraddressBookObj.streetAddress2
-                dataDict["townCity"]= useraddressBookObj.townOrCity + ", " + useraddressBookObj.stateOrCounty  + " " + useraddressBookObj.postcodeOrZIP
-                dataDict["countryOrRegion"]  = useraddressBookObj.countryOrRegion
-                dataDict["phoneNo"]  = useraddressBookObj.phoneNo
-                dataDict["orderNotes"]       = useraddressBookObj.orderNotes
+                dataDict["address"]         = useraddressBookObj.address
+                dataDict["landmark"]        = useraddressBookObj.landmark
+                dataDict["townCity"]        = useraddressBookObj.townOrCity + ", " + useraddressBookObj.state  +\
+                                                 " " + useraddressBookObj.postcodeOrZIP
+                dataDict["country"]         = useraddressBookObj.country
+                dataDict["phoneNo"]         = useraddressBookObj.phoneNo
+                dataDict["orderNotes"]      = useraddressBookObj.orderNotes
                 userAddressBookDictList.append(dataDict)
             else:
                 print("WE have issue at selectDeliveryAddress_View ListOfAddress_2...", len(useraddressBookObj))
 
     print("selectDeliveryAddress_View END")
 
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+
     context = {
-        "userID"                        :   request.user.id,
+        'headerDict'                    :   headerDict,
         "userAddressBookDictList"       :   userAddressBookDictList,
         "userAddressBookDictListCount"  :   len(userAddressBookDictList),
         "userAddressBookItemEditObj"    :   userAddressBookItemEditObj
     }
-    return render(request, "product/purchase/index.html", context)
+    return render(request, "product/purchase/selectAddress/index.html", context)
 
 def placeOrderInit(request, userObject, orderDeliveryAddress, onOrderPaidAmount, orderFirstPaidTrxnID, orderFirstPaymentID):
     userOrderGrouptable_ = userOrderGrouptable(userId=request.user.id, ordersList="")
@@ -758,7 +757,6 @@ def confirmOrderDetails_View(request):
                 return redirect("/")
             else:#submit
                 fillTemporaryOrderStoreTable(request.user.id, "", request.POST["selectedMode"], "", "") #token or full
-                #setSession(request, 'selectedMode', request.POST["selectedMode"])   #token or full
                 return redirect("/product/purchase/selectPaymentMethod")
         else: #when click on Place Order after payment contain ORDERFIRSTTRXNID
             print("confirmOrderDetails_View Place order button click request.POST", request.POST)
@@ -781,12 +779,12 @@ def confirmOrderDetails_View(request):
         for obj in useraddressBookObj:
             orderDeliveryAddress =  obj.firstname + " " \
                                 + obj.lastname + ", " \
-                                + obj.streetAddress1 + ", " \
-                                + obj.streetAddress2 + ", " \
+                                + obj.address + ", " \
+                                + obj.landmark + ", " \
                                 + obj.townOrCity + ", " \
-                                + obj.stateOrCounty  + " " \
+                                + obj.state  + " " \
                                 + obj.postcodeOrZIP + ", " \
-                                + obj.countryOrRegion + ", " \
+                                + obj.country + ", " \
                                 + "Contact No." + obj.phoneNo
 
             print("orderDeliveryAddress: ", orderDeliveryAddress)
@@ -829,8 +827,10 @@ def confirmOrderDetails_View(request):
     print("itemidList::", itemidList)
     if(len(itemidList) == 0):
         return redirect("/")
-        
+    
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
+        'headerDict'                :   headerDict,
         "orderDeliveryAddress"      : orderDeliveryAddress,
         "productDictList"           : productDictList,
         "itemidList"                : itemidList,
@@ -911,9 +911,11 @@ def selectPaymentMethod_View(request):
         data["bankName"]        = obj.bankName
         data["cardType"]        = obj.cardType
         cardsDict[obj.id] = data
+    
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
-        'userID'    :   getUserId(request),
+        'headerDict'    :   headerDict,
         'accIds'    :   accIds,
         'accIdsCount' : len(accIds),
         'cardsDict' :   cardsDict
@@ -1019,15 +1021,15 @@ def reviewOrderBeforePayment_View(request):
         userAddrObj = userAddressBook.objects.filter(userId=request.user.id).filter(id=int(obj.deleveryAddressId))
         for addrData in userAddrObj: #todo remove camel case when already implimentt toCamelCase address save
             fullName = addrData.firstname + " " + addrData.lastname
-            deleveryAddress.append(toCamelCase(fullName))
-            if addrData.companyName:
-                deleveryAddress.append(toCamelCase(addrData.companyName))
-            deleveryAddress.append(toCamelCase(addrData.streetAddress1))
-            deleveryAddress.append(toCamelCase(addrData.streetAddress2))
-            deleveryAddress.append(toCamelCase(addrData.townOrCity))
-            stateAndZipCode = addrData.stateOrCounty + ", " + addrData.postcodeOrZIP
-            deleveryAddress.append(toCamelCase(stateAndZipCode))
-            deleveryAddress.append(toCamelCase(addrData.countryOrRegion))
+            deleveryAddress.append(fullName)
+            if addrData.locationType:
+                deleveryAddress.append(addrData.locationType)
+            deleveryAddress.append(addrData.address)
+            deleveryAddress.append(addrData.landmark)
+            deleveryAddress.append(addrData.townOrCity)
+            stateAndZipCode = addrData.state + ", " + addrData.postcodeOrZIP
+            deleveryAddress.append(stateAndZipCode)
+            deleveryAddress.append(addrData.country)
             phoneNumber = "Phone: " + addrData.phoneNo
             deleveryAddress.append(phoneNumber)
         dataDict["deleveryAddress"] = deleveryAddress
@@ -1047,8 +1049,10 @@ def reviewOrderBeforePayment_View(request):
 
         obj.save()
 
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+
     context = {
-        'userId' : request.user.id,
+        'headerDict'    :   headerDict,
         'dataDict' : dataDict
     }
     return render(request, "product/purchase/reviewOrderBeforePayment.html", context)
@@ -1066,8 +1070,9 @@ def processTopay_View(request):
         dataDict["restAmount"]  = toCommaSeperatedCurrency(obj.restAmount)
         dataDict["orderTotal"]  = toCommaSeperatedCurrency(obj.orderTotal)
 
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
-        'userId' : request.user.id,
+        'headerDict'    :   headerDict,
         'dataDict' : dataDict
     }
     return render(request, "product/purchase/processTopay.html", context)
@@ -1081,7 +1086,9 @@ def placeOrder_View(request):
         else:
             dataDict[obj[1]] = [obj]
     print("paymentObj::", dataDict)
+    
     context = {
+        
         "paymentObj" : dataDict
     }
     return render(request, "product/purchase/placeOrder.html", context)
@@ -1112,7 +1119,8 @@ def login_View(request):
             return redirect("/login")
     else:
         print("login_view GET Method called")
-        return render(request, 'loginRegister/login.html', {"userID" : "",})
+        headerDict = {"userID" : ""}
+        return render(request, 'loginRegister/login.html', {"headerDict" : headerDict})
 
 def register_View(request):
     print("register_View")
@@ -1218,8 +1226,9 @@ def register_View(request):
             messages.error(request, "password mismatch")
             return render(request, 'loginRegister/register.html', context)
     else:
+        headerDict = {"userID" : ""}
         context = {
-            "userID" : "",
+            "headerDict" : headerDict,
             "dataDict" : dataDict
         }
         return render(request, 'loginRegister/register.html', context)

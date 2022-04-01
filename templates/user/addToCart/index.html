@@ -5,6 +5,7 @@
 
 <head>
     {% include 'common/head.html' %}
+    <script src="{% static 'js/common/common.js' %}"></script>
     <!--<script src="{% static 'js/adminPage.js' %}"></script>-->
     <!--<script src="{% static 'js/user/addToCart/index.js' %}"></script>-->
 </head>
@@ -14,7 +15,7 @@
     }
 
     #mainDiv{
-        max-width:1200px; 
+        max-width:1400px; 
         margin-top:5.5%;
     }
 
@@ -38,8 +39,8 @@
     {% include 'common/header/header.html' %}
     <div class="w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
         <div class="w3-row" id="add-to-cart">
-            <div class="w3-col l1 m1 s1 w3-hide-small"><br></div>
-            <div class="w3-col l8 m8 s12">
+            <div class="w3-col l2 m1 s1 w3-hide-small"><br></div>
+            <div class="w3-col l7 m8 s12">
                 <div class="w3-row" style="text-align: left;">
                     <h3><b>Shopping Cart</b></h3>
                 </div>
@@ -163,8 +164,9 @@
         function maxLimitValidation(){
             maxLimitErrorList = '{{dataDictionary.productDictList}}';
             maxLimitErrorList = maxLimitErrorList.replaceAll('&#x27;', "").replaceAll("[", '').replaceAll("]", '').replaceAll("{", '').split("},")
+            
             maxLimitErrorFlag = false
-            for (var i=0; i<maxLimitErrorList.length; i++){  
+            for (var i=0; i<maxLimitErrorList.length; i++){ 
                 quantity = parseInt(maxLimitErrorList[i].split(", ")[4].replaceAll(" ", '').split(":")[1])
                 storeQuantity = parseInt(maxLimitErrorList[i].split(", ")[5].replaceAll("}", '').replaceAll(" ", '').split(":")[1])
                 itemID = maxLimitErrorList[i].split(", ")[0].replaceAll(": ", ':').split(":")[1]
@@ -220,33 +222,34 @@
                 document.getElementById("CHECK_" + itemId).checked = false;
             }
 
-            if (validationFlg) {
+            if (validationFlg) {//select box
                 for (var i = 0; i < unBuyStorevect.length; i++) {
                     if (unBuyStorevect[i] == itemId) {
                         unBuyStorevect.splice(i, 1);
                     }
                 }
-                itemQuantPrice = document.getElementById(itemId + "_SUBTOTALIDINFO").value.split("/").map(iNum => parseInt(iNum, 10));
-                subTotalQuantPricevec = document.getElementById("SUBTOTALQUANTPRICE").value.split("/").map(iNum => parseInt(iNum, 10));
-
+                itemQuantPrice = document.getElementById(itemId + "_SUBTOTALIDINFO").value.replaceAll(",", '').split("/").map(iNum => parseInt(iNum, 10));
+                subTotalQuantPricevec = document.getElementById("SUBTOTALQUANTPRICE").value.replaceAll(",", '').split("/").map(iNum => parseInt(iNum, 10));
                 
                 newSubTotalQuant = (subTotalQuantPricevec[0] + itemQuantPrice[0]);
                 newSubTotalPrice = (subTotalQuantPricevec[1] + (itemQuantPrice[0] * itemQuantPrice[1]));
                 
-                STR = "Subtotal (" + newSubTotalQuant.toString() + " items): ₹<b>" + newSubTotalPrice.toString() + "</b>";
+                STR = "Subtotal (" + newSubTotalQuant.toString() + " items): ₹<b>" + toCommaSeperatedCurrency(newSubTotalPrice) + "</b>";
                 document.getElementById('SUBTOTALBUTTON2').innerHTML = STR;
                 document.getElementById('SUBTOTALBUTTON4').innerHTML = STR;
                 document.getElementById('SUBTOTALQUANTPRICE').value = newSubTotalQuant.toString() +
                     ' / ' + newSubTotalPrice.toString();
                 
-            } else {
+            } else {//unselect box
                 unBuyStorevect.push(itemId);
-                itemQuantPrice = document.getElementById(itemId + "_SUBTOTALIDINFO").value.split("/").map(iNum => parseInt(iNum, 10));
-                subTotalQuantPricevec = document.getElementById("SUBTOTALQUANTPRICE").value.split("/").map(iNum => parseInt(iNum, 10));
+                itemQuantPrice = document.getElementById(itemId + "_SUBTOTALIDINFO").value.replaceAll(",", '').split("/").map(iNum => parseInt(iNum, 10));
+                subTotalQuantPricevec = document.getElementById("SUBTOTALQUANTPRICE").value.replaceAll(",", '').split("/").map(iNum => parseInt(iNum, 10));
+
                 newSubTotalQuant = (subTotalQuantPricevec[0] - itemQuantPrice[0]);
                 newSubTotalPrice = (subTotalQuantPricevec[1] - (itemQuantPrice[0] * itemQuantPrice[1]));
+
                 STR = "Subtotal (" + newSubTotalQuant.toString() +
-                    " items):₹ <b>" + newSubTotalPrice.toString() + "</b>";
+                    " items):₹ <b>" + toCommaSeperatedCurrency(newSubTotalPrice) + "</b>";
                 document.getElementById("SUBTOTALBUTTON2").innerHTML = STR;
                 document.getElementById("SUBTOTALBUTTON4").innerHTML = STR;
                 document.getElementById("SUBTOTALQUANTPRICE").value = newSubTotalQuant.toString() + "/" + newSubTotalPrice.toString();

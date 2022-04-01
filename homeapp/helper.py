@@ -262,3 +262,24 @@ def getUserId(request):
         return  request.user.id
     else:
         return ""
+
+def getAddToCartData(request):
+    addToCartButtonDict = {"totalCost" : 0, "cartItems" : 0}
+    if (request.user.id != None):
+        userObjects = usertable.objects.filter(userId=request.user.id)
+        for obj in userObjects:
+            if obj.addToCartItemsDict:
+                addToCartItemsDict = dict( [item.split(":")[0].strip().strip("'"),int(item.split(":")[1].strip())]  for item in obj.addToCartItemsDict.strip('}{').split(","))
+                for key, value in addToCartItemsDict.items():
+                    productObj = productsTablePrimary.objects.filter(modelNumber=key)
+                    for product in productObj:
+                        print("getAddToCartData addToCartItemsDict::", key, product.price)
+                        addToCartButtonDict["totalCost"] += (product.price * value)
+                        addToCartButtonDict["cartItems"] += value
+    return addToCartButtonDict
+
+def getUserName(request):
+    if (request.user.id != None) or (usertable.objects.filter(userId=request.user.id)).exists():
+        return (usertable.objects.filter(userId=request.user.id)[0].firstname)
+    else:
+        return ""

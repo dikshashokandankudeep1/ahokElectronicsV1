@@ -15,7 +15,7 @@
 
     #mainDiv{
         max-width:1200px; 
-        margin-top:5.5%;
+        margin-top:80px;
     }
 
     @media only screen and (max-width: 600px) {
@@ -52,21 +52,22 @@
             <div class="w3-col l10 m12 s12 w3-border-left" style="padding-left:5%; padding-right:5%; position: relative;">
                 {% include 'product/search/filters/allDevices/priceSorting.html' %}
                 {% if isSearchContentFound == 0 %}
-                <div class="w3-row w3-text" style="margin-top:5%;">
-                    <b>Sorry, no results found for <span class="w3-text-red">{{ searchContent }}</span></b>
-                </div>
-                <div class="w3-row " style="margin-bottom:5%;">
-                    Please check the spelling or try searching for something else
-                </div>
-                {% if productBrandnameListObjCount != 0  and isSearchContentFound == 0 %}
-                <div class="w3-row w3-text">
-                    {% if relaventContent != "" %}
-                    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%">Showing results for {{relaventContent}} instead</div>
-                    {% else %}
-                    <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%">Showing results for <b>tv</b> instead</div>
+                    <div class="w3-row w3-text" style="margin-top:5%;">
+                        <b>Sorry, no results found for <span class="w3-text-red">{{ searchContent }}</span></b>
+                    </div>
+                    <div class="w3-row " style="margin-bottom:5%;">
+                        Please check the spelling or try searching for something else
+                    </div>
+                    {% if productBrandnameListObjCount != 0  and isSearchContentFound == 0 %}
+                    <div class="w3-row w3-text">
+                        {% if relaventContent != "" %}
+                        <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%">Showing results for {{relaventContent}} instead</div>
+                        {% else %}
+                        <div class="w3-col l9 m9 s9 w3-text-green" style="text-align:left; padding:2%">Showing results for <b>tv</b> instead</div>
+                        {% endif %}
+                    </div>
                     {% endif %}
-                </div>
-                {% endif %} {% endif %}
+                {% endif %}
 
                 <div class="w3-row" style="margin-bottom: 1%;" onclick="onlyShowButtonSort()">
                     {% for instance in productBrandnameListObj %}
@@ -108,9 +109,9 @@
     <!--Middle Part Closed-->
     <script>
         window.onload = function() {
+            dropdownMenuProfileHide()
             onlyShowButtonSort()
             document.getElementById('dropdownSortButton').value = 'Popularity';
-            document.getElementById("dropdownMenuProfile").style.display = "none";
         }
 
         function dropdownMenuProfileHide(){
@@ -177,5 +178,4 @@
         }
     </script>
 </body>
-{% include 'home/footer.html' %}
 </html>

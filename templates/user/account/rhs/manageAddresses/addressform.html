@@ -1,0 +1,65 @@
+<form action="" method="post" class="w3-border" id="addormodifyaddress_datafillform" style="margin-top:3%; padding:1.3%; cursor:pointer;"> {% csrf_token %}
+    <div class="w3-row">
+        <div class="w3-row w3-text-blue">
+            <span>
+                {% if dataDictionary.oldOperation == "" %}
+                    ADD A NEW ADDRESS
+                {% else %}
+                    MODIFY ADDRESS
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="w3-row" style="margin-top:3%;">
+        <div class="w3-row">
+            <div id="addormodifyaddress">
+                <form action="" method="post"> {% csrf_token %}
+                    <div>
+                        <input type="text" name="firstname" id="firstname" style="padding:1%;" value="{{dataDictionary.editDict.firstname}}" placeholder="First name" required>
+                        <input type="text" name="lastname" id="lastname" style="padding:1%;" value="{{dataDictionary.editDict.lastname}}" placeholder="Last name" required>
+                    </div>
+                    <div style="margin-top:2%; margin-bottom:2%;">
+                        <input type="text" name="mobileNumber" id="mobileNumber" style="padding:1%;" value="{{dataDictionary.editDict.mobileNumber}}" placeholder="Mobile Number" required>
+                        <input type="email" name="emailAddress" id="emailAddress" style="padding:1%;" value="{{dataDictionary.editDict.emailAddress}}" placeholder="Email" required>
+                    </div>
+                    <div style="margin-top:2%; margin-bottom:2%;">
+                        <input type="textarea" name="address" id="address" style="padding:1%;" value="{{dataDictionary.editDict.address}}" placeholder="Address" required>
+                        <input type="text" name="townOrCity" id="townOrCity" style="padding:1%;" value="{{dataDictionary.editDict.townOrCity}}" placeholder="City/District/Town" required>
+                    </div>
+                    <div style="margin-top:2%; margin-bottom:2%;">
+                        <input type="text" name="state" id="state" style="padding:1%;" value="{{dataDictionary.editDict.state}}" placeholder="State" required>
+                        <input type="number" name="pincode" id="pincode" style="padding:1%;" value="{{dataDictionary.editDict.pincode}}" maxlength="6" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="Pincode" required>
+                    </div>
+                    <div style="margin-top:2%; margin-bottom:2%;">
+                        <input type="text" name="country" id="country" style="padding:1%;" value="{{dataDictionary.editDict.country}}" placeholder="Country" required>
+                        <input type="textarea" name="landmark" id="landmark" style="padding:1%;" value="{{dataDictionary.editDict.landmark}}" placeholder="Landmark" required>
+                    </div>
+                    
+                    <div id="locationType" style="margin-top:2%; margin-bottom:4%;">
+                        {% if dataDictionary.editDict.locationType == "Home" %}
+                            <input type="radio" name="locationType" id="Home" value="home" checked style="cursor:pointer;" required>
+                                <span style="margin-right:2%;">Home</span>
+                            <input type="radio" name="locationType" id="Work" value="work" style="cursor:pointer;" required>
+                                <span>Work</span>
+                        {% else %}
+                            <input type="radio" name="locationType" id="Home" value="home" style="cursor:pointer;" required>
+                                <span style="margin-right:2%;">Home</span>
+                            <input type="radio" name="locationType" id="Work" value="work" checked style="cursor:pointer;" required>
+                                <span>Work</span>
+                        {% endif %}
+                    </div>
+                    <input type="hidden" id="buttonOperation" name="buttonOperation" value="manageAddresses:addormodifyaddress" />
+                    <input type="hidden" id="id" name="id" value="{{dataDictionary.editDict.id}}" />
+                    <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-bottom:0.5%; padding-left:3%; padding-right:3%;">
+                        Save
+                    </button>
+                </form>
+                <a href="/account/addresses" style="text-decoration:none">
+                    <span style="cursor:pointer; margin-bottom:0.5%; padding-left:3%; padding-right:3%;" onmouseover="this.style.color='#2874f0'" onmouseout="this.style.color='#878787'; this.style.color='#878787'">
+                        Cancel
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</form>

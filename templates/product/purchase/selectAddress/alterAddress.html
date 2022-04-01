@@ -1,0 +1,162 @@
+<div class="w3-col l10 m12 s12" style="padding-top:1%; padding-bottom:3%;">
+    <div class="w3-row">
+        <div class="w3-col l6 m12 s12 ">
+            <div class="w3-row" style="padding-bottom: 2%; padding-top: 4%; padding-left: 2%;">
+                <div class="w3-col l12 m12 s12">
+                    {% if userAddressBookItemEditObj == "" %}
+                        <b>Add a new address</b>
+                    {% else %}
+                        <div class="w3-row">
+                            <h3>Please update the delivery address.</h3>
+                        </div>
+                        <div class="w3-row">
+                            <b>Edit your address</b>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <form action="" method="post"> {% csrf_token %}
+                <div class="w3-row w3-card" style="padding: 2%; padding-left: 2%;">
+                    <div class="w3-col l12 m12 s12">
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>First Name<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='firstname' style='width:70%' placeholder='First Name' name='firstname' value="{{userAddressBookItemEditObj.firstname}}"
+                                            required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Last Name<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='lastname' style='width:70%' placeholder='Last Name' name='lastname' value="{{userAddressBookItemEditObj.lastname}}" required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b><medium>Deliver at</medium></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <select class="w3-select w3-border" id="locationType" name="locationType" required>
+                                    
+                                    {% if userAddressBookItemEditObj.locationType == "" %}
+                                        <option value="" disabled selected> Select delivery location type</option>
+                                    {% elif userAddressBookItemEditObj.locationType == "Worklocation" %}
+                                        <option value="Worklocation" selected>Work location</option>
+                                    {% elif userAddressBookItemEditObj.locationType == "Home" %}
+                                        <option value="Home" selected>home</option>
+                                    {% elif userAddressBookItemEditObj.locationType == "Other" %}
+                                        <option value="Other" selected>other</option>
+                                    {% else %}
+                                        <option value="" disabled selected> Select delivery location type</option>
+                                        <option value="Worklocation">Work location</option>
+                                        <option value="Home">home</option>
+                                        <option value="Other">other</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Address<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='address' style='width:70%' placeholder='Address' name='address' value="{{userAddressBookItemEditObj.address}}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Town/City<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='townOrCity' style='width:70%' placeholder='Town or City' name='townOrCity' value="{{userAddressBookItemEditObj.townOrCity}}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>State<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='state' style='width:70%' placeholder='State' name='state' value="{{userAddressBookItemEditObj.state}}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Country<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='country' style='width:70%' placeholder='Country' name='country' value="{{userAddressBookItemEditObj.country}}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Postcode/ZIP<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='number' id='postcodeOrZIP' style='width:70%' placeholder='Postcode or ZIP' name='postcodeOrZIP' value="{{userAddressBookItemEditObj.postcodeOrZIP}}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Landmark<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='landmark' style='width:70%' placeholder='Landmark' name='landmark' value="{{userAddressBookItemEditObj.landmark}}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Phone Number<span class="required"> *</span></b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='number' id='phoneNo' style='width:70%' placeholder='Phone Number' name='phoneNo' value="{{userAddressBookItemEditObj.phoneNo}}" required>
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Email Address</b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='email' id='emailAddress' style='width:70%' placeholder='Email Address' name='emailAddress' value="{{userAddressBookItemEditObj.emailAddress}}">
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                <b>Order Notes</b>
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <input class='w3-input w3-animate-input w3-round w3-border' type='text' id='orderNotes' style='width:70%' placeholder='Notes about your order, e.g. special notes for delivery' name='orderNotes' value="{{userAddressBookItemEditObj.orderNotes}}">
+                            </div>
+                        </div>
+                        <div class="w3-row" style="margin-bottom:10px">
+                            <div class="w3-col l4 s4 m4" style="padding-top:10px">
+                                {% if userAddressBookItemEditObj == "" %}
+                                    <button class="w3-button w3-hover-dark-grey" style="background-color:#ffe11b;"  id="addAddress" onclick="setOnButtonClick('addAddress')" >
+                                        Add address
+                                    </button>
+                                {% else %}
+                                    <input type="hidden" name="MODIFYADDRESS" value="{{userAddressBookItemEditObj.id}}">
+                                    <button class="w3-button w3-hover-dark-grey" style="background-color:#ffe11b;" id="modifyAddress" onclick="setOnButtonClick('modifyAddress')">
+                                        Update address
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="w3-col l6 s6 m6">
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

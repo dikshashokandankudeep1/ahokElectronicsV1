@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from .models import usertable, userordertable
-from .helper import searchContentInSearchBar
+from .models import usertable, userordertable, userAddressBook
 from django.shortcuts import redirect
 from django.contrib.auth.models import User, auth
+from .commom import toCamelCase, toCommaSeperatedCurrency
+from .helper import searchContentInSearchBar, getUserId, getAddToCartData, getUserName, checkUserLogged
 
 orderTrackingStatusDict = {
         0: "Order not placed yet",
@@ -33,18 +34,9 @@ orderTrackingStatusDict = {
         25: "returned by user, from::after delivered::except delivery charge [FP][E-DC]"
     }
 
-def orders_View(request):
-    if request.method == "POST":
-        print("orders_View 0 request.POST", request.POST)
-        if(request.POST.__contains__("search")):
-            print("orders_View searchContent")
-            return searchContentInSearchBar(request)
 
-    print("orders_View 1 orders")
-
-    print("orders_View 1 request.user.id::",request.user.id)
-    userordertable_list = userordertable.objects.filter(userId=request.user.id)
-    print("orders_View 1 userordertable_list::",userordertable_list)
+def orders_Helper(userordertable_list):
+    print("userordertable_list::", userordertable_list)
     productDictList = []
     for userordertable_ in userordertable_list:
         print("orders_View userordertable_.orderTrackingStatus::",userordertable_.orderTrackingStatus)
@@ -59,16 +51,26 @@ def orders_View(request):
         print("orders_View userordertable_.orderPlacedDate::", str(userordertable_.orderPlacedDate).split("-"))
 
         payAtHome = 0
-        warning = 0
+        #warning = 0
         if userordertable_.paidAmount < userordertable_.finalPaidAmount:
             payAtHome = userordertable_.finalPaidAmount - userordertable_.paidAmount
 
-        dataDict = { "orderPlacedDate" : userordertable_.orderPlacedDate, "finalPaidAmount" : userordertable_.finalPaidAmount,
-                    "onOrderPaidAmount" : userordertable_.onOrderPaidAmount, "payAtHome" : payAtHome, "warning" : warning,
-                    "orderDeliveryAddressHeading" : orderDeliveryAddressHeading, "orderDeliveryAddressRestPart" : orderDeliveryAddressRestPart,
-                    "orderId" : userordertable_.orderId, "orderTrackingStatus" : orderTrackingStatus, "reason":reason,
-                    "orderPaymentDate" : userordertable_.orderFirstPaymentDate, "orderedItemImage" : userordertable_.orderedItemImage,
-                    "orderTitle" : userordertable_.orderTitle, "orderItemId" : userordertable_.orderItemId, "orderSellingQuantity" : userordertable_.orderSellingQuantity
+
+        dataDict = { "orderPlacedDate"  : userordertable_.orderPlacedDate, 
+                    "finalPaidAmount"   : toCommaSeperatedCurrency(userordertable_.finalPaidAmount),
+                    #"onOrderPaidAmount" : userordertable_.onOrderPaidAmount, 
+                    "payAtHome"         : toCommaSeperatedCurrency(payAtHome), 
+                    #"warning"           : warning,
+                    "orderDeliveryAddressHeading"   : orderDeliveryAddressHeading, 
+                    "orderDeliveryAddressRestPart"  : orderDeliveryAddressRestPart,
+                    "orderId" : userordertable_.orderId, 
+                    "orderTrackingStatus" : orderTrackingStatus, 
+                    "reason"    : reason,
+                    "orderPaymentDate" : userordertable_.orderFirstPaymentDate, 
+                    "orderedItemImage" : userordertable_.orderedItemImage,
+                    "orderTitle"    : userordertable_.orderTitle, 
+                    "orderItemId"   : userordertable_.orderItemId, 
+                    "orderSellingQuantity" : userordertable_.orderSellingQuantity
         }
         productDictList.append(dataDict)
 
@@ -79,35 +81,71 @@ def orders_View(request):
     else:
         dataDictionary = { "productDictList" : productDictList }
 
+    return dataDictionary
+
+def orders_View(request):
+
+    print("IN orders_View")
+    isNotLogged = checkUserLogged(request, request.get_full_path())
+    if isNotLogged:
+        return redirect(isNotLogged)
+
+    if request.method == "POST":
+        print("orders_View 0 request.POST", request.POST)
+        if(request.POST.__contains__("search")):
+            return searchContentInSearchBar(request)
+
+    userordertable_list = userordertable.objects.filter(userId=request.user.id)
+    print("orders_View 1 userordertable_list::",userordertable_list)
+    
+    dataDictionary = orders_Helper(userordertable_list)
+
     print("orders_View 2 dataDictionary::", dataDictionary)
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
+        'headerDict'          : headerDict,
         "dataDictionary"      : dataDictionary
     }
     return render(request, "user/orders/index.html", context)
 
 
+def Product_viewMore_view(request, orderId):
+
+    print("IN Product_viewMore_view")
+    isNotLogged = checkUserLogged(request, request.get_full_path())
+    if isNotLogged:
+        return redirect(isNotLogged)
+
+    userordertable_list = userordertable.objects.filter(userId=request.user.id).filter(orderId=orderId)
+    print("orders_View 1 userordertable_list::",userordertable_list)
+    
+    dataDictionary = orders_Helper(userordertable_list)
+
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    context = {
+        'headerDict'          : headerDict,
+        "dataDictionary"      : dataDictionary
+    }
+    return render(request, "user/orders/viewMore/index.html", context)
+
+
 
 def account_profileInformation_View(request):
+
+    isNotLogged = checkUserLogged(request, request.get_full_path())
+    if isNotLogged:
+        return redirect(isNotLogged)
+
     return account_View(request, "profileinformation")
 
 def account_View(request, touds):
 
     if touds == "orders":
         return orders_View(request)
-
-    dataShow = ""
-    dataDictionary = {}
-    userObject = usertable.objects.filter(userId=request.user.id)
-    if len(userObject) == 0:
-        context = {"url" : request.get_full_path()}
-        return render(request, "404.html", context)
-    else:
-        userObject = userObject[0]
-
-    print("account_View 0 userObject::", userObject)
-
+    
+    postOperation = []
     if request.method == "POST":
-        print("I AM IN POST")
+        print("I AM IN POST::", request.POST)
         if request.POST.__contains__("menuSwitch"):
             if request.POST["menuSwitch"] == "profileinformation":
                 return redirect("/account")
@@ -117,7 +155,25 @@ def account_View(request, touds):
                 url = "/account/" + request.POST["menuSwitch"]
                 return redirect(url)
         else:
-            pass
+            if request.POST.__contains__("buttonOperation"):
+                splitData = request.POST["buttonOperation"].split(":")
+                print("buttonOperation::", splitData)
+                if splitData[0] == "manageAddresses":
+                    if splitData[1] != "addormodifyaddress":
+                        postOperation = splitData
+                    else:
+                        postOperation = (splitData + list(request.POST))
+            else:
+                print("manageAddresses:buttonOperation::ELSE")
+                pass
+
+    dataShow = ""
+    dataDictionary = {}
+    userObjects = usertable.objects.filter(userId=request.user.id)
+    userObject = userObjects[0]
+    
+    print("account_View 0 userObject::", userObject)
+
 
     print("account_View touds::", touds)
     if touds =="profileinformation":
@@ -127,7 +183,87 @@ def account_View(request, touds):
                           "mobilenumber" : userObject.mobilenumber,"whatsappnumber" : userObject.whatsappnumber }
         dataShow = touds
     elif touds =="addresses":
-        dataDictionary = {"username" : userObject.username }
+        manageAddressesDict = []
+        oldOperation = ""
+        editDict = {"firstname" : "", "lastname": "", "mobileNumber" : "", "emailAddress": "", 
+                    "address" : "", "townOrCity" : "", "state": "", "pincode": "", 
+                    "country": "", "landmark": "", "locationType": "Home"}
+        
+        if (userObject.userAddressBooks != "") and (userObject.userAddressBooks != "[]"):
+            userAddressBookList = list(map(int, userObject.userAddressBooks.strip('][').split(', ')))
+        else:
+            userAddressBookList = []
+
+        if postOperation:
+            if postOperation[1] == "edit": #click on edit address
+                addressObjs = userAddressBook.objects.filter(userId=request.user.id).filter(id=int(postOperation[2]))
+                oldOperation = int(postOperation[2])
+                for addressObj in addressObjs:
+                    editDict["id"]              = int(postOperation[2])
+                    editDict["firstname"]       = addressObj.firstname
+                    editDict["lastname"]        = addressObj.lastname
+                    editDict["mobileNumber"]    = addressObj.phoneNo
+                    editDict["emailAddress"]    = addressObj.emailAddress
+                    editDict["address"]         = addressObj.address
+                    editDict["townOrCity"]      = addressObj.townOrCity
+                    editDict["state"]           = addressObj.state
+                    editDict["pincode"]         = addressObj.postcodeOrZIP
+                    editDict["country"]         = addressObj.country
+                    editDict["landmark"]        = addressObj.landmark
+                    editDict["locationType"]        = addressObj.locationType
+                print("EDIT::", manageAddressesDict)
+            elif postOperation[1] == "delete": #click on delete address
+                userAddressBookList.remove(int(postOperation[2]))
+                for u_obj in userObjects:
+                    u_obj.userAddressBooks = str(list(set(userAddressBookList)))
+                    u_obj.save()
+                userObject = userObjects[0]
+                print("After delete userAddressBookList::", userAddressBookList)
+            else:#addormodifyaddress
+                if request.POST["id"] == "":  #Modify address
+                    userAddressBook_ = userAddressBook(userId=request.user.id, firstname=toCamelCase(request.POST["firstname"]), 
+                                        lastname=toCamelCase(request.POST["lastname"]), locationType=request.POST["locationType"],
+                                        address=toCamelCase(request.POST["address"]), landmark=toCamelCase(request.POST["landmark"]), 
+                                        townOrCity=request.POST["townOrCity"], state=request.POST["state"], 
+                                        country=toCamelCase(request.POST["country"]), postcodeOrZIP=request.POST["pincode"], 
+                                        phoneNo=request.POST["mobileNumber"], emailAddress=request.POST["emailAddress"].lower(), 
+                                        orderNotes="")
+                else: #add new address
+                    userAddressBook_ = userAddressBook(id=int(request.POST["id"]), userId=request.user.id, firstname=toCamelCase(request.POST["firstname"]), 
+                                        lastname=toCamelCase(request.POST["lastname"]), locationType=request.POST["locationType"],
+                                        address=toCamelCase(request.POST["address"]), landmark=toCamelCase(request.POST["landmark"]), 
+                                        townOrCity=request.POST["townOrCity"], state=request.POST["state"], 
+                                        country=toCamelCase(request.POST["country"]), postcodeOrZIP=request.POST["pincode"], 
+                                        phoneNo=request.POST["mobileNumber"], emailAddress=request.POST["emailAddress"].lower(), 
+                                        orderNotes="")
+                userAddressBook_.save()
+                userAddressBookList.append(userAddressBook_.id)
+                for u_obj in userObjects:
+                    u_obj.userAddressBooks = str(list(set(userAddressBookList)))
+                    u_obj.save()
+                userObject = userObjects[0]
+                
+            if (userObject.userAddressBooks != "") and (userObject.userAddressBooks != "[]"):
+                userAddressBookList = list(map(int, userObject.userAddressBooks.strip('][').split(', ')))
+            else:
+                userAddressBookList = []
+            for address in userAddressBookList:
+                if oldOperation and oldOperation != address:  #ignore other address when click on edit
+                    continue
+                addressObjs = userAddressBook.objects.filter(userId=request.user.id).filter(id=address)
+                for addressObj in addressObjs:
+                    dictData = {    "id" : addressObj.id,
+                                    "fullName": (addressObj.firstname + " " + addressObj.lastname  ),
+                                    "mobileNumber" : addressObj.phoneNo,
+                                    "address" : (addressObj.address.lower() + ", " + addressObj.landmark.lower() + ", " +
+                                                addressObj.townOrCity + ", " + addressObj.state + " - " + addressObj.postcodeOrZIP)
+                                }
+                    manageAddressesDict.append(dictData)
+        
+        dataDictionary = {"username" : userObject.username, 
+                            "manageAddressesDict" : manageAddressesDict, 
+                            "oldOperation" :  oldOperation,
+                            "editDict" : editDict}
         dataShow ="manageaddresses"
     elif touds =="changepassword":
         dataDictionary = {"username" : userObject.username }
@@ -141,9 +277,10 @@ def account_View(request, touds):
         dataShow = touds
 
     print("account_View 2 dataDictionary::", dataDictionary)
+    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
-
-       "dataShow" : dataShow,
+       'headerDict'          : headerDict, 
+       "dataShow"            : dataShow,
        "dataDictionary"      : dataDictionary
     }
     return render(request,"user/account/index.html", context)

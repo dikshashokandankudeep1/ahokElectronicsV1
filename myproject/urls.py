@@ -27,7 +27,7 @@ from homeapp.views import Home_view, ProductList_view, ProductListOnClick_view, 
                         user_addToCart_View#, Admin_view, error_404, selectDeliveryAddress_View, 
 
 from homeapp.manager import manager_default_View, manager_View
-from homeapp.userAccount import account_profileInformation_View, account_View
+from homeapp.userAccount import account_profileInformation_View, account_View, Product_viewMore_view
 
 #handler404 = error_404
 
@@ -42,6 +42,8 @@ urlpatterns = [
     path('product-category/<str:categoryName>/<str:brandName>', ProductListOnClick_view, name="ProductListOnClick_view"),
     path('product/<str:modelNumber>', Product_view, name="Product_view"),
     path('product/search/<str:productTitle>', ProductSearchList_view, name="ProductSearchList_view"),
+
+    path('product/viewMore/<str:orderId>', Product_viewMore_view, name="Product_viewMore_view"),
     #path('product/purchase', selectDeliveryAddress_View, name="selectDeliveryAddress_View"),
 
     #path('productAddToCart/<int:productId>', productAddToCart_View, name="productAddToCart_View"),

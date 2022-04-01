@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% include 'common/title.html' %}
+
+<head>
+    {% include 'common/head.html' %}
+</head>
+
+<style>
+    .checked {
+        color: orange;
+    }
+    
+    #mainDiv{
+        max-width:1200px; 
+        margin-top:5.5%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        #mainDiv{
+            max-width:100%; 
+            margin-top:100px;
+        }
+    }
+
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+        #mainDiv{
+            max-width:1200px; 
+            margin-top:100px;
+        }
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<body style="position: relative;">
+    {% include 'common/header/checkout.html' %}
+    <div class="w3-content w3-small" id="mainDiv" onmouseover="dropdownMenuProfileHide()">
+    <div class="w3-row">
+        <div class="w3-col l12 m12 s12">
+            <div class="w3-row">
+                {% include 'product/purchase/selectAddress/showAvailableAddress.html' %}
+            </div>
+            <div class="w3-col l12 m8 s1 w3-hide-large w3-hide-medium"><br></div>
+            <div class="w3-col l12 m8 s10">
+                <div class="w3-row" style="padding-left: 2%;">
+                    {% include 'product/purchase/selectAddress/alterAddress.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<script>
+window.onload = function() {
+    document.getElementById("dropdownMenuProfile").style.display = "none";
+};
+
+function dropdownMenuProfileHide(){
+    document.getElementById("dropdownMenuProfile").style.display = "none";
+}
+
+function setOnButtonClick(buttonId){
+    document.getElementById(buttonId).setCustomValidity('');
+    phoneNo = document.getElementById("phoneNo").value;
+    console.log("includes::", phoneNo, phoneNo.includes("+"))
+    if (phoneNo.length != 10 && phoneNo.length != 12){
+        document.getElementById(buttonId).setCustomValidity('phone number should length 10');
+    }
+    else if((phoneNo.substring(0, 2) == "91" && phoneNo.length != 12) || (phoneNo.substring(0, 2) != "91" && phoneNo.length == 12)){
+        document.getElementById(buttonId).setCustomValidity('phoneNo should 911234567890');
+    }
+}
+</script>
+
+</body>
+
+</html>
