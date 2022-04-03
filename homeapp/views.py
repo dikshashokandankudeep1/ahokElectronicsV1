@@ -16,8 +16,8 @@ from .models import usertable, userPaymentTable, userAddressBook, userordertable
                     paymentTable, webCredentialsTable, temporaryOrderStoreTable, globleVariables, promoCodes
 
 from django.contrib.auth.models import User, auth
-
-from .commom import  setSession, getSession, toCamelCase, toCommaSeperatedCurrency, myThreadPool
+from .commom import setSession, getSession, toCamelCase, toCommaSeperatedCurrency
+from .threadPool import myThreadPool
 
 from .helper import searchContentInSearchBar, checkUserLogged, getUserId, getAddToCartData, getUserName
 
@@ -40,8 +40,8 @@ def Home_view(request):
 
     print("productHomeCategoryListObj::", productHomeCategoryListObj)
     print("productHomeSliderObj::", productHomeSliderObj)
-    
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
         'headerDict'    :   headerDict,
@@ -71,7 +71,7 @@ def ProductList_view(request, categoryName):
 
     print("ProductList_view dataDict::",dataDict)
 
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
         'headerDict'    :   headerDict,
@@ -151,7 +151,7 @@ def ProductSearchList_view(request, productTitle):
     else:
         isSearchContentFound = 1
 
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
         'headerDict'    :   headerDict,
         'searchContent'     :   productTitle,
@@ -324,7 +324,7 @@ def ProductListOnClick_view(request, categoryName, brandName):
         print("Method is GET Bada dikkat he re deva....")
 
     print("ProductListOnClick_view 3 productBrandnameListObj::",productBrandnameListObj)
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
         'headerDict'                     : headerDict,
@@ -409,7 +409,7 @@ def Product_view(request, modelNumber):
                 dataData["Highlight"][value[0]] = value[1]  #todo
     
     print("Product_view 8::")
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
         'headerDict'    :   headerDict,
         'instance'      :   productsTablePrimary.objects.filter(modelNumber=modelNumber)[0],
@@ -503,7 +503,7 @@ def user_addToCart_View(request):
     if dataDictionary["productDictList"] == []:
         return redirect("/")
 
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
        'headerDict'    :   headerDict,
        "dataDictionary"      : dataDictionary
@@ -540,8 +540,8 @@ def selectDeliveryAddress_View(request):
             return redirect("/product/purchase/confirmOrderDetails")
         else:
             print("selectDeliveryAddress_View Address alter")
-            firstname       = toCamelCase(request.POST['firstname'])
-            lastname        = toCamelCase(request.POST['lastname'])
+            firstName       = toCamelCase(request.POST['firstName'])
+            lastName        = toCamelCase(request.POST['lastName'])
             locationType    = toCamelCase(request.POST['locationType'])
             country         = toCamelCase(request.POST['country'])
             address         = toCamelCase(request.POST['address'])
@@ -557,7 +557,7 @@ def selectDeliveryAddress_View(request):
 
             if "MODIFYADDRESS" not in request.POST.keys():
                 print("selectDeliveryAddress_View address:: Add new address")
-                userAddressBook_ = userAddressBook(userId=request.user.id, firstname=firstname, lastname=lastname, locationType=locationType,
+                userAddressBook_ = userAddressBook(userId=request.user.id, firstName=firstName, lastName=lastName, locationType=locationType,
                                         country=country, address=address, landmark=landmark,
                                         townOrCity=townOrCity, state=state, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
                                         emailAddress=emailAddress, orderNotes=orderNotes)
@@ -576,8 +576,8 @@ def selectDeliveryAddress_View(request):
                     obj.save()
             else:
                 print("selectDeliveryAddress_View Address Modify")
-                userAddressBook_ = userAddressBook(id=int(request.POST['MODIFYADDRESS']), userId=request.user.id, firstname=firstname, 
-                                        lastname=lastname, locationType=locationType,
+                userAddressBook_ = userAddressBook(id=int(request.POST['MODIFYADDRESS']), userId=request.user.id, firstName=firstName, 
+                                        lastName=lastName, locationType=locationType,
                                         country=country, address=address, landmark=landmark,
                                         townOrCity=townOrCity, state=state, postcodeOrZIP=postcodeOrZIP, phoneNo=phoneNo,
                                         emailAddress=emailAddress, orderNotes=orderNotes)
@@ -614,7 +614,7 @@ def selectDeliveryAddress_View(request):
                 useraddressBookObj = useraddressBookObj[0]
                 dataDict = {}
                 dataDict["id"] = idData
-                dataDict["userFullName"]    = useraddressBookObj.firstname + " " + useraddressBookObj.lastname
+                dataDict["userFullName"]    = useraddressBookObj.firstName + " " + useraddressBookObj.lastName
                 dataDict["address"]         = useraddressBookObj.address
                 dataDict["landmark"]        = useraddressBookObj.landmark
                 dataDict["townCity"]        = useraddressBookObj.townOrCity + ", " + useraddressBookObj.state  +\
@@ -628,7 +628,7 @@ def selectDeliveryAddress_View(request):
 
     print("selectDeliveryAddress_View END")
 
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
         'headerDict'                    :   headerDict,
@@ -777,8 +777,8 @@ def confirmOrderDetails_View(request):
         addressId = getTemporaryOrderStoreTable(request.user.id, 1, 0, 0, 0)
         useraddressBookObj = userAddressBook.objects.filter(id=addressId)
         for obj in useraddressBookObj:
-            orderDeliveryAddress =  obj.firstname + " " \
-                                + obj.lastname + ", " \
+            orderDeliveryAddress =  obj.firstName + " " \
+                                + obj.lastName + ", " \
                                 + obj.address + ", " \
                                 + obj.landmark + ", " \
                                 + obj.townOrCity + ", " \
@@ -828,7 +828,7 @@ def confirmOrderDetails_View(request):
     if(len(itemidList) == 0):
         return redirect("/")
     
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
         'headerDict'                :   headerDict,
         "orderDeliveryAddress"      : orderDeliveryAddress,
@@ -912,7 +912,7 @@ def selectPaymentMethod_View(request):
         data["cardType"]        = obj.cardType
         cardsDict[obj.id] = data
     
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
         'headerDict'    :   headerDict,
@@ -1020,7 +1020,7 @@ def reviewOrderBeforePayment_View(request):
         deleveryAddress = []
         userAddrObj = userAddressBook.objects.filter(userId=request.user.id).filter(id=int(obj.deleveryAddressId))
         for addrData in userAddrObj: #todo remove camel case when already implimentt toCamelCase address save
-            fullName = addrData.firstname + " " + addrData.lastname
+            fullName = addrData.firstName + " " + addrData.lastName
             deleveryAddress.append(fullName)
             if addrData.locationType:
                 deleveryAddress.append(addrData.locationType)
@@ -1049,7 +1049,7 @@ def reviewOrderBeforePayment_View(request):
 
         obj.save()
 
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
 
     context = {
         'headerDict'    :   headerDict,
@@ -1070,7 +1070,7 @@ def processTopay_View(request):
         dataDict["restAmount"]  = toCommaSeperatedCurrency(obj.restAmount)
         dataDict["orderTotal"]  = toCommaSeperatedCurrency(obj.orderTotal)
 
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
         'headerDict'    :   headerDict,
         'dataDict' : dataDict
@@ -1097,6 +1097,12 @@ def placeOrder_View(request):
 def login_View(request):
     print("login_View")
 
+    if request.user.id != None:
+        userObjects = usertable.objects.filter(userId=request.user.id)
+        for userObject in userObjects:
+            user = auth.authenticate(userObject.username, password=userObject.password)
+            auth.logout(request)
+
     if request.method=='POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -1115,121 +1121,72 @@ def login_View(request):
             else:
                 return redirect(redirectUrl)
         else:
-            messages.info(request, "Invalid Credentials")
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, "Invalid Credentials")
             return redirect("/login")
     else:
         print("login_view GET Method called")
         headerDict = {"userID" : ""}
         return render(request, 'loginRegister/login.html', {"headerDict" : headerDict})
 
-def register_View(request):
+def register_View(request, typeOfUser="customer"):
     print("register_View")
 
-    dataDict = {
-        "firstname" : "", "lastname" : "", "username" : "",  "mobilenumber" : "", "whatsappnumber" : "", "emailaddress" : ""
-    }
-    
-    if "firstname" in request.session:
-        dataDict["firstname"]       = getSession(request, "firstname")
-        dataDict["lastname"]        = getSession(request, "lastname")
-        dataDict["mobilenumber"]    = getSession(request, "mobilenumber")
-        dataDict["whatsappnumber"]  = getSession(request, "whatsappnumber")
-        dataDict["emailaddress"]    = getSession(request, "emailaddress")
-        
     if request.method == 'POST':
-        firstname = (request.POST['firstname']).lower()
-        lastname = (request.POST['lastname']).lower()
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        mobilenumber = request.POST['mobilenumber']
-        whatsappnumber = request.POST['whatsappnumber']
-        emailaddress = (request.POST['emailaddress']).lower()
+        firstName   = toCamelCase(request.POST['firstName'])
+        lastName    = toCamelCase(request.POST['lastName'])
+        gender      = toCamelCase(request.POST['gender'])
+        password    = request.POST['password']
+        mobileNumber    = request.POST['mobileNumber']
+        whatsappNumber  = request.POST['whatsappNumber']
+        emailAddress    = (request.POST['emailAddress']).lower()
 
-        setSession(request, 'firstname', firstname)
-        setSession(request, 'lastname', lastname)
-        setSession(request, 'mobilenumber', mobilenumber)
-        setSession(request, 'whatsappnumber', whatsappnumber)
-        setSession(request, 'emailaddress', emailaddress)
-        context = {
-            "userID" : "",
-            "dataDict" : {"firstname" : firstname, "lastname" : lastname, "mobilenumber" : mobilenumber, 
-                            "whatsappnumber" : whatsappnumber, "emailaddress" : emailaddress}
-        }
-        if password1 == password2:
-            if len(password1) < 6 :
-                messages.set_level(request, messages.ERROR)
-                messages.error(request, "password should at least 6 digit")
-                return render(request, 'loginRegister/register.html', context)
-            elif User.objects.filter(email=emailaddress).exists():
-                messages.set_level(request, messages.ERROR)
-                messages.error(request, "Email already taken")
-                return render(request, 'loginRegister/register.html', context)
-            
+        username = firstName.lower() + lastName.lower()
+        testUserName = username
+        while(True):
+            counter = 0
+            if User.objects.filter(username=testUserName).exists():
+                counter += 1
+                testUserName =  username + str(counter)
             else:
-                username = firstname + lastname
-                testUserName = username
-                while(True):
-                    counter = 0
-                    if User.objects.filter(username=testUserName).exists():
-                        counter += 1
-                        testUserName =  username + str(counter)
-                    else:
-                        username = testUserName
-                        break
-                print("username created::", username)
-                user = User.objects.create_user(username=username, password=password1, email=emailaddress)
-                usertable_ = usertable(userId=user.id, username=username, firstname=firstname, 
-                                        lastname=lastname, password=password1, mobilenumber=mobilenumber, 
-                                        whatsappnumber=whatsappnumber, emailaddress=emailaddress)
-                usertable_.save()
-                user.save()
+                username = testUserName
+                break
+        print("username created::", username)
 
-                for obj in webCredentialsTable.objects.filter(credentialType="sentEmail"):
-                    websiteUrl  = obj.websiteUrl
-                    senderEmail = obj.senderEmail
-                    password    = obj.password
-                    
-                    subject = "User credentials"
-                    messageContent = "<p><b><span style='color:green'> Congratulations!</b> now you are member of "+ websiteUrl +" </b></p>"
-                    messageContent += "<p> Below are your login credentials </p>"
-                    messageContent += "<p> Username : "+ username +" </p>"
-                    messageContent += "<p> Password : "+ password +" </p>"
-                    
-                    taskDataDict = {}
-                    taskDataDict["senderEmail"] = senderEmail
-                    taskDataDict["emailaddress"] = emailaddress
-                    taskDataDict["password"] = password
-                    taskDataDict["subject"] = subject
-                    taskDataDict["messageContent"] = messageContent
-
-                    ''' #todo deamon thread
-                    def initAddTaskToThreadPool():
-                        addTaskToThreadPool("sentEmail", taskDataDict)
-                    T = Thread(target = initAddTaskToThreadPool)
-                    T.setDaemon(True)
-                    T.start()
-                    '''
-                    threadPool =  myThreadPool()
-                    threadPool.addTaskToThreadPool("sentEmail", taskDataDict)
-
-                    messages.set_level(request, messages.INFO)
-                    messages.info(request, "username and password sent through email")
-                    del request.session["firstname"]
-                    del request.session["lastname"]
-                    del request.session["mobilenumber"]
-                    del request.session["whatsappnumber"]
-                    del request.session["emailaddress"]
-
-                    return redirect('/login')
-        else:
-            messages.set_level(request, messages.ERROR)
-            messages.error(request, "password mismatch")
-            return render(request, 'loginRegister/register.html', context)
+        user = User.objects.create_user(username=username, password=password, email=emailAddress)
+        user.save()
+        usertable_ = usertable( userId=user.id, typeOfUser=typeOfUser, username=username, 
+                                firstName=firstName, lastName=lastName, 
+                                gender=gender, password=password, mobileNumber=mobileNumber, 
+                                whatsappNumber=whatsappNumber, emailAddress=emailAddress)
+        usertable_.save()
+        
+        for obj in webCredentialsTable.objects.filter(credentialType="sentEmail"):
+            taskDataDict = { "operation" : "credentials" }
+            taskDataDict["useremail"]  = emailAddress
+            taskDataDict["username"]        = username
+            taskDataDict["userPassword"]    = password
+            
+            threadPool =  myThreadPool()
+            threadPool.addTaskToThreadPool("sentEmail", taskDataDict)
+            
+            messages.set_level(request, messages.INFO)
+            msg = "your username::" + username + " | password::" + password
+            messages.info(request, msg)
+            #messages.info(request, "username and password sent through email")
+            '''
+            del request.session["firstName"]
+            del request.session["lastName"]
+            del request.session["mobileNumber"]
+            del request.session["whatsappNumber"]
+            del request.session["emailAddress"]
+            '''
+            return redirect('/login')
+    
     else:
         headerDict = {"userID" : ""}
         context = {
             "headerDict" : headerDict,
-            "dataDict" : dataDict
         }
         return render(request, 'loginRegister/register.html', context)
 

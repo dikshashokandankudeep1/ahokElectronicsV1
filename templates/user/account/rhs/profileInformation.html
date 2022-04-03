@@ -18,14 +18,16 @@
     <div class="w3-row" style="margin-top:3%;">
         <div class="w3-row">
             <div id="personalInfo_def_name">
-                <input type="text" value="{{dataDictionary.firstname}}" disabled style="cursor:not-allowed; padding:1%; color:#878787;">
-                <input type="text" value="{{dataDictionary.lastname}}" disabled style="cursor:not-allowed; padding:1%; margin-left:1%; color:#878787;">
+                <input type="text" value="{{dataDictionary.firstName}}" disabled style="cursor:not-allowed; padding:1%; color:#878787;">
+                <input type="text" value="{{dataDictionary.lastName}}" disabled style="cursor:not-allowed; padding:1%; margin-left:1%; color:#878787;">
             </div>
             <div id="personalInfo_name">
                 <form action="" method="post"> {% csrf_token %}
                     <input type="hidden" id="form_gender" name="personalInfo_form_gender" value="" />
-                    <input type="text" value="Pradeep" name="personalInfo_fname" style="padding:1%;">
-                    <input type="text" value="Kumawat" name="personalInfo_lname" style="padding:1%; margin-left:1%;">
+                    <input type="text" value="{{dataDictionary.firstName}}" name="firstName" style="padding:1%;">
+                    <input type="text" value="{{dataDictionary.lastName}}" name="lastName" style="padding:1%; margin-left:1%;">
+                    <input type="hidden" id="profileinformation:gender" name="gender" value="{{dataDictionary.gender}}" />
+                    <input type="hidden" id="buttonOperation" name="buttonOperation" value="profileinformation:personaInfo" />
                     <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-left:2%;margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
                 </form>
             </div>
@@ -36,16 +38,30 @@
             </div>
             <div class="w3-row" style="padding-top:1%;">
                 <div id="personalInfo_def_gender" style="cursor:not-allowed;">
-                    <input type="radio" name="gender_def" id="Male" disabled checked>
-                    <span style="color:#878787; margin-right:2%;">Male</span>
-                    <input type="radio" name="gender_def" id="Female" disabled>
-                    <span style="color:#878787;">Female</span>
+                    {% if dataDictionary.gender == "Male" %}
+                        <input type="radio" name="gender_def" id="Male" disabled checked>
+                        <span style="color:#878787; margin-right:2%;">Male</span>
+                        <input type="radio" name="gender_def" id="Female" disabled>
+                        <span style="color:#878787;">Female</span>
+                    {% else %}
+                        <input type="radio" name="gender_def" id="Male" disabled>
+                        <span style="color:#878787; margin-right:2%;">Male</span>
+                        <input type="radio" name="gender_def" id="Female" disabled checked>
+                        <span style="color:#878787;">Female</span>
+                    {% endif %}
                 </div>
                 <div id="personalInfo_gender">
-                    <input type="radio" name="gender" id="Male" checked style="cursor:pointer;">
-                    <span style="margin-right:2%;">Male</span>
-                    <input type="radio" name="gender" id="Female" style="cursor:pointer;">
-                    <span>Female</span>
+                    {% if dataDictionary.gender == "Male" %}
+                        <input type="radio" name="gender" id="Male"  onclick="fillGender('Male')" checked style="cursor:pointer;">
+                        <span style="margin-right:2%;">Male</span>
+                        <input type="radio" name="gender" id="Female"  onclick="fillGender('Female')" style="cursor:pointer;">
+                        <span>Female</span>
+                    {% else %}
+                        <input type="radio" name="gender" id="Male"  onclick="fillGender('Male')" style="cursor:pointer;">
+                        <span style="margin-right:2%;">Male</span>
+                        <input type="radio" name="gender" id="Female"  onclick="fillGender('Female')" checked style="cursor:pointer;">
+                        <span>Female</span>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -69,17 +85,20 @@
     </div>
     <div class="w3-row" style="margin-top:3%;">
         <div class="w3-row" id="emailAddress_def_email">
-            <input type="text" value="pradeepkumawat91@gmail.com" disabled style="cursor:not-allowed; padding:1%;width:35%; color:#878787;">
+            <input type="email" value="{{dataDictionary.emailAddress}}" disabled style="cursor:not-allowed; padding:1%;width:35%; color:#878787;">
         </div>
         <div class="w3-row" id="emailAddress_email">
-            <input type="text" value="pradeepkumawat91@gmail.com" style="padding:1%; width:35%;">
-            <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-left:2%; margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
+            <form action="" method="post"> {% csrf_token %}
+                <input type="email" name="emailAddress" value="{{dataDictionary.emailAddress}}" style="padding:1%; width:35%;">
+                <input type="hidden" id="buttonOperation" name="buttonOperation" value="profileinformation:emailAddress" />
+                <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-left:2%; margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
+            </form>
         </div>
     </div>
     <!---->
     <div class="w3-row" id="mobileNumber_def_edit" style="padding-top:6%;">
         <span style="font-weight:550;">
-            Mobile Number
+            Contact Number
         </span>
         <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcEdit('mobileNumber')">
             Edit
@@ -87,7 +106,7 @@
     </div>
     <div class="w3-row" id="mobileNumber_cancel" style="padding-top:6%;">
         <span style="font-weight:550;">
-            Mobile Number
+            Contact Number
         </span>
         <span class="w3-text-blue" style="cursor:pointer; padding-left:2%;" onclick="funcCancel('mobileNumber')">
             Cancel
@@ -95,11 +114,80 @@
     </div>
     <div class="w3-row" style="margin-top:3%;">
         <div class="w3-row" id="mobileNumber_def_mobile">
-            <input type="text" value="+917597434356" disabled style="cursor:not-allowed; padding:1%; width:35%; color:#878787;">
+            <span style="color:#878787;">Mobile</span>
+            <div class="w3-row" style="margin-top:1%; margin-bottom:1%">
+                <input type="number" value="{{dataDictionary.mobileNumber}}" disabled style="cursor:not-allowed; padding:1%; width:35%; color:#878787;">
+            </div>
+            <span style="color:#878787;">Whatsapp</span>
+            <div class="w3-row" style="margin-top:1%">
+                <input type="number" value="{{dataDictionary.whatsappNumber}}" disabled style="cursor:not-allowed; padding:1%; width:35%; color:#878787;">
+            </div>
         </div>
         <div class="w3-row" id="mobileNumber_mobile">
-            <input type="text" value="+917597434356" style="padding:1%; width:35%;">
-            <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-left:2%;margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
+            <form action="" method="post"> {% csrf_token %}
+                <span style="color:#878787;">Mobile</span>
+                <div class="w3-row" style="margin-top:1%; margin-bottom:1%">
+                    <input type="number" name="mobileNumber" value="{{dataDictionary.mobileNumber}}" style="padding:1%; width:35%;">
+                </div>
+                <span style="color:#878787;">Whatsapp</span>
+                <div class="w3-row" style="margin-top:1%; margin-bottom:1%">
+                    <input type="number" name="whatsappNumber" value="{{dataDictionary.whatsappNumber}}" style="padding:1%; width:35%;">
+                </div>
+                <input type="hidden" id="buttonOperation" name="buttonOperation" value="profileinformation:contactNumber" />
+                <button class="w3-button w3-black w3-center" style="cursor:pointer; margin-bottom:0.5%; padding-left:4%;padding-right:4%;">SAVE</button>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+    function fillGender(genderType){
+        document.getElementById("profileinformation:gender").value = genderType;
+    }
+
+    function funcEdit(idType) {
+        if ('personalInfo' == idType) {
+            hideId('personalInfo_def_edit');
+            hideId('personalInfo_def_name');
+            hideId('personalInfo_def_gender');
+    
+            showId('personalInfo_name');
+            showId('personalInfo_gender');
+            showId('personalInfo_cancel');
+        } else if ('emailAddress' == idType) {
+            hideId('emailAddress_def_email');
+            hideId('emailAddress_def_edit');
+            showId('emailAddress_email');
+            showId('emailAddress_cancel');
+    
+        } else if ('mobileNumber' == idType) {
+            hideId('mobileNumber_def_mobile');
+            hideId('mobileNumber_def_edit');
+            showId('mobileNumber_mobile');
+            showId('mobileNumber_cancel');
+        }
+    }
+    
+    function funcCancel(idType) {
+        if ('personalInfo' == idType) {
+            showId('personalInfo_def_edit');
+            showId('personalInfo_def_name');
+            showId('personalInfo_def_gender');
+            hideId('personalInfo_name');
+            hideId('personalInfo_gender');
+            hideId('personalInfo_cancel');
+    
+        } else if ('emailAddress' == idType) {
+            showId('emailAddress_def_email');
+            showId('emailAddress_def_edit');
+            hideId('emailAddress_email');
+            hideId('emailAddress_cancel');
+    
+        } else if ('mobileNumber' == idType) {
+            showId('mobileNumber_def_mobile');
+            showId('mobileNumber_def_edit');
+            hideId('mobileNumber_mobile');
+            hideId('mobileNumber_cancel');
+        }
+    }
+</script>

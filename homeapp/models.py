@@ -164,8 +164,8 @@ class productsTablePrimary(models.Model):
 
 class userAddressBook(models.Model):
     userId          =   models.CharField(blank = True, max_length=50, default="")
-    firstname       =   models.CharField(blank = True, max_length=50, default="")
-    lastname        =   models.CharField(blank = True, max_length=50, default="")
+    firstName       =   models.CharField(blank = True, max_length=50, default="")
+    lastName        =   models.CharField(blank = True, max_length=50, default="")
     address         =   models.CharField(blank = True, max_length=50, default="")
     townOrCity      =   models.CharField(blank = True, max_length=50, default="")
     state           =   models.CharField(blank = True, max_length=50, default="")
@@ -176,7 +176,7 @@ class userAddressBook(models.Model):
     emailAddress    =   models.CharField(blank = True, max_length=50, default="")
     orderNotes      =   models.CharField(blank = True, max_length=50, default="")
     locationType    =   models.CharField(blank = True, max_length=50, default="")
-    
+
 class userordertable(models.Model):
     userId                  =   models.IntegerField(blank=True, null=True, default=0)
     orderDeliveryAddress    =   models.CharField(blank=True, max_length=50, default="")
@@ -277,13 +277,15 @@ class userPaymentTable(models.Model):
 class usertable(models.Model):
     userId              =   models.CharField(blank = True, max_length=50, default="")
     isActive            =   models.BooleanField(blank=True, default=True)
-    firstname           =   models.CharField(blank = True, max_length=50, default="")
-    lastname            =   models.CharField(blank = True, max_length=50, default="")
+    typeOfUser          =   models.CharField(blank = True, max_length=50, default="")
+    firstName           =   models.CharField(blank = True, max_length=50, default="")
+    lastName            =   models.CharField(blank = True, max_length=50, default="")
+    gender              =   models.CharField(blank = True, max_length=50, default="")
     username            =   models.CharField(blank = True, max_length=50, default="")
     password            =   models.CharField(blank = True, max_length=50, default="")
-    mobilenumber        =   models.CharField(blank = True, max_length=50, default="")
-    whatsappnumber      =   models.CharField(blank = True, max_length=50, default="")
-    emailaddress        =   models.CharField(blank = True, max_length=50, default="")
+    mobileNumber        =   models.CharField(blank = True, max_length=50, default="")
+    whatsappNumber      =   models.CharField(blank = True, max_length=50, default="")
+    emailAddress        =   models.CharField(blank = True, max_length=50, default="")
     addToCartItemsDict  =   models.CharField(blank = True, max_length=200, default="")
     userAddressBooks    =   models.CharField(blank = True, max_length=200, default="")
     userOrderBooks      =   models.CharField(blank = True, max_length=200, default="")

@@ -109,7 +109,10 @@
     <!--Middle Part Closed-->
     <script>
         window.onload = function() {
-            dropdownMenuProfileHide()
+            userId = '{{headerDict.userID}}'
+            if(userId != ""){
+                dropdownMenuProfileHide()
+            }
             onlyShowButtonSort()
             document.getElementById('dropdownSortButton').value = 'Popularity';
         }

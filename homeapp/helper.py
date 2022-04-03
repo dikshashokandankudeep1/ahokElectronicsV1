@@ -251,21 +251,22 @@ def searchContentInSearchBar(request):
 
 
 def checkUserLogged(request, redirectedPageUrl):
-    if (request.user.id == None) or (not (usertable.objects.filter(userId=request.user.id)).exists()):
+    if (request.user.id == None) or (not (usertable.objects.filter(userId=request.user.id).filter(typeOfUser="customer")).exists()):
         setSession(request, 'redirectedPageUrl', redirectedPageUrl)
         return '/login'
     else:
         return ""
     
 def getUserId(request):
-    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).exists():
-        return  request.user.id
+    if (request.user.id != None) and usertable.objects.filter(userId=request.user.id).filter(typeOfUser="customer").exists():
+        return request.user.id
     else:
         return ""
 
 def getAddToCartData(request):
     addToCartButtonDict = {"totalCost" : 0, "cartItems" : 0}
-    if (request.user.id != None):
+    if (request.user.id != None) or usertable.objects.filter(userId=request.user.id).filter(typeOfUser="customer").exists():
+
         userObjects = usertable.objects.filter(userId=request.user.id)
         for obj in userObjects:
             if obj.addToCartItemsDict:
@@ -279,7 +280,7 @@ def getAddToCartData(request):
     return addToCartButtonDict
 
 def getUserName(request):
-    if (request.user.id != None) or (usertable.objects.filter(userId=request.user.id)).exists():
-        return (usertable.objects.filter(userId=request.user.id)[0].firstname)
+    if (request.user.id != None) and (usertable.objects.filter(userId=request.user.id).filter(typeOfUser="customer")).exists():
+        return (usertable.objects.filter(userId=request.user.id).filter(typeOfUser="customer")[0].firstName)
     else:
         return ""

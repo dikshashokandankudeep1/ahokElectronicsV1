@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import usertable, userordertable, userAddressBook
 from django.shortcuts import redirect
+from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from .commom import toCamelCase, toCommaSeperatedCurrency
 from .helper import searchContentInSearchBar, getUserId, getAddToCartData, getUserName, checkUserLogged
@@ -101,7 +102,7 @@ def orders_View(request):
     dataDictionary = orders_Helper(userordertable_list)
 
     print("orders_View 2 dataDictionary::", dataDictionary)
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
         'headerDict'          : headerDict,
         "dataDictionary"      : dataDictionary
@@ -121,7 +122,7 @@ def Product_viewMore_view(request, orderId):
     
     dataDictionary = orders_Helper(userordertable_list)
 
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
         'headerDict'          : headerDict,
         "dataDictionary"      : dataDictionary
@@ -143,6 +144,9 @@ def account_View(request, touds):
     if touds == "orders":
         return orders_View(request)
     
+    userObjects = usertable.objects.filter(userId=request.user.id)
+    userObject = userObjects[0]
+
     postOperation = []
     if request.method == "POST":
         print("I AM IN POST::", request.POST)
@@ -163,29 +167,83 @@ def account_View(request, touds):
                         postOperation = splitData
                     else:
                         postOperation = (splitData + list(request.POST))
+                        
+                elif splitData[0] == "profileinformation":
+                    if splitData[1] == "personaInfo":
+                        postOperation = {   "personaInfo" : 
+                                            {
+                                                "firstName" : request.POST["firstName"],
+                                                "lastName" : request.POST["lastName"],
+                                                "gender" : request.POST["gender"]
+                                            }
+                                        }
+                    elif splitData[1] == "emailAddress":
+                        postOperation = {   "emailAddress" : 
+                                            {
+                                                "emailAddress" : request.POST["emailAddress"]
+                                            }
+                                        }
+                    else: #splitData[1] == "contactNumber"
+                        postOperation = {   "contactNumber" : 
+                                            {
+                                                "mobileNumber" : request.POST["mobileNumber"],
+                                                "whatsappNumber" : request.POST["whatsappNumber"]
+                                            }
+                                        }
+
+                elif splitData[0] == "changepassword":
+                    if userObject.password == request.POST["currentPassword"]:
+                        for userObj in userObjects:
+                            userObj.password = request.POST["newPassword"]
+                            userObj.save()
+                        userObject = userObjects[0]
+                        messages.set_level(request, messages.INFO)
+                        messages.info(request, "password update successful")
+                    else:
+                        messages.set_level(request, messages.ERROR)
+                        messages.error(request, "current password mismatch please try again...")
             else:
                 print("manageAddresses:buttonOperation::ELSE")
                 pass
 
     dataShow = ""
     dataDictionary = {}
-    userObjects = usertable.objects.filter(userId=request.user.id)
-    userObject = userObjects[0]
+    
     
     print("account_View 0 userObject::", userObject)
 
 
     print("account_View touds::", touds)
     if touds =="profileinformation":
-        dataDictionary = {"userId" : userObject.userId, "username" : userObject.username, 
-                          "firstname" : userObject.firstname, "lastname" : userObject.lastname,
-                          "emailaddress" : userObject.emailaddress,
-                          "mobilenumber" : userObject.mobilenumber,"whatsappnumber" : userObject.whatsappnumber }
+        
+        if postOperation:
+            if postOperation.__contains__("personaInfo"):
+                for userObj in userObjects:
+                    userObj.firstName       =   postOperation["personaInfo"]["firstName"]
+                    userObj.lastName        =   postOperation["personaInfo"]["lastName"]
+                    userObj.gender          =   postOperation["personaInfo"]["gender"]
+                    userObj.save()
+
+            elif postOperation.__contains__("emailAddress"):
+                for userObj in userObjects:
+                    userObj.emailAddress    =   postOperation["emailAddress"]["emailAddress"]
+                    userObj.save()
+            
+            else:#postOperation has key == "contactNumber"
+                for userObj in userObjects:
+                    userObj.mobileNumber    =   postOperation["contactNumber"]["mobileNumber"]
+                    userObj.whatsappNumber  =   postOperation["contactNumber"]["whatsappNumber"]
+                    userObj.save()
+            userObject = userObjects[0]
+
+        dataDictionary = {"userId" : userObject.userId, "username" : userObject.username, "firstName" : userObject.firstName, 
+                            "lastName" : userObject.lastName, "gender" : userObject.gender, "emailAddress" : userObject.emailAddress,
+                            "mobileNumber" : userObject.mobileNumber, "whatsappNumber" : userObject.whatsappNumber }
         dataShow = touds
     elif touds =="addresses":
         manageAddressesDict = []
         oldOperation = ""
-        editDict = {"firstname" : "", "lastname": "", "mobileNumber" : "", "emailAddress": "", 
+        editDict = {"firstName" : "", "lastName": "", "mobileNumber" : "", "emailAddress": "", 
                     "address" : "", "townOrCity" : "", "state": "", "pincode": "", 
                     "country": "", "landmark": "", "locationType": "Home"}
         
@@ -200,8 +258,8 @@ def account_View(request, touds):
                 oldOperation = int(postOperation[2])
                 for addressObj in addressObjs:
                     editDict["id"]              = int(postOperation[2])
-                    editDict["firstname"]       = addressObj.firstname
-                    editDict["lastname"]        = addressObj.lastname
+                    editDict["firstName"]       = addressObj.firstName
+                    editDict["lastName"]        = addressObj.lastName
                     editDict["mobileNumber"]    = addressObj.phoneNo
                     editDict["emailAddress"]    = addressObj.emailAddress
                     editDict["address"]         = addressObj.address
@@ -221,16 +279,16 @@ def account_View(request, touds):
                 print("After delete userAddressBookList::", userAddressBookList)
             else:#addormodifyaddress
                 if request.POST["id"] == "":  #Modify address
-                    userAddressBook_ = userAddressBook(userId=request.user.id, firstname=toCamelCase(request.POST["firstname"]), 
-                                        lastname=toCamelCase(request.POST["lastname"]), locationType=request.POST["locationType"],
+                    userAddressBook_ = userAddressBook(userId=request.user.id, firstName=toCamelCase(request.POST["firstName"]), 
+                                        lastName=toCamelCase(request.POST["lastName"]), locationType=request.POST["locationType"],
                                         address=toCamelCase(request.POST["address"]), landmark=toCamelCase(request.POST["landmark"]), 
                                         townOrCity=request.POST["townOrCity"], state=request.POST["state"], 
                                         country=toCamelCase(request.POST["country"]), postcodeOrZIP=request.POST["pincode"], 
                                         phoneNo=request.POST["mobileNumber"], emailAddress=request.POST["emailAddress"].lower(), 
                                         orderNotes="")
                 else: #add new address
-                    userAddressBook_ = userAddressBook(id=int(request.POST["id"]), userId=request.user.id, firstname=toCamelCase(request.POST["firstname"]), 
-                                        lastname=toCamelCase(request.POST["lastname"]), locationType=request.POST["locationType"],
+                    userAddressBook_ = userAddressBook(id=int(request.POST["id"]), userId=request.user.id, firstName=toCamelCase(request.POST["firstName"]), 
+                                        lastName=toCamelCase(request.POST["lastName"]), locationType=request.POST["locationType"],
                                         address=toCamelCase(request.POST["address"]), landmark=toCamelCase(request.POST["landmark"]), 
                                         townOrCity=request.POST["townOrCity"], state=request.POST["state"], 
                                         country=toCamelCase(request.POST["country"]), postcodeOrZIP=request.POST["pincode"], 
@@ -253,7 +311,7 @@ def account_View(request, touds):
                 addressObjs = userAddressBook.objects.filter(userId=request.user.id).filter(id=address)
                 for addressObj in addressObjs:
                     dictData = {    "id" : addressObj.id,
-                                    "fullName": (addressObj.firstname + " " + addressObj.lastname  ),
+                                    "fullName": (addressObj.firstName + " " + addressObj.lastName  ),
                                     "mobileNumber" : addressObj.phoneNo,
                                     "address" : (addressObj.address.lower() + ", " + addressObj.landmark.lower() + ", " +
                                                 addressObj.townOrCity + ", " + addressObj.state + " - " + addressObj.postcodeOrZIP)
@@ -277,7 +335,7 @@ def account_View(request, touds):
         dataShow = touds
 
     print("account_View 2 dataDictionary::", dataDictionary)
-    headerDict = {"userID" : getUserId(request), "userName" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
+    headerDict = {"userID" : getUserId(request), "username" : getUserName(request), "addToCartButtonDict" : getAddToCartData(request)}
     context = {
        'headerDict'          : headerDict, 
        "dataShow"            : dataShow,

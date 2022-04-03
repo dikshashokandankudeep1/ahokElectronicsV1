@@ -42,57 +42,52 @@
                     <tr>
                         <td class="w3-small w3-medium w3-center" colspan="1"><b>Sign Up</b></td>
                     </tr>
-                    {%if messages.level == 40 %}
-                        {% for message in messages %}
-                        <tr>
-                            <td class="w3-text-red">Error:: {{ message }} </td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        {% for message in messages %}
-                        <tr>
-                            <td class="w3-text-green">Success:: {{ message }} </td>
-                        </tr>
-                        {% endfor %}
-                    {% endif %}
                     <tr>
                         <td>
-                            <input class="w3-input w3-border" type="text" name="firstname" value="{{dataDict.firstname}}" placeholder="Firstname" required>
+                            <input class="w3-input w3-border" type="text" name="firstName" value="" placeholder="Firstname" required>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input class="w3-input w3-border" type="text" name="lastname" value="{{dataDict.lastname}}" placeholder="Last Name" required>
+                            <input class="w3-input w3-border" type="text" name="lastName" value="" placeholder="Last Name" required>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input class="w3-input w3-border" type="password" name="password1" value="" placeholder="Password" required>
+                            <input type="radio" name="gender" id="Male" value="Male" checked style="cursor:pointer;" required>
+                            <span style="margin-right:2%;">Male</span>
+                            <input type="radio" name="gender" id="Female" value="Female" style="cursor:pointer;" required>
+                            <span>Female</span>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input class="w3-input w3-border" type="password" name="password2" value="" placeholder="Confirm Password" required>
+                            <input class="w3-input w3-border" type="password" id="password1" name="password" value="" placeholder="Password" required>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input class="w3-input w3-border" type="number" name="mobilenumber" value="{{dataDict.mobilenumber}}" placeholder="Mobile Number" required>
+                            <input class="w3-input w3-border" type="password" id="password2" value="" placeholder="Confirm Password" required>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input class="w3-input w3-border" type="number" name="whatsappnumber" value="{{dataDict.whatsappnumber}}" placeholder="WhatsApp Number" required>
+                            <input class="w3-input w3-border" type="number" id="mobileNumber" name="mobileNumber" value="" placeholder="Mobile Number" required>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input class="w3-input w3-border" type="email" name="emailaddress" value="{{dataDict.emailaddress}}" placeholder="Email Address" required>
+                            <input class="w3-input w3-border" type="number" id="whatsappNumber" name="whatsappNumber" value="" placeholder="WhatsApp Number" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="w3-input w3-border" type="email" name="emailAddress" value="" placeholder="Email Address" required>
                         </td>
                     </tr>
                     <tr>
                         <td  class="w3-small">
-                            <button class="w3-button w3-medium w3-block w3-round" style="background-color:#ffe11b;">
+                            <button class="w3-button w3-medium w3-block w3-round" style="background-color:#ffe11b;" onclick="registerFormValidation()">
                                 REGISTER
                             </button>
                         </td>
@@ -107,4 +102,29 @@
         </div>
     </div>
 </body>
+<script>
+function registerFormValidation(){
+    document.getElementById("password1").setCustomValidity("")
+    document.getElementById("password2").setCustomValidity("")
+    document.getElementById("mobileNumber").setCustomValidity("")
+    document.getElementById("whatsappNumber").setCustomValidity("")
+
+    password1 = document.getElementById("password1").value
+    password2 = document.getElementById("password2").value
+    
+    if(password1.length < 6 ){
+        document.getElementById("password1").setCustomValidity("password should at least 6 digit");
+    }
+    else if (password1 != password2){
+        document.getElementById("password2").setCustomValidity("password mismatch");
+    }
+    else if ( document.getElementById("mobileNumber").value.length != 10 ){
+        document.getElementById("mobileNumber").setCustomValidity("mobile Number should 10 digits");
+    }
+    else if ( document.getElementById("whatsappNumber").value.length != 10 ){
+        document.getElementById("whatsappNumber").setCustomValidity("mobile Number should 10 digits");
+    }
+}
+</script>
+
 </html>
